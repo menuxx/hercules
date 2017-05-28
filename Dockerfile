@@ -1,4 +1,4 @@
-FROM keymetrics/pm2-docker-alpine:latest
+FROM keymetrics/pm2-docker-alpine:6
 ENV PORT 8080
 RUN apk update
 RUN apk add git
