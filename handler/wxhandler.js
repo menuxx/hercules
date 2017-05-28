@@ -3,7 +3,7 @@ const {Router} = require('express')
 const {xmlbodyparser} = require('../components/xml')
 const wxerror = require('debug')('wxerror:error')
 const log = require('debug')('wxlog')
-const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify')
+const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify/index')
 const {wxGetComponentToken, wxGetPreAuthCode} = require('../wxapi/componentApi')
 const {componentCacheSave} = require('../components/cache')
 // 平台配置
