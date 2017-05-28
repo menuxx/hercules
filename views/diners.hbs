@@ -1,0 +1,38 @@
+{{> header }}
+<div class="container">
+  <div class="row">
+    <div class="alert alert-warning">
+      该列表只包含数据库中存在 `app_id` 的店铺，这就意味着店铺必须关联对应的微信小程序账户
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      <div class="list-group">
+        {{#each diners}}
+        <div class="list-group-item">
+          <div class="list-group-item-heading">
+            ID: <span class="label label-info">{{id}}</span>
+            <span class="label label-default">AppID: {{app_id}}</span>
+            <span class="label label-default">店名: {{shop_name}}</span>
+            <span class="pull-right">
+              授权状态: 
+              {{#if authorizer_app_id}}
+              <span class="label label-success">已授权</span>
+              {{else}}
+              <span class="label label-danger">未授权</span>
+              {{/if}}
+            </span>
+          </div>
+          <hr>
+          <a class="btn btn-sm btn-primary" target="_blank" href="{{authorize_url}}">去授权</a>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    <div class="col-md-1">
+    </div>
+  </div>
+</div>
+{{> footer }}
