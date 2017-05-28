@@ -15,17 +15,16 @@ module.exports = {
     'password': process.env.AUTH_PASSWORD
   },
   redis: {
-    port: process.env.REDIS_01_PORT,
+    port: parseInt(process.env.REDIS_01_PORT, 10),
     host: process.env.REDIS_01_HOSTNAME,
     password: process.env.REDIS_01_PASSWORD
   },
   leancloud: {
     appId: process.env.LEANCLOUD_APPID,
     appKey: process.env.LEANCLOUD_APPKEY
+  },
+  server: {
+    port: process.env.PORT || 8081,
+    siteUrl: process.env.SITE_URL
   }
 }
-// [
-//     'http://api.menuxx.com/wx/component_cache',
-//     'http://dev.api.menuxx.com/wx/component_cache',
-//     'http://127.0.0.1:8080/wx/component_cache'
-//   ]

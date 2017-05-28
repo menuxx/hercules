@@ -5,6 +5,7 @@ const redisFactory = require("redis")
 const bluebird = require('bluebird')
 const {redis} = require('../config')
 const errorlog = require('debug')('redis:error')
+const log = require('debug')('redis')
 const {assign} = require('lodash')
 
 // 为 redis 添加 Promise 支持
@@ -13,10 +14,16 @@ bluebird.promisifyAll(redisFactory.Multi.prototype)
 
 module.exports = function ({dbIndex}) {
 
-  const credis = redisFactory.createClient(assign({db : dbIndex}, redis))
+  var credis = redisFactory.createClient(assign({db : dbIndex}, redis));
 
   credis.on("error", function (err) {
-      errorlog("Redis Error ", err)
+      errorlog("[Radis] Error ", err)
+  });
+
+  ['connect', 'reconnecting'].forEach(function (event) {
+    credis.on(event, function () {
+      log(`[Radis] dbIndex %d ${event}`, dbIndex)
+    })
   })
 
   return credis

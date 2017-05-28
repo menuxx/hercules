@@ -12,6 +12,7 @@ const {wxGetAuthorizeUrl, wxQueryAuth} = require('../wxapi/componentApi')
 const {tokenCache, wxCache} = require('../components/cache')
 const {errorPage} = require('../lib/error')
 const {delayRefresh} = require('../components/rabbitmq')
+const {siteUrl} = require('../config').server
 const bb = require('bluebird')
 
 passport.use(new BasicStrategy(function(username, password, cb) {
@@ -46,7 +47,7 @@ route.get('/diners', passport.authenticate('basic', { session: false }),
       diners = diners.filter(function(item) {
         return !isEmpty(item.app_id)
       }).map(function(item){
-        item.authorize_url = wxGetAuthorizeUrl(appId, preAuthCode, `http://wx1.qurenjia.com/wx/3rd/authorize/${item.app_id}`)
+        item.authorize_url = wxGetAuthorizeUrl(appId, preAuthCode, `${siteUrl}/wx/3rd/authorize/${item.app_id}`)
         return item
       })
       resp.render('diners', { diners, title: '可授权店铺列表' })

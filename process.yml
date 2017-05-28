@@ -4,7 +4,7 @@ apps:
     cwd : /usr/src/app/
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 200M
+    max_memory_restart: 600M
     env:
       NODE_ENV: production
     env_production:

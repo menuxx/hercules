@@ -3,12 +3,19 @@ const {Router} = require('express')
 const {xmlbodyparser} = require('../components/xml')
 const wxerror = require('debug')('wxerror:error')
 const log = require('debug')('wxlog')
+const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify')
 const {wxGetComponentToken, wxGetPreAuthCode} = require('../wxapi/componentApi')
 const {componentCacheSave} = require('../components/cache')
 // 平台配置
 const {cachePublishPointers} = require('../config')
 const {tokenCache} = require('../components/cache')
 const rp = require('request-promise')
+
+// 配置暂时放在这里，待稍后调整
+const {appId, appSecret, appKey, token, encodingAESKey} = require('../config')
+const {xmlparser} = require('../components/xml')
+const WXBizMsgCrypt = require('wechat-crypto')
+const wxCrypt = new WXBizMsgCrypt(token, encodingAESKey, appKey)
 
 const route = Router()
 
@@ -176,69 +183,8 @@ routes.push(WXMsgRoute(
 // 挂在到 route /3rd/notify 上
 // .handler('/3rd/notify', route)
 
-route.post('/3rd/notify', WXNotifyHandler({ routes }))
+// route.post('/3rd/notify', WXNotifyHandler({ routes }))
 
-route.post('/3rd/notify', notifyParser(function (msg, req, resp) {
-  // 根据 InfoType 识别 不同消息类型
-  let infoType = msg.InfoType, appId = msg.AppId, createTime = msg.CreateTime
-  let msgType = msg.MsgType
-  let event = msg.Event
-
-  switch (infoType) {
-    /**
-     * <xml>
-     *    <AppId>wxb3d033d520d15fe7</AppId>,
-     *    <CreateTime>1495811746</CreateTime>,
-     *    <InfoType>component_verify_ticket<InfoType/>,
-     *    <ComponentVerifyTicket>ticket@@@I0nn1nN3CGFo1pj9GqF2uI2QZjoeonXzcAt8bIqh_uK7DddwmoOrCu_k4VVWWssx2gIX3cb1W7eSLoNqacuUaA</ComponentVerifyTicket>
-     * </xml>
-     *    
-     */
-    case 'component_verify_ticket' :
-      break;
-  }
-
-  if (msgType === 'event') {
-    switch (event) {
-      /**
-       * 获取审核结果
-       * 审核通过时，接收到的推送XML数据包示例如下：
-       * <xml>
-       *   <ToUserName><![CDATA[gh_fb9688c2a4b2]]></ToUserName>
-       *   <FromUserName><![CDATA[od1P50M-fNQI5Gcq-trm4a7apsU8]]></FromUserName>
-       *   <CreateTime>1488856741</CreateTime>
-       *   <MsgType><![CDATA[event]]></MsgType>
-       *   <Event><![CDATA[weapp_audit_success]]></Event>
-       *   <SuccTime>1488856741</SuccTime>
-       * </xml>
-       */
-      case 'weapp_audit_success' :
-
-        break;
-
-      /**
-       * 审核不通过时，接收到的推送XML数据包示例如下：
-       * <xml><ToUserName><![CDATA[gh_fb9688c2a4b2]]></ToUserName>
-       * <FromUserName><![CDATA[od1P50M-fNQI5Gcq-trm4a7apsU8]]></FromUserName>
-       * <CreateTime>1488856591</CreateTime>
-       * <MsgType><![CDATA[event]]></MsgType>
-       * <Event><![CDATA[weapp_audit_fail]]></Event>
-       * <Reason><![CDATA[1:账号信息不符合规范:<br>
-       * (1):包含色情因素<br>
-       * 2:服务类目"金融业-保险_"与你提交代码审核时设置的功能页面内容不一致:<br>
-       * (1):功能页面设置的部分标签不属于所选的服务类目范围。<br>
-       * (2):功能页面设置的部分标签与该页面内容不相关。<br>
-       * </Reason>
-       * <FailTime>1488856591</FailTime>
-       * </xml>
-       **/
-      case 'weapp_audit_fail' :
-
-        break;
-    }
-  }
-
-}))
 // 微信第三方开放平台
 route.post('/3rd/notify', function(req, resp) {
 

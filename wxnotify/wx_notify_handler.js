@@ -51,3 +51,5 @@ const WXNotifyHandler = function ({ routes }) {
     })
   }
 }
+
+module.exports = WXNotifyHandler

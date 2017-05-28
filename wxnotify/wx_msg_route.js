@@ -11,5 +11,7 @@
 const qs = require('querystring')
 
 const WXMsgRoute = function (routingKey, callback) {
-  var opts = qs.parse(routeOpts.routingKey)
+  var opts = qs.parse(routingKey)
 }
+
+module.exports = WXMsgRoute

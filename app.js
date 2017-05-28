@@ -4,6 +4,7 @@ const app = express()
 const http = require('http')
 const server = http.createServer(app)
 const hbs = require('./components/view')(app)
+const {port} = require('./config').server
 
 // handlers
 const apihandler = require('./handler/apihandler')
@@ -20,8 +21,6 @@ app.use(bodyparser.urlencoded({ extended: false }))
 app.use(express.static(__dirname + '/public'))
 app.use('/api', apihandler)
 app.use('/', pageshandler)
-
-var port = 8081
 
 require('./components/rabbitmq')
 

@@ -7,7 +7,7 @@
   "author": "yinchangsheng <ychangsheng@gmail.com>",
   "license": "Apache License 2.0",
   "scripts": {
-    "start": "./node_modules/babel-cli/bin/babel-node.js app.js"
+    "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js"
   },
   "dependencies": {
     "amqp": "^0.2.6",
