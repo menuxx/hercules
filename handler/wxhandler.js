@@ -3,7 +3,7 @@ const {Router} = require('express')
 const {xmlbodyparser} = require('../components/xml')
 const wxerror = require('debug')('wxerror:error')
 const log = require('debug')('wxlog')
-const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify/index')
+// const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify')
 const {wxGetComponentToken, wxGetPreAuthCode} = require('../wxapi/componentApi')
 const {componentCacheSave} = require('../components/cache')
 // 平台配置
@@ -44,12 +44,12 @@ var routes = []
  * Event          事件类型 weapp_audit_success
  * SuccTime        审核成功时的时间（整形），时间戳
  **/
-routes.push(WXMsgRoute(
-  'MsgType=event&Event=weapp_audit_success', 
-  function (msg, req, resp) {
+// routes.push(WXMsgRoute(
+//   'MsgType=event&Event=weapp_audit_success', 
+//   function (msg, req, resp) {
 
-  }
-))
+//   }
+// ))
 
 /**
 * 审核不通过时，接收到的推送XML数据包示例如下：
@@ -68,12 +68,12 @@ routes.push(WXMsgRoute(
 *  <FailTime>1488856591</FailTime>
 * </xml>
 */
-routes.push(WXMsgRoute(
-  'MsgType=event&Event=weapp_audit_fail', 
-  function (msg, req, resp) {
+// routes.push(WXMsgRoute(
+//   'MsgType=event&Event=weapp_audit_fail', 
+//   function (msg, req, resp) {
 
-  }
-))
+//   }
+// ))
 
 /**
 * 处理微信第三方验证票据
@@ -96,12 +96,12 @@ routes.push(WXMsgRoute(
 * InfoType              component_verify_ticket
 * ComponentVerifyTicket Ticket内容
 */
-routes.push(WXMsgRoute(
-  'InfoType=component_verify_ticket', 
-  function (msg, req, resp) {
+// routes.push(WXMsgRoute(
+//   'InfoType=component_verify_ticket', 
+//   function (msg, req, resp) {
 
-  }
-))
+//   }
+// ))
 
 /**
 * 字段说明：
@@ -120,11 +120,10 @@ routes.push(WXMsgRoute(
 * <AuthorizerAppid>公众号appid</AuthorizerAppid>
 * </xml>
 **/
-routes.push(WXMsgRoute(
-  'InfoType=unauthorized'
-), function (msg, req, resp) {
+// routes.push(WXMsgRoute('InfoType=unauthorized'), 
+//   function (msg, req, resp) {
 
-})
+// })
 
 /**
  * 字段说明：
@@ -146,11 +145,10 @@ routes.push(WXMsgRoute(
  *   <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
  * </xml>
  **/
-routes.push(WXMsgRoute(
-  'InfoType=authorized'
-), function (msg, req, resp) {
+// routes.push(WXMsgRoute('InfoType=authorized'), 
+//   function (msg, req, resp) {
 
-})
+// })
 
 /**
  * 字段说明：
@@ -172,12 +170,11 @@ routes.push(WXMsgRoute(
  *  <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
  * </xml>
  **/
-routes.push(WXMsgRoute(
-  'InfoType=updateauthorized',
-  function (msg, req, resp) {
+// routes.push(WXMsgRoute('InfoType=updateauthorized',
+//   function (msg, req, resp) {
 
-  }
-))
+//   }
+// ))
 
 
 // 挂在到 route /3rd/notify 上
