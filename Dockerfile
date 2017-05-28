@@ -1,5 +1,7 @@
 FROM keymetrics/pm2-docker-alpine:latest
+
 ENV PORT 8080
+RUN apk install git
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
