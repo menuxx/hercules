@@ -3,7 +3,7 @@ const {leancloud} = require('../config')
 
 AV.init(leancloud)
 
-const TestObject = AV.Object.extend('TestObject')
+// const TestObject = AV.Object.extend('TestObject')
 
 // var testObject = new TestObject()
 
@@ -23,21 +23,28 @@ const TestObject = AV.Object.extend('TestObject')
 //   console.error(error)
 // });
 
-var query = new AV.Query('TestObject')
+// var query = new AV.Query('TestObject')
 
-// query.find().then(function(res) {
+// // query.find().then(function(res) {
+// //   console.log(res)
+// // })
+
+// // query.get('5929341fa0bb9f0057e3ba10').then(function (todo) {
+// //   console.log('success', todo)
+// // }, function (error) {
+// //   console.log('error', error)
+// // })
+
+// query.equalTo('words', 'Hello World!')
+// query.find().then(function (res) {
 //   console.log(res)
 // })
 
-// query.get('5929341fa0bb9f0057e3ba10').then(function (todo) {
-//   console.log('success', todo)
-// }, function (error) {
-//   console.log('error', error)
-// })
 
-query.equalTo('words', 'Hello World!')
-query.find().then(function (res) {
-  console.log(res)
-})
+const WXEventLog = AV.Object.extend('EventLog')
 
+export const saveEventLog = function (info) {
+  var log = new WXEventLog()
+  return log.save(info)
+}
 

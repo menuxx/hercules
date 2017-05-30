@@ -11,6 +11,8 @@ const {cachePublishPointers} = require('../config')
 const {tokenCache} = require('../components/cache')
 const rp = require('request-promise')
 
+const {saveEventLog} = require('../leancloud')
+
 // 配置暂时放在这里，待稍后调整
 const {appId, appSecret, appKey, token, encodingAESKey} = require('../config')
 const {xmlparser} = require('../components/xml')
@@ -203,7 +205,10 @@ route.post('/3rd/notify', function(req, resp) {
       return resp.status(401).send('FAIL:XML_PARSE_FAIL')
     }
     console.log('--------------', result)
-    var {ComponentVerifyTicket} = result.xml
+    var {ComponentVerifyTicket, MsgType} = result.xml
+    if (MsgType === 'event') {
+      saveEventLog(result.xml)
+    }
     log('component_verify_ticket: ', ComponentVerifyTicket)
     // 解析完成之后就算成功
     resp.send('SUCCESS')
