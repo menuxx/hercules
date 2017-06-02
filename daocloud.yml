@@ -1,0 +1,21 @@
+version: "3.0"
+stages:
+- build
+- deploy_prod
+build:
+  stage: build
+  job_type: image_build
+  only:
+    branches:
+    - prod
+  build_dir: /
+  cache: true
+  dockerfile_path: /Dockerfile
+deploy_prod:
+  stage: deploy_prod
+  job_type: DCS_deploy
+  only:
+    branches:
+    - prod
+  app_name: menuxx_3rd
+  cluster_id: sr346813-8475-845a-a8j5-66e6z1d17a50

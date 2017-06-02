@@ -1,0 +1,26 @@
+menuxx_3rd:
+  image: daocloud.io/nizhuantech/menuxx_3rd:prod-2203957
+  privileged: false
+  restart: always
+  ports:
+  - 80:8080
+  volumes:
+  - /data/hercules:/usr/src/app/tmp
+  environment:
+  - REDIS_01_HOSTNAME=10.23.236.159
+  - WX_3RD_APP_TOKEN=dg156c5719d3202f32a6619e14D0ccqd
+  - REDIS_01_PORT=7389
+  - WX_3RD_APP_SECRET=99454ebe9eb76b704d9dfd8c34cc310b
+  - WX_3RD_ENCODING_AES_KEY=kat52d5719d320nEj2A6l19u14H21ct2aI8K08rltKl
+  - SITE_URL=http://wx3rd.menuxx.com
+  - LEANCLOUD_APPKEY=HqvqMuGWLEKQjc02Dwzmz142
+  - REDIS_01_PASSWORD=4cj34t4j9
+  - LEANCLOUD_APPID=98Yqw7EVpTpxvIP5wS4NK6j9-gzGzoHsz
+  - CACHE_PUBLISH_POINTERS=http://api.menuxx.com/wx/component_cache,http://dev.api.menuxx.com/wx/component_cache
+  - RABBIT_URI_01=amqp://menuxx:28181820@10.23.236.159:5692/menuxx
+  - DEBUG=*,-babel
+  - AUTH_PASSWORD=28181820
+  - AUTH_USERNAME=menuxx3rd
+  - PORT=8080
+  - WX_3RD_APP_ID=wxb3d033d520d15fe7
+  - WX_3RD_APP_KEY=gh_e9100e798b39

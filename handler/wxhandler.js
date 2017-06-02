@@ -186,7 +186,6 @@ var routes = []
 
 // 微信第三方开放平台
 route.post('/3rd/notify', function(req, resp) {
-
   var {signature, timestamp, nonce, encrypt_type, msg_signature} = req.query
   if (isEmpty(signature) || isEmpty(timestamp) || isEmpty(nonce) || isEmpty(encrypt_type) || isEmpty(msg_signature)) {
     wxerror('参数错误')
@@ -207,7 +206,8 @@ route.post('/3rd/notify', function(req, resp) {
     console.log('--------------', result)
     var {ComponentVerifyTicket, MsgType} = result.xml
     if (MsgType === 'event') {
-      saveEventLog(result.xml)
+       saveEventLog(result.xml)
+       return resp.send('SUCCESS')
     }
     log('component_verify_ticket: ', ComponentVerifyTicket)
     // 解析完成之后就算成功
