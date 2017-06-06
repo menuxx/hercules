@@ -20,3 +20,6 @@ export const dev_pool  = mysql.createPool({
   port            : 3006
 })
 
+module.exports = {
+  diners: require('./diners')
+}

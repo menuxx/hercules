@@ -1,5 +1,6 @@
 // 文档位置 https://booteam.pubu.im/apps/integrations/59283d44a059285529eadc00
 const rp = require('request-promise')
+const {siteUrl} = require('../config').server
 // 使用 pubu.im 做消息发布
 const apiUrl = 'https://hooks.pubu.im/services/nkweqg711p27cwp'
 
@@ -57,7 +58,7 @@ const apiUrl = 'https://hooks.pubu.im/services/nkweqg711p27cwp'
  * callbackUrl和action组合一起使用。
  **/
 
-const post = function (data) {
+export const post = function (data) {
   return rp({
     uri: apiUrl,
     method: 'POST',
@@ -68,33 +69,6 @@ const post = function (data) {
 
 // 发送简单的文本信息
 export const sendSimpleTextMsg = function (text, user, avatarUrl) {
-  return post({
-    "text": text,
-    "displayUser": {
-      "name": user,
-      avatarUrl
-    }
-  })
-}
-
-// 发送块信息
-/**
-* {
-*  "text": "芝根芝底披萨审核失败",
-*  "channel": "#菜单加",
-*  "attachments": [{
-*    "title": "审核失败",
-*    "description": "1:账号信息不符合规范:\n(1):包含色情因素\n2:服务类目\"金融业-保险_\"与你提交代码审核时设置的功能页面内容不一致:\n(1):功能页面设置的部分标签不属于所选的服务类目范围。\n(2):功能页面设置的部分标签与该页面内容不相关。\n",
-*    "url": "https://pypi.python.org/pypi/paho-mqtt/1.1",
-*    "color": "error"
-*  }],
-*  "displayUser": {
-*    "name": "微信审核",
-*    "avatarUrl": "https://file.menuxx.com/image/weixin-logo.png?imageView2/0/w/100/h/100"
-*  }
-* }
-**/
-export const sendBlockMsg = function (text, user, avatarUrl) {
   return post({
     "text": text,
     "displayUser": {

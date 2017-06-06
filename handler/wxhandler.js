@@ -8,7 +8,7 @@ const {wxGetComponentToken, wxGetPreAuthCode} = require('../wxapi/componentApi')
 const {componentCacheSave} = require('../components/cache')
 // 平台配置
 const {cachePublishPointers} = require('../config')
-const {tokenCache} = require('../components/cache')
+const {tokenCache, wxCache} = require('../components/cache')
 const rp = require('request-promise')
 
 const {saveEventLog} = require('../leancloud')
@@ -77,27 +77,6 @@ var routes = []
 //   }
 // ))
 
-/**
-* 处理微信第三方验证票据
-* 推送component_verify_ticket协议
-* 在第三方平台创建审核通过后，微信服务器会向其
-* “授权事件接收URL”每隔10分钟定时推送component_verify_ticket。
-* 第三方平台方在收到ticket推送后也需进行解密（详细请见【消息加解密接入指引】），接收到后必须直接返回字符串success。
-* POST数据示例
-* <xml>
-*   <AppId></AppId>
-*   <CreateTime>1413192605</CreateTime>
-*   <InfoType>component_verify_ticket</InfoType>
-*   <ComponentVerifyTicket></ComponentVerifyTicket>
-* </xml>
-* 
-* 字段说明
-* 字段名称                字段描述
-* AppId                 第三方平台appid
-* CreateTime            时间戳
-* InfoType              component_verify_ticket
-* ComponentVerifyTicket Ticket内容
-*/
 // routes.push(WXMsgRoute(
 //   'InfoType=component_verify_ticket', 
 //   function (msg, req, resp) {
@@ -105,47 +84,14 @@ var routes = []
 //   }
 // ))
 
-/**
-* 字段说明：
-* 字段名称                         字段描述
-* AppId                          第三方平台appid
-* CreateTime                     时间戳
-* InfoType                       unauthorized是取消授权
-* AuthorizerAppid                公众号或小程序
-* AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
-* AuthorizationCodeExpiredTime   授权码过期时间
-* 取消授权通知
-* <xml>
-* <AppId>第三方平台appid</AppId>
-* <CreateTime>1413192760</CreateTime>
-* <InfoType>unauthorized</InfoType>
-* <AuthorizerAppid>公众号appid</AuthorizerAppid>
-* </xml>
-**/
+
 // routes.push(WXMsgRoute('InfoType=unauthorized'), 
 //   function (msg, req, resp) {
 
 // })
 
 /**
- * 字段说明：
- * 字段名称                         字段描述
- * AppId                          第三方平台appid
- * CreateTime                     时间戳
- * InfoType                       authorized是授权成功通知
- * AuthorizerAppid                公众号或小程序
- * AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
- * AuthorizationCodeExpiredTime   授权码过期时间
- * 
- * 授权成功通知
- * <xml>
- *   <AppId>第三方平台appid</AppId>
- *   <CreateTime>1413192760</CreateTime>
- *   <InfoType>authorized</InfoType>
- *   <AuthorizerAppid>公众号appid</AuthorizerAppid>
- *   <AuthorizationCode>授权码（code）</AuthorizationCode>
- *   <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
- * </xml>
+
  **/
 // routes.push(WXMsgRoute('InfoType=authorized'), 
 //   function (msg, req, resp) {
@@ -153,24 +99,7 @@ var routes = []
 // })
 
 /**
- * 字段说明：
- * 字段名称                         字段描述
- * AppId                          第三方平台appid
- * CreateTime                     时间戳
- * InfoType                       updateauthorized是更新授权
- * AuthorizerAppid                公众号或小程序
- * AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
- * AuthorizationCodeExpiredTime   授权码过期时间
- * 
- * 授权更新通知
- * <xml>
- *  <AppId>第三方平台appid</AppId>
- *  <CreateTime>1413192760</CreateTime>
- *  <InfoType>updateauthorized</InfoType>
- *  <AuthorizerAppid>公众号appid</AuthorizerAppid>
- *  <AuthorizationCode>授权码（code）</AuthorizationCode>
- *  <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
- * </xml>
+
  **/
 // routes.push(WXMsgRoute('InfoType=updateauthorized',
 //   function (msg, req, resp) {
@@ -198,6 +127,13 @@ route.post('/3rd/notify', function(req, resp) {
     wxerror('签名错误')
     return resp.status(401).send('FAIL:SIGNATURE_INVALID')
   }
+  //  { xml: 
+  //    { AppId: 'wxb3d033d520d15fe7',
+  //      CreateTime: '1496396219',
+  //      InfoType: 'unauthorized',
+  //      AuthorizerAppid: 'wxd101a85aa106f53e' 
+  //    }
+  //  }
   xmlparser.parseString(xmlMsg, function (err, result) {
     if (err) {
       wxerror('parse xml %s fail', xmlMsg, err)
@@ -209,6 +145,20 @@ route.post('/3rd/notify', function(req, resp) {
        saveEventLog(result.xml)
        return resp.send('SUCCESS')
     }
+    else if (MsgType === 'text') {
+      // https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318611&lang=zh_CN
+      // http://www.07net01.com/2017/01/1770019.html
+      // 自动化测试的专用测试小程序的信息如下：
+      //（1）appid：wxd101a85aa106f53e
+      //（2）Username： gh_8dad206e9538
+      var content = result.xml.Content
+      var formOpenId = result.xml.FromUserName
+      // wxCache.getAuthorizerInfo()
+      // rp({
+      //   method: 'PUT',
+      //   uri: `https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=${}`
+      // })
+    }
     log('component_verify_ticket: ', ComponentVerifyTicket)
     // 解析完成之后就算成功
     resp.send('SUCCESS')
@@ -217,7 +167,7 @@ route.post('/3rd/notify', function(req, resp) {
       log('component_access_token: ', component_access_token)
       return wxGetPreAuthCode(appId, component_access_token).then(function({pre_auth_code}) {
         return {
-          pre_auth_code, component_access_token,
+          pre_auth_code, component_access_token
         }
       })
     })

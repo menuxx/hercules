@@ -1,4 +1,6 @@
-const {post, get} = require('./baseApi')
+const {post, get} = require('../wx3rdApi')
+const {defaultArgs} = require('../defaultArgs')
+
 /**
  * 第三方平台compoment_access_token是第三方平台的下文中接口的调用凭据，
  * 也叫做令牌（component_access_token）。
@@ -17,13 +19,13 @@ const {post, get} = require('./baseApi')
  *  "expires_in": 7200
  * }
  **/
-export const wxGetComponentToken = function (appId, appSecret, verifyTicket) {
-  return post('/component/api_component_token', {
-    component_appid: appId,
+export const wxGetComponentToken = defaultArgs(function (componentAppid, appSecret, verifyTicket) {
+  return post('/api_component_token', {
+    component_appid: componentAppid,
     component_appsecret: appSecret,
     component_verify_ticket: verifyTicket
   })
-}
+})
 
 /**
  * 该API用于获取预授权码。预授权码用于公众号或小程序授权时的第三方平台方安全验证。
@@ -37,11 +39,11 @@ export const wxGetComponentToken = function (appId, appSecret, verifyTicket) {
  *  "expires_in":600
  * }
  */
-export const wxGetPreAuthCode = function (appId, accessToken) {
-  return post(`/component/api_create_preauthcode?component_access_token=${accessToken}`, {
-    component_appid: appId
+export const wxGetPreAuthCode = defaultArgs(function (componentAppid, accessToken) {
+  return post(`/api_create_preauthcode?component_access_token=${accessToken}`, {
+    component_appid: componentAppid
   })
-}
+})
 
 /**
 * 使用授权码换取公众号或小程序的接口调用凭据和授权信息
@@ -55,16 +57,16 @@ export const wxGetPreAuthCode = function (appId, accessToken) {
 * component_appid 第三方平台appid
 * authorization_code  授权code,会在授权成功时返回给第三方平台，详见第三方平台授权流程说明
 */
-export const wxQueryAuth = function (appId, accessToken, authCode) {
-  return post(`/component/api_query_auth?component_access_token=${accessToken}`, {
-    component_appid: appId,
+export const wxQueryAuth = defaultArgs(function (componentAppid, accessToken, authCode) {
+  return post(`/api_query_auth?component_access_token=${accessToken}`, {
+    component_appid: componentAppid,
     authorization_code: authCode
   })
-}
+})
 
-export const wxGetAuthorizeUrl = function (appId, pre_auth_code, redirect_uri) {
-  return `https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=${appId}&pre_auth_code=${pre_auth_code}&redirect_uri=${encodeURIComponent(redirect_uri)}`
-}
+export const wxGetAuthorizeUrl = defaultArgs(function (componentAppid, pre_auth_code, redirect_uri) {
+  return `https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=${componentAppid}&pre_auth_code=${pre_auth_code}&redirect_uri=${encodeURIComponent(redirect_uri)}`
+})
 
 /** 
  * 获取（刷新）授权公众号或小程序的接口调用凭据（令牌）
@@ -89,13 +91,13 @@ export const wxGetAuthorizeUrl = function (appId, pre_auth_code, redirect_uri) {
  * expires_in  有效期，为2小时
  * authorizer_refresh_token  刷新令牌
  */
-export const wxRefreshApiAuthorizerToken = function (appId, component_access_token, authorizer_appid, authorizer_refresh_token) {
-  return post(`/component/api_authorizer_token?component_access_token=${component_access_token}`, {
-    component_appid: appId,
+export const wxRefreshApiAuthorizerToken = defaultArgs(function (componentAppid, component_access_token, authorizer_appid, authorizer_refresh_token) {
+  return post(`/api_authorizer_token?component_access_token=${component_access_token}`, {
+    component_appid: componentAppid,
     authorizer_appid,
     authorizer_refresh_token
   })
-}
+})
 
 // 获取小程序详细信息
 /**
@@ -176,12 +178,9 @@ export const wxRefreshApiAuthorizerToken = function (appId, component_access_tok
  * 请注意：
  * 1）该字段的返回不会考虑小程序是否具备该权限集的权限（因为可能部分具备）
  **/
-export const wxGetAuthorizerInfo = function (appId, authorizer_appid, component_access_token) {
-  return post(`/component/api_get_authorizer_info?component_access_token=${component_access_token}`, {
-    component_appid: appId,
+export const wxGetAuthorizerInfo = defaultArgs(function (componentAppid, authorizer_appid, component_access_token) {
+  return post(`/api_get_authorizer_info?component_access_token=${component_access_token}`, {
+    component_appid: componentAppid,
     authorizer_appid
   })
-}
-
-
-
+})

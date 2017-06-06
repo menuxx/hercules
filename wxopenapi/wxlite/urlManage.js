@@ -31,11 +31,11 @@
  *    "downloaddomain":["https://www.qq.com","https://www.qq.com"],
  * }
  */
-const {post} = require('../wxapi')
-const {defaultArgs} = require('./defaultArgs')
+const {post} = require('../wxliteApi');
+const {defaultArgs} = require('../defaultArgs');
 
 const modifyDomain = function (action) {
-  return defaultArgs(function({accessToken, requestDomains, wsRequestDomains, uploadDomains, downloadDomains}) {
+  return defaultArgs(function(accessToken, requestDomains, wsRequestDomains, uploadDomains, downloadDomains) {
     return post(`modify_domain?access_token=${accessToken}`, {
       "action": action,
       "requestdomain": requestDomains,
@@ -44,13 +44,13 @@ const modifyDomain = function (action) {
       "downloaddomain": downloadDomains
     })
   })
-}
+};
 
 // exports.addDomain
 // exports.deleteDomain
 // exports.setDomain
 // exports.getDomain
 
-['add', 'delete', 'set', 'get'].forEach(function(action){
+['wxAdd', 'wxDelete', 'wxSet', 'wxGet'].forEach(function(action){
   exports[action + 'Domain'] = modifyDomain(action)
 })

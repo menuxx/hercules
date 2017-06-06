@@ -1,6 +1,8 @@
 // http://www.squaremobius.net/amqp.node/channel_api.html
 const amqp = require('amqplib/callback_api')
-const {rabbit} = require('../config')
+const {rabbit, plInfo} = require('../config')
+const db = require('../db')
+const sms = require('./ronglian')
 const info = require('debug')('rabbitmq')
 const errorlog = require('debug')('rabbitmq:error')
 const {authorizerRefreshToken} = require('./rabbitmq_tasks')
@@ -9,8 +11,12 @@ const {wxCache} = require('./cache')
 const uuid = require('uuid/v4')
 const {isEmpty} = require('lodash')
 const bb = require('bluebird')
+const {InfoTypes} = require('../wxapi')
 
-var refreshTokenChannel = null
+// 延迟队列
+var delayChannel = null
+// 普通队列
+var qChannel = null
 
 var amqpConn = null
 
@@ -23,7 +29,10 @@ export const refreshTokenQueue = 'refresh_token_queue'
 export const codeCommitQueue = 'code_commit_queue'
 
 // 代码提交审核队列
-export const codeSubmitAudit = 'code_submit_audit_queue'
+export const codeSubmitAuditQueue = 'code_submit_audit_queue'
+
+// 短信延迟发布队列
+export const smsSendQueue = 'sms_send_queue'
 
 // ?heartbeat=60
 const start = function () {
@@ -60,9 +69,11 @@ function closeOnErr(err) {
 
 function whenConnected () {
   // 恢复离线作业
-  startRefreshTokenPublisher()
-  // 启动令牌组刷新缓存 队列作业
-  startRefreshTokenQueueWorker()
+  startDelayPublisher()
+  // 启动普通作业
+  startQPublisher()
+  // 启动队列作业
+  startDelayQueueWorkers()
 }
 
 /**
@@ -86,12 +97,12 @@ function startPublisher (callback) {
   })
 }
 
-function startRefreshTokenPublisher () {
+function startDelayPublisher () {
   startPublisher(function (ch) {
     // 添加 延迟 支持
     // 使用 错误 恢复 的 publish 方法
     require('./rabbitmq_delay')(ch, {publish})
-    refreshTokenChannel = ch
+    delayChannel = ch
     while (true) {
       var m = offlinePubQueue.shift()
       if (!m) break
@@ -99,6 +110,20 @@ function startRefreshTokenPublisher () {
     }
   })
 }
+
+function startQPublisher () {
+  startPublisher(function (ch) {
+    // 添加 延迟 支持
+    // 使用 错误 恢复 的 publish 方法
+    qChannel = ch
+    while (true) {
+      var m = offlinePubQueue.shift()
+      if (!m) break
+      publish(ch, m[0], m[1], m[2])
+    }
+  })
+}
+
 
 /**
  * The publish function will publish a message to an exchange with a given routing key. 
@@ -142,12 +167,12 @@ function startWorker(queueName, workCallback) {
       info('[AMQP] queue %s Worker is started', queueName)
     })
     function processMsg(msg) {
-      workCallback(msg, ch, function(ok) {
+      workCallback(msg, ch, function(ok, status=true) {
         try {
           if (ok) {
             ch.ack(msg)
           } else {
-            ch.reject(msg, true)
+            ch.reject(msg, status)
           }
         } catch (e) {
           closeOnErr(e)
@@ -157,44 +182,84 @@ function startWorker(queueName, workCallback) {
   })
 }
 
-function startRefreshTokenQueueWorker() {
+function startDelayQueueWorkers() {
+  // 短信延迟发送队列
+  startWorker(smsSendQueue, function (msg, ch, ackCallback) {
+    info('recive sms message')
+    if (msg !== null) {
+      // msg app_key, authorizer_appid, sms_type
+      var {app_key, sms_type} = JSON.parse(msg.content.toString())
+      var sendCallback
+      // 各种短信发送
+      if (sms_type == InfoTypes.UNAUTHORIZED) {
+        sendCallback = function ({master_phone, master_name, shop_name}) {
+          return sms.sendAuthorizedSMS(master_phone, [master_name, shop_name])
+        }
+      }
+      else if (sms_type == InfoTypes.AUTHORIZED) {
+        sendCallback = function ({master_phone, master_name, shop_name}) {
+          return sms.sendUnauthorizedSMS(master_phone, [master_name, shop_name, plInfo.contactPhone])
+        }
+      }
+      else if (sms_type == InfoTypes.UPDATEAUTHORIZED) {
+        sendCallback = function ({master_phone, master_name, shop_name}) {
+          return sms.sendUpdateauthorizedSMS(master_phone, [master_name, shop_name, plInfo.contactPhone])
+        }
+      } else {
+        sendCallback = function ({master_phone, master_name, shop_name}) {
+          return sms.sendAuthorizedSMS(master_phone, [master_name, shop_name])
+        }
+      }
+      return db.diners.getDinerByAppKey(app_key)
+      .then(sendCallback)
+      .then(function () {
+        info('send authorized sms ok ...')
+        ackCallback(true)
+      }, function () {
+        // 保留并重新发送
+        ackCallback(false, true)
+      })
+    }
+  })
+
+  // 令牌刷新队列
   startWorker(refreshTokenQueue, function (msg, ch, ackCallback) {
-    info('recive delayRefreshToken message')
+    info('recive delay_refresh_token message')
     if (msg !== null) {
       // 解析数据
       var data = JSON.parse(msg.content.toString())
       return wxCache.getRefreshTokenMsgId(data.appId).then(function(msgId) {
-        info('current refresh_token_msg_id: %s, message id: %s', msgId, data.refreshTokenMsgId)
+        info('current refresh_token_msg_id: %s, message id: %s', msgId, data.refresh_token_msg_id)
         // 与商家绑定的令牌消息ID不一致 丢弃消息
-        if ( isEmpty(data.refreshTokenMsgId) || data.refreshTokenMsgId != msgId) {
-          info('reject message id : %s', data.refreshTokenMsgId)
-          ch.reject(msg, false)
+        if ( isEmpty(data.refresh_token_msg_id) || data.refresh_token_msg_id != msgId) {
+          info('reject message id : %s', data.refresh_token_msg_id)
+          // 拒接，并删除消息
+          ackCallback(false, false)
           return bb.resolve(msg)
         }
         // 开始刷新令牌
-        info('start refreshToken ....', data)
+        info('start refresh_token ....', data)
         return authorizerRefreshToken(data)
         // 重新发布 延迟 更新消息 到队列
         .then(function({appId, authorizer_appid, authorizer_refresh_token}) {
-          info('refreshToken done ...')
+          info('refresh_token done ...')
           return delayRefresh(appId, authorizer_appid, authorizer_refresh_token)
         })
         // 成功后确认成功
         .then(function () {
           info('ask confirm ok ...')
-          ch.ack(msg)
+          // 消息处理中
+          ackCallback(true)
         })
       })
     }
-    // 消息处理中
-    ackCallback(true)
   })
 }
-
 // 当应用关闭之前， 断开连接，释放资源
 process.on('exit', (code) => {
   info(`rabbotmq exit: ${code}`)
-  refreshTokenChannel.close()
+  delayChannel.close()
+  qChannel.close()
   connection.disconnect()
 })
 
@@ -204,17 +269,25 @@ export const delayRefresh = function (appId, authorizer_appid, authorizer_refres
   // 过期时间是 7200 ,但是应为系统间各种延迟 所以 需要更宽的过期时间。
   // 6000 秒后， 微信 token 过期时间 7200 秒
   // 1200 秒作为系统所有延迟时间消耗
-  info('delayRefreshToken message publish')
+  info('delay refresh token message publish')
   // 生成消息 id 并且绑定到，对应的 店铺 appId 上面
   var msgId = uuid()
   return wxCache.putRefreshTokenMsgId(appId, msgId).then(function() {
-    var msg = new Buffer(JSON.stringify({refreshTokenMsgId: msgId, appId, authorizer_appid, authorizer_refresh_token}))
-    return refreshTokenChannel.delay(1000 * 6000).publish('', refreshTokenQueue, msg)
+    var msg = new Buffer(JSON.stringify({ refresh_token_msg_id: msgId, appId, authorizer_appid, authorizer_refresh_token }))
+    // 6000 秒后发送
+    return delayChannel.delay(1000 * 6000).publish('', refreshTokenQueue, msg)
   })
 }
 
+export const sendSMSQ = function (authorizer_appid, sms_type) {
+  info('send sms message publish')
+  var msg = new Buffer(JSON.stringify({ authorizer_appid, sms_type }))
+  // 5 秒后发送
+  return delayChannel.delay(1000 * 5).publish('', smsSendQueue, msg)
+}
+
 // 小程序代码提交队列
-export const commit = function (appId, authorizer_appid, authorizer_access_token) {
+export const commit = function (authorizer_appid, authorizer_access_token) {
   
 }
 

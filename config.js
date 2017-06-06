@@ -1,30 +1,55 @@
 
+var git = require('git-rev-sync')
+
 module.exports = {
-  appId: process.env.WX_3RD_APP_ID, // component_appid
-  appSecret: process.env.WX_3RD_APP_SECRET,  // component_appsecret
-  appKey: process.env.WX_3RD_APP_KEY,
-  token: process.env.WX_3RD_APP_TOKEN,
-  encodingAESKey: process.env.WX_3RD_ENCODING_AES_KEY,
+  code : {
+    versionNum: git.tag(),
+    codeId: git.short('.')
+  },
+  loggers : {
+    fundebug : (process.env.LOGGER_FUNDEBUG || '').split(','),
+    console : (process.env.LOGGER_CONSOLE || '').split(','),
+    file : (process.env.LOGGER_FILE || '').split(',')
+  },
+  plInfo : {
+    name : '菜单加',
+    contactPhone : '13575762817'
+  },
+  // 微信开放平台
+  wxOpen : {
+    componentAppid      : process.env.WX_3RD_APP_ID,      // component_appid
+    componentAppSecret  : process.env.WX_3RD_APP_SECRET,  // component_appsecret
+    appKey              : process.env.WX_3RD_APP_KEY,
+    token               : process.env.WX_3RD_APP_TOKEN,
+    encodingAESKey      : process.env.WX_3RD_ENCODING_AES_KEY,
+    checkSignature      : false // 可选，默认为true。由于微信公众平台接口调试工具在明文模式下不发送签名，所以如要使用该测试工具，请将其设置为false
+  },
   // 缓存发布通知地址
-  cachePublishPointers: process.env.CACHE_PUBLISH_POINTERS.split(',') || [],
-  rabbit: {
-    uri: process.env.RABBIT_URI_01
+  cachePublishPointers : (process.env.CACHE_PUBLISH_POINTERS || '').split(',') || [],
+  // 荣联云短信
+  ronglian : {
+    accountSid  : process.env.RONGLIAN_ACCOUNT_SID,
+    authToken   : process.env.RONGLIAN_AUTH_TOKEN,
+    appId       : process.env.RONGLIAN_APP_ID
   },
-  auth: {
-    'username': process.env.AUTH_USERNAME,
-    'password': process.env.AUTH_PASSWORD
+  rabbit : {
+    uri         : process.env.RABBIT_URI_01
   },
-  redis: {
-    port: parseInt(process.env.REDIS_01_PORT, 10),
-    host: process.env.REDIS_01_HOSTNAME,
-    password: process.env.REDIS_01_PASSWORD
+  auth : {
+    username    : process.env.AUTH_USERNAME,
+    password    : process.env.AUTH_PASSWORD
   },
-  leancloud: {
-    appId: process.env.LEANCLOUD_APPID,
-    appKey: process.env.LEANCLOUD_APPKEY
+  redis : {
+    port        : parseInt(process.env.REDIS_01_PORT, 10),
+    host        : process.env.REDIS_01_HOSTNAME,
+    password    : process.env.REDIS_01_PASSWORD
   },
-  server: {
-    port: process.env.PORT || 8081,
-    siteUrl: process.env.SITE_URL
+  leancloud : {
+    appId       : process.env.LEANCLOUD_APPID,
+    appKey      : process.env.LEANCLOUD_APPKEY
+  },
+  server : {
+    port        : process.env.PORT || 8081,
+    siteUrl     : process.env.SITE_URL
   }
 }

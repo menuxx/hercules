@@ -7,7 +7,7 @@
   "author": "yinchangsheng <ychangsheng@gmail.com>",
   "license": "Apache License 2.0",
   "scripts": {
-    "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js"
+    "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app1.js"
   },
   "dependencies": {
     "amqp": "^0.2.6",
@@ -18,11 +18,16 @@
     "debug": "^2.6.8",
     "express": "^4.15.3",
     "express-session": "^1.15.3",
+    "express-validator": "^3.2.0",
     "express-xml-bodyparser": "^0.3.0",
+    "fundebug-nodejs": "^0.0.8",
+    "git-rev-sync": "^1.9.1",
     "hbs": "^4.0.1",
+    "kwargsjs": "^1.0.1",
     "leancloud-realtime": "^3.4.1",
     "leancloud-storage": "^2.4.0",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "mysql": "github:mysqljs/mysql",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
@@ -32,7 +37,10 @@
     "request-promise": "^4.2.1",
     "session-file-store": "^1.0.0",
     "uuid": "^3.0.1",
+    "wechat": "^2.1.0",
+    "wechat-api": "^1.32.1",
     "wechat-crypto": "^0.0.2",
+    "winston": "^2.3.1",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {

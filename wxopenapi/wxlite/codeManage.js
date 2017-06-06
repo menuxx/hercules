@@ -5,8 +5,8 @@
  * 第三方平台可选择将代码添加到代码中，获得代码模版ID后，
  * 可调用以下接口进行代码管理。
  */
-const {post, get} = require('../wxapi')
-const {defaultArgs} = require('./defaultArgs')
+const {post, get, bindTesterErrorMsg} = require('../wxliteApi')
+const {defaultArgs} = require('../defaultArgs')
 
 /**
  * 1、为授权的小程序帐号上传小程序代码
@@ -38,7 +38,18 @@ const {defaultArgs} = require('./defaultArgs')
  * 85013  无效的自定义配置
  * 85014  无效的模版编号
  */
-export const commit = defaultArgs(function({accessToken, templateId, extJson, version, desc}) {
+
+/**
+ * 错误码说明：
+ * 返回码 说明
+ * -1    系统繁忙
+ * 85001 微信号不存在或微信号设置为不可搜索
+ * 85002 小程序绑定的体验者数量达到上限
+ * 85003 微信号绑定的小程序体验者达到上限
+ * 85004 微信号已经绑定
+ */
+
+export const wxCommit = defaultArgs(function(accessToken, templateId, extJson, version, desc) {
   return post(`commit?access_token=${accessToken}`, {
     template_id: templateId,
     ext_json: extJson,
@@ -77,7 +88,7 @@ export const commit = defaultArgs(function({accessToken, templateId, extJson, ve
  *   "errmsg": "system error"
  * }
  */
-export const getQrcode = defaultArgs(function({accessToken}) {
+export const wxGetQrcode = defaultArgs(function(accessToken) {
   return get(`get_qrcode?access_token=${accessToken}`)
 })
 
@@ -120,8 +131,12 @@ export const getQrcode = defaultArgs(function({accessToken}) {
  * -1     系统繁忙
  **/
 
-export const getCategory = defaultArgs(function({accessToken}) {
+export const wxGetCategory = defaultArgs(function(accessToken) {
   return get(`get_category?access_token=${accessToken}`)
+  .catch(function(err) {
+    err.errorMsg = bindTesterErrorMsg(err.errcode)
+    return err
+  })
 })
 
 /**
@@ -154,8 +169,12 @@ export const getCategory = defaultArgs(function({accessToken}) {
 * 86001     不存在第三方的已经提交的代码
 **/
 
-export const getPage = defaultArgs(function({accessToken}) {
+export const wxGetPage = defaultArgs(function(accessToken) {
   return get(`get_page?get_page=${accessToken}`)
+  .catch(function(err) {
+    err.errorMsg = bindTesterErrorMsg(err.errcode)
+    return err
+  })
 })
 
 /**
@@ -209,21 +228,83 @@ export const getPage = defaultArgs(function({accessToken}) {
 * 86001     不存在第三方的已经提交的代码
 **/
 
-export const submitAudit = defaultArgs(function({accessToken}) {
+export const wxSubmitAudit = defaultArgs(function (accessToken) {
   return get(`submit_audit?access_token=${accessToken}`)
+  .catch(function(err) {
+    err.errorMsg = bindTesterErrorMsg(err.errcode)
+    return err
+  })
 })
 
+/**
+ * 发布已通过审核的小程序（仅供第三方代小程序调用）
+ * 请求方式: POST（请使用https协议）
+ * https://api.weixin.qq.com/wxa/release?access_token=TOKEN
+ *
+ * POST数据示例:
+ * { }
+ *
+ * 参数说明：
+ * 请填写空的数据包，POST的json数据包为空即可。
+ *
+ * 返回说明（正常时返回的json示例）：
+ * {
+ *    "errcode":0,
+ *    "errmsg":"ok",
+ * }
+ * 
+ * 错误码说明：
+ * 返回码       说明
+ * -1          系统繁忙
+ * 85019       没有审核版本
+ * 85020       审核状态未满足发布
+ **/
+export const wxRelease = defaultArgs(function (accessToken) {
+  return post(`release?access_token=${accessToken}`, {})
+  .catch(function(err) {
+    err.errorMsg = bindTesterErrorMsg(err.errcode)
+    return err
+  })
+})
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * 9、修改小程序线上代码的可见状态（仅供第三方代小程序调用）
+ * 请求方式: POST（请使用https协议）
+ * https://api.weixin.qq.com/wxa/change_visitstatus?access_token=TOKEN
+ * 
+ * POST数据示例:
+ * {
+ *    "action"="close"
+ * }
+ *
+ * 参数说明:
+ * 参数  说明
+ * access_token  
+ * 请使用第三方平台获取到的该小程序授权的authorizer_access_token
+ * action  设置可访问状态，发布后默认可访问，close为不可见，open为可见
+ *
+ * 返回说明（正常时返回的json示例）：
+ * {
+ *   "errcode":0,
+ *   "errmsg":"ok",
+ * }
+ * 
+ * 错误码说明：
+ * 返回码    说明
+ * -1       系统繁忙
+ * 85021    状态不可变
+ * 85022    action非法
+ */
+export const wxRelease = defaultArgs(function (accessToken, isOpne) {
+  var action = isOpne ? 'open' : 'close'
+  return post(`change_visitstatus?access_token=${accessToken}`, {
+    action
+  })
+  .catch(function(err) {
+    err.errorMsg = bindTesterErrorMsg(err.errcode)
+    return err
+  })
+})
 
 
 

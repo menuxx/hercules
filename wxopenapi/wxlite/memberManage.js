@@ -19,39 +19,14 @@
  *  }
  **/
 
-const {post} = require('../wxapi')
-const {defaultArgs} = require('./defaultArgs')
+const {post, bindTesterErrorMsg} = require('../wxliteApi')
+const {defaultArgs} = require('../defaultArgs')
 
  /**
   * 1、绑定微信用户为小程序体验者
   */
 
-/**
- * 错误码说明：
- * 返回码 说明
- * -1    系统繁忙
- * 85001 微信号不存在或微信号设置为不可搜索
- * 85002 小程序绑定的体验者数量达到上限
- * 85003 微信号绑定的小程序体验者达到上限
- * 85004 微信号已经绑定
- *
- */
-export const errorMap = {
-  '-1': '系统繁忙',
-  '85001': '微信号不存在或微信号设置为不可搜索',
-  '85002': '小程序绑定的体验者数量达到上限',
-  '85003': '微信号绑定的小程序体验者达到上限',
-  '85004': '微信号已经绑定'
-}
-export const bindTesterErrorMsg = function(errorCode) {
-  var errMsg = errorMap[errorCode + ""]
-  if (errMsg) {
-    return errMsg
-  }
-  return '未知的错误'
-}
-
-export const bindTester = defaultArgs(function ({accessToken, wechatid}) {
+export const wxBindTester = defaultArgs(function (accessToken, wechatid) {
   return post(`bind_tester?access_token=${accessToken}`, {
     wechatid
   })
@@ -80,7 +55,7 @@ export const bindTester = defaultArgs(function ({accessToken, wechatid}) {
  * 返回码  说明
  * -1     系统繁忙
  */
-export const unbindTester = defaultArgs(function({accessToken, wechatid}) {
+export const wxUnbindTester = defaultArgs(function(accessToken, wechatid) {
   return post(`unbind_tester?access_token=${accessToken}`, {
     wechatid
   })
