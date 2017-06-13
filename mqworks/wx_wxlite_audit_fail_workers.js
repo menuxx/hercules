@@ -7,6 +7,7 @@
 // 根据小程序原始id 在 leancloud DinerWXLite Class 中查找到对应的 diner 然后在 AuditLog Class 中 生成对应的记录
 // 1. pubuim 通知 authorizer_appid 小程序审核失败，并显示原因。
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');
 const {wxtime} = require('../lib/date');

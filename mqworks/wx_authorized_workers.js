@@ -15,6 +15,7 @@
  // 4. pubuim 通知 授权完成
  // 5. webhook 通知服务器，更改状态
  **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_authorized');
 const {tokenCache, authorizerCache} = require('../components/cache');

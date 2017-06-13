@@ -13,6 +13,7 @@
 // 2. 更新 authorizer 缓存
 // 3. 短信通知 用户 更新授权成功
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {createSimpleWorker, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
 const {tokenCache, authorizerCache} = require('../components/cache');

@@ -6,6 +6,7 @@
  // 然后将其存储到 redis 缓存中，并发送一个 6000 秒后发送的延迟消息，从而实现循环循环刷新
  // 将获取的令牌和刷新令牌存储到redis中，供后续调用
  **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('refresh_access_toke');
 const {isEmpty} = require('lodash');

@@ -8,6 +8,7 @@
 // 1. pubuim 通知 authorizer_appid 小程序已经完成审核，待发布
 // 2. 或根据流水线配置，直接发布该小程序，不通知 pubuim
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {wxtime} = require('../lib/date');
 const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');

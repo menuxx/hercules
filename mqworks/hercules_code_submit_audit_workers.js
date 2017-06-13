@@ -43,6 +43,7 @@
 //      "auditid": 1234567
 // }
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('code_submit_audit');
 const {createSimpleWorker} = require('../components/rabbitmq');

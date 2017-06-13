@@ -9,6 +9,7 @@
 // 然后将其缓存起来，以供其他程序调用
 // 完成后发送 消息到 hercules.update_access_token.success routingKey . 通知 webhook 去更新其他应用
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {errorlog, log} = require('../logger')('update_access_token');
 const {wx3rdApi} = require('../wxopenapi');

@@ -7,6 +7,7 @@
 // version 默认从最新的 leancloud WXLiteCode Class 中提取最新的 version
 // 所以 version 暂时作为扩展字段
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./')
 const {log, errorlog} = require('../logger')('code_commit');
 const wxlite = require('../wxlite')

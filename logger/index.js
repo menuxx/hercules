@@ -14,11 +14,11 @@ Object.keys(loggerConfig).forEach(function (loggerType) {
 
   if ( loggerType === 'fundebug' ) {
     loggers.forEach(function (loggerLevel, i) {
-      transports.push(new (FunDebugTransport)(Object.assign({ level: loggerLevel, name: loggerLevel + '_' + i, }, fundebugConfig)))
+      transports.push(new (FunDebugTransport)(Object.assign({ level: loggerLevel, name: loggerType + '_' + loggerLevel + '_' + i, }, fundebugConfig)))
     })
   } else if ( loggerType === 'console' ) {
     loggers.forEach(function (loggerLevel, i) {
-      transports.push(new (winston.transports.Console)({ colorize: true, level: loggerLevel, name: loggerLevel + '_' + i, }))
+      transports.push(new (winston.transports.Console)({ colorize: true, level: loggerLevel, name: loggerType + '_' + loggerLevel + '_' + i, }))
     })
   } else if ( loggerType === 'file' ) {
     loggers.forEach(function (loggerLevel, i) {

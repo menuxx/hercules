@@ -6,6 +6,7 @@
 // pubuim 通知发布完成
 // 更新 leancloud DinerWXLite
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./')
 const {log, errorlog} = require('../logger')('code_release');
 const wxlite = require('../wxlite')

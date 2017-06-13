@@ -13,6 +13,7 @@
 // 5. webhook 通知服务器，更改状态
 // 6. 向 leancloud 穿件取消授权日志
 **/
+require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_unauthorize');
 const {authorizerCache} = require('../components/cache');
