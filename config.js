@@ -1,4 +1,3 @@
-var git = require('git-rev-sync')
 var {isEmpty} = require('lodash')
 
 var filterEmpty = function (arr) {
@@ -15,8 +14,8 @@ var wechatArgumentConvert = function (config) {
 
 module.exports = {
 	code: {
-		versionNum: git.tag(),
-		codeId: git.short('.')
+		versionNum: '0.0.1',
+		codeId: '86a833f'
 	},
 	loggers: {
 		fundebug: filterEmpty((process.env.LOGGER_FUNDEBUG || '').split(',')),
