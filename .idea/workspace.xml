@@ -2,20 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logger/index.js" afterPath="$PROJECT_DIR$/logger/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_code_release_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_code_release_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_update_access_token_success_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_update_access_token_success_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_update_access_token_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_update_access_token_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_updateauthorize_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_updateauthorize_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_wxlite_audit_fail_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_wxlite_audit_fail_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_wxlite_audit_success_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_wxlite_audit_success_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/process.yml" afterPath="$PROJECT_DIR$/process.yml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.js" afterPath="$PROJECT_DIR$/app.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -30,16 +17,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="hercules_code_submit_audit_workers.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="514">
-              <caret line="45" column="26" lean-forward="true" selection-start-line="45" selection-start-column="26" selection-end-line="45" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="hercules_code_release_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_release_workers.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -120,11 +97,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wx_wxlite_audit_success_workers.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="wx_wxlite_audit_success_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/wx_wxlite_audit_success_workers.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
               <caret line="10" column="26" lean-forward="true" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="26" lean-forward="true" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -224,7 +211,6 @@
         <option value="$PROJECT_DIR$/components/session.js" />
         <option value="$PROJECT_DIR$/handler/pageshandler.js" />
         <option value="$PROJECT_DIR$/Dockerfile" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/logger/index.js" />
         <option value="$PROJECT_DIR$/process.yml" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js" />
@@ -238,6 +224,7 @@
         <option value="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" />
         <option value="$PROJECT_DIR$/mqworks/wx_wxlite_audit_fail_workers.js" />
         <option value="$PROJECT_DIR$/mqworks/wx_wxlite_audit_success_workers.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -659,12 +646,12 @@
       <workItem from="1497023802739" duration="58858000" />
       <workItem from="1497176606002" duration="15313000" />
       <workItem from="1497234942219" duration="31390000" />
-      <workItem from="1497281805904" duration="18878000" />
+      <workItem from="1497281805904" duration="18922000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124439000" />
+    <option name="totallyTimeSpent" value="124483000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1276" height="777" extended-state="6" />
@@ -1012,14 +999,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1136,6 +1115,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="26" lean-forward="true" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="26" lean-forward="true" selection-start-line="0" selection-start-column="26" selection-end-line="0" selection-end-column="26" />
           <folding />
         </state>
       </provider>
