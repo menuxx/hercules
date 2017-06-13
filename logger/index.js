@@ -24,7 +24,7 @@ Object.keys(loggerConfig).forEach(function (loggerType) {
     loggers.forEach(function (loggerLevel, i) {
       transports.push(new (winston.transports.File)({
         name: loggerLevel + '_' + i,
-        filename: path.resolve('../tmp/log/menuxx.log'),
+        filename: path.resolve('./tmp/log/menuxx.log'),
         level: loggerLevel,
         handleExceptions : true,
         humanReadableUnhandledException : true
