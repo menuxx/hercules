@@ -205,7 +205,7 @@ const handleUpdateAuthorized = function ({AppId, AuthorizerAppid, AuthorizationC
 const handleAuthorize = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
 	// 消息延迟一秒发送到目标消费者
 	// 已提供足够的时间来修改通知业务服务器，来关联 appkey 和 appid
-	appDelayPublish(1500, ROUTING_KEYS.WX_Authorized, {
+	appDelayPublish(2000, ROUTING_KEYS.WX_Authorized, {
 		appId: AppId,
 		authorizerAppid: AuthorizerAppid,
 		authorizationCode: AuthorizationCode
