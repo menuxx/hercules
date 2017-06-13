@@ -9,11 +9,15 @@ const FileStore = require('session-file-store')(session)
 const credis = require('./redis')({dbIndex: 3})
 const {isProd} = require('../env')
 
-var store = new FileStore({
-  path: path.resolve(path.join(__dirname, '../tmp/sessions'))
-})
+var store;
 
 if (!isProd()) {
+	store = new FileStore({
+		path: path.resolve(path.join(__dirname, '../tmp/sessions'))
+	})
+}
+
+if (isProd()) {
   store = new RedisStore({ client: credis })
 }
 
