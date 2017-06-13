@@ -31,7 +31,7 @@ apps:
     name: hercules_UpdateAccessTokenSuccess
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 30M
+    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -44,7 +44,7 @@ apps:
     exec_mode: cluster
     instances: 0
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 100M
+    max_memory_restart: 200M
     env:
       NODE_ENV: production
     env_production:
@@ -57,7 +57,7 @@ apps:
     exec_mode: cluster
     instances: 0
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
+    max_memory_restart: 200M
     env:
       NODE_ENV: production
     env_production:
@@ -106,7 +106,7 @@ apps:
     name: weixin_UpdateAuthorize
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 20M
+    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -119,7 +119,7 @@ apps:
     exec_mode: cluster
     instances: 4
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 100M
+    max_memory_restart: 200M
     env:
       NODE_ENV: production
     env_production:

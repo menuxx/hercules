@@ -1,5 +1,5 @@
-menuxx_3rd:
-  image: daocloud.io/nizhuantech/menuxx_3rd:prod-e836e3f
+hercules:
+  image: daocloud.io/nizhuantech/menuxx_3rd:prod-b4644fa
   privileged: false
   restart: always
   ports:
@@ -7,12 +7,16 @@ menuxx_3rd:
   volumes:
   - /data/hercules:/usr/src/app/tmp
   environment:
+  - DEBUG_COLORS=4
   - LOGGER_FUNDEBUG=error
+  - URL_GET_AUTHORIZE=http://api.menuxx.com/authorizers
   - RONGLIAN_ACCOUNT_SID=8a216da857511049015774861894153f
   - WX_3RD_APP_SECRET=99454ebe9eb76b704d9dfd8c34cc310b
   - SITE_URL=http://wx3rd.menuxx.com
+  - DEBUG=*,-babel,-express:router*,-express:application*
   - REDIS_01_PASSWORD=4cj34t4j9
   - LEANCLOUD_APPKEY=HqvqMuGWLEKQjc02Dwzmz142
+  - MENUXX_BASE_URL=http://api.menuxx.com
   - AUTH_PASSWORD=28181820
   - PORT=8080
   - REDIS_01_HOSTNAME=10.23.236.159
@@ -22,7 +26,7 @@ menuxx_3rd:
   - LOGGER_FILE=error
   - LEANCLOUD_APPID=98Yqw7EVpTpxvIP5wS4NK6j9-gzGzoHsz
   - CACHE_PUBLISH_POINTERS=http://api.menuxx.com/wx/component_cache,http://dev.api.menuxx.com/wx/component_cache
-  - DEBUG=*,-babel
+  - URL_PUT_AUTHORIZE=http://api.menuxx.com/authorizers
   - WX_3RD_APP_TOKEN=dg156c5719d3202f32a6619e14D0ccqd
   - AUTH_USERNAME=menuxx3rd
   - RONGLIAN_APP_ID=8aaf07085aabcbbd015ad084f0fd0bef
