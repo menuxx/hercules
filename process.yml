@@ -7,7 +7,6 @@ apps:
     cwd : /usr/src/app/
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 600M
     env:
       NODE_ENV: production
     env_production:
@@ -19,7 +18,6 @@ apps:
     name: hercules_UpdateAccessToken
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -31,7 +29,6 @@ apps:
     name: hercules_UpdateAccessTokenSuccess
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -43,7 +40,6 @@ apps:
     name: hercules_CodeCommit
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -55,7 +51,6 @@ apps:
     name: hercules_WxliteCodeSubmitAudit
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -67,7 +62,6 @@ apps:
     name: hercules_WxliteCodeRelease
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -79,7 +73,6 @@ apps:
     name: weixin_Authorizerd
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -91,7 +84,6 @@ apps:
     name: weixin_UnAuthorize
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -103,7 +95,6 @@ apps:
     name: weixin_UpdateAuthorize
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
@@ -115,7 +106,6 @@ apps:
     name: hercules_RefreshAuthorizerAccessToken
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
     env:
       NODE_ENV: production
     env_production:
