@@ -2,8 +2,11 @@
 // http://handlebarsjs.com/builtin_helpers.html
 const hbs = require('hbs')
 const path = require('path')
-
+var helpers = require('handlebars-helpers')({
+	handlebars: hbs
+});
 module.exports = function (app) {
+  hbs.registerHelper(helpers)
   hbs.registerPartials(path.resolve('views/partials'))
   app.engine('hbs', hbs.__express)
   app.set('views', path.resolve('views'))

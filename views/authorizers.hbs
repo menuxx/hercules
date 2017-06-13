@@ -1,0 +1,160 @@
+{{> header }}
+<div class="container">
+    <div class="row">
+        <div class="col-md-1">
+        </div>
+        <div class="col-md-8">
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                {{#each authorizers}}
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                   href="#collapseOne_{{@index}}" aria-expanded="false"
+                                   aria-controls="collapseOne_{{@index}}">
+                                    {{shopName}} - {{masterName}} -
+                                    {{#if authorizerStatus}}
+                                        <span class="label label-success">已授权</span>
+                                    {{else}}
+                                        <span class="label label-danger">未授权</span>
+                                    {{/if}}
+                                </a>
+                            </h4>
+                            <hr>
+                            {{#if authorizerStatus}}
+                            <a class="btn btn-link" href="{{siteUrl}}/authorizers/{{appKey}}">> 详情</a>
+                            {{/if}}
+                            <a href="{{authorizeUrl}}" class="btn btn-link">授权链接</a>
+                        </div>
+                        <div id="collapseOne_{{@index}}" class="panel-collapse collapse in" role="tabpanel"
+                             aria-labelledby="headingOne">
+                            <div class="panel-body">
+                                <form class="form-horizontal diner-form" data-appid="{{authorizerAppid}}">
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-2 control-label">AppKey</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled value="{{appKey}}">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="help-block">在本平台内部唯一标识</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-group-sm">
+                                        <label class="col-sm-2 control-label">AppId</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" disabled
+                                                   value="{{authorizerAppid}}">
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="help-block">小程序appId</div>
+                                        </div>
+                                    </div>
+
+                                    {{#if authorizerStatus}}
+                                        <div class="form-group form-group-sm">
+                                            <label class="col-sm-2 control-label">TemplateId</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" disabled value="{{wxliteTemplateId}}">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="help-block">小程序模板编号</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-sm">
+                                            <label class="col-sm-2 control-label">Version</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" disabled value="{{wxliteVersion}}">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="help-block">当前已经发布过的小程序版本</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-sm">
+                                            <label class="col-sm-2 control-label">Preview</label>
+                                            <div class="col-sm-6">
+                                                <a class="code-preview btn btn-block btn-primary">生成预览</a>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="help-block">提交一个预览版本, 同时会打开一个二维码</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group form-group-sm">
+                                            <label class="col-sm-2 control-label">SubmitAudit</label>
+                                            <div class="col-sm-6">
+                                                <a class="btn btn-block btn-primary">提交审核</a>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="help-block">为该用户单独提交审核一个版本的小程序</div>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-md-1">
+        </div>
+    </div>
+</div>
+<div id="qrDialog" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">扫描二维码体验小程序</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info" role="alert">
+                    <div class="diner-testers"></div>
+                    <div class="code-info"></div>
+                </div>
+                <img style="width: 100%;" src="{{siteUrl}}/api/wxlite_qrcode/wx833943b167b4012a">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var api = {};
+    ['put', 'post'].forEach(function (method) {
+        api[method] = function (api, data) {
+            return fetch(api, {
+                method: method.toUpperCase(),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (res) {
+            	if (res.ok) {
+                    return res.json();
+                } else {
+            		return Promise.reject();
+                }
+            }, function (err) {
+                console.error(err.stack);
+                alert('发生错误:' + err.message);
+            })
+        }
+    });
+    $(".code-preview").on('click', function () {
+    	var appid = $(this).parents('form.diner-form').data('appid');
+        api.put(`/api/code_commit/${appid}?type=preview`).then(function (res) {
+            $("#qrDialog").find('.diner-testers').html('微信ID: ' + res.testers.join(', ') + '可以体验该小程序');
+            $("#qrDialog").find('.code-info').html('version: ' + res.version + ', templateId: ' + res.templateId);
+            $("#qrDialog").modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            })
+        })
+    });
+</script>
+{{> footer }}

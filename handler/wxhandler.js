@@ -1,207 +1,326 @@
-const {isEmpty} = require('lodash')
-const {Router} = require('express')
-const {xmlbodyparser} = require('../components/xml')
-const wxerror = require('debug')('wxerror:error')
-const log = require('debug')('wxlog')
-// const {WXMsgRoute, WXNotifyHandler} = require('../wxnotify')
-const {wxGetComponentToken, wxGetPreAuthCode} = require('../wxapi/componentApi')
-const {componentCacheSave} = require('../components/cache')
+const {log, errorlog} = require('../logger')('wxhandler');
+// doc : https://github.com/node-webot/wechat
+const wechat = require('wechat');
+const wxconfig = require('../config').wxOpen;
 // 平台配置
-const {cachePublishPointers} = require('../config')
-const {tokenCache, wxCache} = require('../components/cache')
-const rp = require('request-promise')
+const {componentCacheGet} = require('../components/cache');
+const {Router} = require('express');
+const {appPublish, appDelayPublish} = require('../components/rabbitmq');
+const {wxApi, wx3rdApi} = require('../wxopenapi');
+const {InfoTypes} = wx3rdApi;
+const {ROUTING_KEYS} = require('../mqworks');
+const fundebug = require('../fundebug');
+const {isEmpty, has} = require('lodash');
 
-const {saveEventLog} = require('../leancloud')
+const route = Router();
 
-// 配置暂时放在这里，待稍后调整
-const {appId, appSecret, appKey, token, encodingAESKey} = require('../config')
-const {xmlparser} = require('../components/xml')
-const WXBizMsgCrypt = require('wechat-crypto')
-const wxCrypt = new WXBizMsgCrypt(token, encodingAESKey, appKey)
+// 验证 消息 api
+// doc1 : https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318611&lang=zh_CN
+// doc2 : http://www.07net01.com/2017/01/1770019.html
+// 第三方信息 Api 验证
+/**
+ * url :  /wx/3rd/wxd101a85aa106f53e/callback?
+ *      signature=80f328952ca60312cc6eefe43e3913c3dfe92c60&
+ *      timestamp=1496461028&nonce=1556906150&
+ *      openid=oV6P70DM0-NBLoiQKb2JISwLhR80&encrypt_type=aes&
+ *      msg_signature=79189b427da6755dd2240cca76304a57b9eb4880
+ *
+ * msg :
+ * {
+ *    ToUserName: 'gh_8dad206e9538',
+ *    FromUserName: 'oV6P70DM0-NBLoiQKb2JISwLhR80',
+ *    CreateTime: '1496461028',
+ *    MsgType: 'text',
+ *    Content: 'QUERY_AUTH_CODE:queryauthcode@@@x4BhekqBmEo3mSUXr6eu3g4xnKLlG4zK6QXJRJTP_F5Kk5Olu2PxjswYSdRuAi2Ydj4cpMHExaBVJeyrMMa8IQ',
+ *    MsgId: '6427251175451672521'
+ * }
+ *
+ * 自动化测试的专用测试小程序的信息如下：
+ *（1）appid：wxd101a85aa106f53e
+ *（2）Username： gh_8dad206e9538
+ */
 
-const route = Router()
+const WX_TEST_LITE_VERIFY_APPID = 'wxd101a85aa106f53e'; // 微信小程序测试 AppId
+const WX_TEST_LITE_USERNAME = 'gh_8dad206e9538'; // 微信小程序测试 UserName
 
-route.use(xmlbodyparser)
+// 验证消息Api
+// msg.ToUserName == WX_TEST_LITE_USERNAME
+const verifyMsgApi = function (msg, resp) {
+	log('verify-msg-api', '- start -');
+	let {Content} = msg;
+	resp.send('');
+	let queryAuthCode = Content.replace('QUERY_AUTH_CODE:', '');
+	return componentCacheGet()
+		.then(function ({component_access_token}) {
+			return wx3rdApi.wxQueryAuth({accessToken: component_access_token, authCode: queryAuthCode})
+		})
+		.then(function ({authorization_info}) {
+			let {authorizer_access_token} = authorization_info;
+			let sendContent = (queryAuthCode + '_from_api');
+			return wxApi.wxSendText(authorizer_access_token, msg.FromUserName, sendContent)
+		})
+};
 
-var routes = []
+/**
+ * doc : https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1453779503&token=&lang=zh_CN
+ *
+ * url : /wx/3rd/notify?signature=0d565e505c560a4c1e5b814674182f68cfefbeb6
+ *      &timestamp=1496461020&nonce=805459633&encrypt_type=aes
+ *      &msg_signature=8e5a1cc3e9152f0f00fd0a50e568f3197474a1a2
+ * msg :
+ *  {
+ *    AppId: 'wxb3d033d520d15fe7',
+ *    CreateTime: '1496461020',
+ *    InfoType: 'authorized',
+ *    AuthorizerAppid: 'wxd101a85aa106f53e',
+ *    AuthorizationCode: 'queryauthcode@@@x4BhekqBmEo3mSUXr6eu3g4xnKLlG4zK6QXJRJTP_F5Kk5Olu2PxjswYSdRuAi2Ydj4cpMHExaBVJeyrMMa8IQ',
+ *    AuthorizationCodeExpiredTime: '1496464620'
+ *  }
+ * 字段说明：
+ * 字段名称                         字段描述
+ * AppId                          第三方平台appid
+ * CreateTime                     时间戳
+ * InfoType                       authorized是授权成功通知
+ * AuthorizerAppid                公众号或小程序
+ * AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
+ * AuthorizationCodeExpiredTime   授权码过期时间
+ *
+ * 授权成功通知
+ * <xml>
+ *   <AppId>第三方平台appid</AppId>
+ *   <CreateTime>1413192760</CreateTime>
+ *   <InfoType>authorized</InfoType>
+ *   <AuthorizerAppid>公众号appid</AuthorizerAppid>
+ *   <AuthorizationCode>授权码（code）</AuthorizationCode>
+ *   <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
+ * </xml>
+ **/
+
+/**
+ * 字段说明：
+ * 字段名称                         字段描述
+ * AppId                          第三方平台appid
+ * CreateTime                     时间戳
+ * InfoType                       updateauthorized是更新授权
+ * AuthorizerAppid                公众号或小程序
+ * AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
+ * AuthorizationCodeExpiredTime   授权码过期时间
+ *
+ * 授权更新通知
+ * <xml>
+ *  <AppId>第三方平台appid</AppId>
+ *  <CreateTime>1413192760</CreateTime>
+ *  <InfoType>updateauthorized</InfoType>
+ *  <AuthorizerAppid>公众号appid</AuthorizerAppid>
+ *  <AuthorizationCode>授权码（code）</AuthorizationCode>
+ *  <AuthorizationCodeExpiredTime>过期时间</AuthorizationCodeExpiredTime>
+ * </xml>
+ **/
 
 /**
  *
- * 审核通过时，接收到的推送XML数据包示例如下：
+ * url :  /wx/3rd/notify?signature=3e3913451936b865c9409e307fd5fa8d834108e6&timestamp=1496461034&nonce=2120938598&encrypt_type=aes&msg_signature=71d49f8eb081fd260406b7d7017c49f71dc9ee95
+ * msg :  { AppId: 'wxb3d033d520d15fe7',
+ * CreateTime: '1496461034',
+ * InfoType: 'unauthorized',
+ * AuthorizerAppid: 'wxd101a85aa106f53e' }
+ *
+ * 字段说明：
+ * 字段名称                         字段描述
+ * AppId                          第三方平台appid
+ * CreateTime                     时间戳
+ * InfoType                       unauthorized是取消授权
+ * AuthorizerAppid                公众号或小程序
+ * AuthorizationCode              授权码，可用于换取公众号的接口调用凭据，详细见上面的说明
+ * AuthorizationCodeExpiredTime   授权码过期时间
+ * 取消授权通知
  * <xml>
- *  <ToUserName><![CDATA[gh_fb9688c2a4b2]]></ToUserName>
- *  <FromUserName><![CDATA[od1P50M-fNQI5Gcq-trm4a7apsU8]]></FromUserName>
- *  <CreateTime>1488856741</CreateTime>
- *  <MsgType><![CDATA[event]]></MsgType>
- *  <Event><![CDATA[weapp_audit_success]]></Event>
- *  <SuccTime>1488856741</SuccTime>
+ *  <AppId>第三方平台appid</AppId>
+ *  <CreateTime>1413192760</CreateTime>
+ *  <InfoType>unauthorized</InfoType>
+ *  <AuthorizerAppid>公众号appid</AuthorizerAppid>
  * </xml>
- * 
- * 参数说明：
- * 参数             说明
- * ToUserName     小程序的原始ID
- * FromUserName   发送方帐号（一个OpenID，此时发送方是系统帐号）
- * CreateTime     消息创建时间 （整型），时间戳
- * MsgType        消息类型，event
- * Event          事件类型 weapp_audit_success
- * SuccTime        审核成功时的时间（整形），时间戳
- **/
-// routes.push(WXMsgRoute(
-//   'MsgType=event&Event=weapp_audit_success', 
-//   function (msg, req, resp) {
-
-//   }
-// ))
+ */
 
 /**
-* 审核不通过时，接收到的推送XML数据包示例如下：
-* <xml>
-*  <ToUserName><![CDATA[gh_fb9688c2a4b2]]></ToUserName>
-*  <FromUserName><![CDATA[od1P50M-fNQI5Gcq-trm4a7apsU8]]></FromUserName>
-*  <CreateTime>1488856591</CreateTime>
-*  <MsgType><![CDATA[event]]></MsgType>
-*  <Event><![CDATA[weapp_audit_fail]]></Event>
-*  <Reason><![CDATA[1:账号信息不符合规范:<br>
-*  (1):包含色情因素<br>
-*    2:服务类目"金融业-保险_"与你提交代码审核时设置的功能页面内容不一致:<br>
-*  (1):功能页面设置的部分标签不属于所选的服务类目范围。<br>
-*  (2):功能页面设置的部分标签与该页面内容不相关。<br>
-*  </Reason>
-*  <FailTime>1488856591</FailTime>
-* </xml>
-*/
-// routes.push(WXMsgRoute(
-//   'MsgType=event&Event=weapp_audit_fail', 
-//   function (msg, req, resp) {
-
-//   }
-// ))
-
-// routes.push(WXMsgRoute(
-//   'InfoType=component_verify_ticket', 
-//   function (msg, req, resp) {
-
-//   }
-// ))
-
-
-// routes.push(WXMsgRoute('InfoType=unauthorized'), 
-//   function (msg, req, resp) {
-
-// })
-
-/**
-
+ * url :  /wx/3rd/notify?signature=a5bd2c7f5ef89b5b18a703964157a96474a040ca&timestamp=1496461523&nonce=260040557&encrypt_type=aes&msg_signature=cab074cd1ed07bfecc9012b4912eb4249d9f958d
+ * msg :
+ *  { 
+ *    AppId: 'wxb3d033d520d15fe7',
+ *    CreateTime: '1496461523',
+ *    InfoType: 'component_verify_ticket',
+ *    ComponentVerifyTicket: 'ticket@@@aglquGhXj06i8hOe_sTqW2enDJoI8pxH7xL-FcDOTbbjKLePiWEwr9kehVf5Oz6JDIlhk_BLsTuNw6Je-ifuVg'
+ *  }
+ *
+ * 处理微信第三方验证票据
+ * 推送component_verify_ticket协议
+ * 在第三方平台创建审核通过后，微信服务器会向其
+ * “授权事件接收URL”每隔10分钟定时推送component_verify_ticket。
+ * 第三方平台方在收到ticket推送后也需进行解密（详细请见【消息加解密接入指引】），接收到后必须直接返回字符串success。
+ * POST数据示例
+ * <xml>
+ *   <AppId></AppId>
+ *   <CreateTime>1413192605</CreateTime>
+ *   <InfoType>component_verify_ticket</InfoType>
+ *   <ComponentVerifyTicket></ComponentVerifyTicket>
+ * </xml>
+ *
+ * 字段说明
+ * 字段名称                字段描述
+ * AppId                 第三方平台appid
+ * CreateTime            时间戳
+ * InfoType              component_verify_ticket
+ * ComponentVerifyTicket Ticket内容
  **/
-// routes.push(WXMsgRoute('InfoType=authorized'), 
-//   function (msg, req, resp) {
 
-// })
+// 处理微信第三方验证票据
+const handleComponentAccessToken = function ({ComponentVerifyTicket, AppId}, resp) {
+	appPublish(ROUTING_KEYS.Hercules_UpdateAccessToken, {
+		verifyTicket: ComponentVerifyTicket,
+		appId: AppId
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleComponentAccessToken error: %o', err);
+		resp.send('FAIL');
+	});
+};
 
-/**
-
- **/
-// routes.push(WXMsgRoute('InfoType=updateauthorized',
-//   function (msg, req, resp) {
-
-//   }
-// ))
-
-
-// 挂在到 route /3rd/notify 上
-// .handler('/3rd/notify', route)
-
-// route.post('/3rd/notify', WXNotifyHandler({ routes }))
-
-// 微信第三方开放平台
-route.post('/3rd/notify', function(req, resp) {
-  var {signature, timestamp, nonce, encrypt_type, msg_signature} = req.query
-  if (isEmpty(signature) || isEmpty(timestamp) || isEmpty(nonce) || isEmpty(encrypt_type) || isEmpty(msg_signature)) {
-    wxerror('参数错误')
-    return resp.status(401).send('FAIL:PARAMTERS_INVALID') 
-  }
-  var {encrypt} = req.body.xml
-  var xmlMsg = wxCrypt.decrypt(encrypt).message
-  var msgSignature = wxCrypt.getSignature(timestamp, nonce, encrypt)
-  if (msg_signature !== msgSignature) {
-    wxerror('签名错误')
-    return resp.status(401).send('FAIL:SIGNATURE_INVALID')
-  }
-  //  { xml: 
-  //    { AppId: 'wxb3d033d520d15fe7',
-  //      CreateTime: '1496396219',
-  //      InfoType: 'unauthorized',
-  //      AuthorizerAppid: 'wxd101a85aa106f53e' 
-  //    }
-  //  }
-  xmlparser.parseString(xmlMsg, function (err, result) {
-    if (err) {
-      wxerror('parse xml %s fail', xmlMsg, err)
-      return resp.status(401).send('FAIL:XML_PARSE_FAIL')
-    }
-    console.log('--------------', result)
-    var {ComponentVerifyTicket, MsgType} = result.xml
-    if (MsgType === 'event') {
-       saveEventLog(result.xml)
-       return resp.send('SUCCESS')
-    }
-    else if (MsgType === 'text') {
-      // https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318611&lang=zh_CN
-      // http://www.07net01.com/2017/01/1770019.html
-      // 自动化测试的专用测试小程序的信息如下：
-      //（1）appid：wxd101a85aa106f53e
-      //（2）Username： gh_8dad206e9538
-      var content = result.xml.Content
-      var formOpenId = result.xml.FromUserName
-      // wxCache.getAuthorizerInfo()
-      // rp({
-      //   method: 'PUT',
-      //   uri: `https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=${}`
-      // })
-    }
-    log('component_verify_ticket: ', ComponentVerifyTicket)
-    // 解析完成之后就算成功
-    resp.send('SUCCESS')
-    // 先返回成功，剩下的工作继续处理 // 异步处理，相当一小型的队列
-    wxGetComponentToken(appId, appSecret, ComponentVerifyTicket).then(function({component_access_token}) {
-      log('component_access_token: ', component_access_token)
-      return wxGetPreAuthCode(appId, component_access_token).then(function({pre_auth_code}) {
-        return {
-          pre_auth_code, component_access_token
-        }
-      })
-    })
-    .then(function({component_access_token, pre_auth_code}) {
-        log('pre_auth_code: ', pre_auth_code)
-        var tokens = {
-          component_verify_ticket: ComponentVerifyTicket, 
-          pre_auth_code, 
-          component_access_token
-        }
-        return componentCacheSave(tokens).then(function() {
-          return tokens
-        })
-    })
-    .then(function(cache) {
-      log('put cache to publish pointers %o', cache)
-      // 将缓存更新通知到所有注册的服务器
-      cachePublishPointers.forEach(function(url) {
-        rp({
-          method: 'PUT',
-          uri: url,
-          body: cache,
-          json: true
-        }).catch(function(err){
-          console.log(url, err.message)
-        })
-      })
-    })
-  })
-})
-
-route.all('/3rd/:appid/callback', function(req, resp) {
-  resp.send('FAIL')
-})
+// 处理授权更新
+const handleUpdateAuthorized = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
+	appPublish(ROUTING_KEYS.WX_UpdateAuthorize, {
+		appId: AppId,
+		authorizerAppid: AuthorizerAppid,
+		authorizationCode: AuthorizationCode
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleUpdateAuthorized error: %o', err);
+		resp.send('FAIL');
+	});
+};
 
 
-module.exports = route
+// 处理授权更新
+const handleAuthorize = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
+	// 消息延迟一秒发送到目标消费者
+	// 已提供足够的时间来修改通知业务服务器，来关联 appkey 和 appid
+	appDelayPublish(1500, ROUTING_KEYS.WX_Authorized, {
+		appId: AppId,
+		authorizerAppid: AuthorizerAppid,
+		authorizationCode: AuthorizationCode
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleAuthorize error: %o', err);
+		resp.send('FAIL');
+	});
+};
+
+const handleUnAuthorize = function ({AppId, AuthorizerAppid, CreateTime}, resp) {
+	appPublish(ROUTING_KEYS.WX_UnAuthorize, {
+		appId: AppId,
+		authorizerAppid: AuthorizerAppid,
+		createTime: CreateTime
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleAuthorize error: %o', err);
+		resp.send('FAIL');
+	});
+};
+
+// 授权事件接收URL
+route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
+	let msg = req.weixin;
+	if ( !has(msg, 'InfoType') || isEmpty(msg.InfoType) ) {
+		fundebug.notify('wx notify unknow url: ' + req.url + 'body: ' + JSON.stringify(msg));
+		return resp.status(401).send('FAIL');
+	}
+	log('weixin notify InfoType : %s', msg.InfoType);
+	switch (msg.InfoType) {
+		// 取消授权
+		case InfoTypes.UNAUTHORIZED:
+			handleUnAuthorize(msg, resp);
+			break;
+		// 授权成功
+		case InfoTypes.AUTHORIZED:
+			handleAuthorize(msg, resp);
+			break;
+		// 授权更新
+		case InfoTypes.UPDATEAUTHORIZED:
+			handleUpdateAuthorized(msg, resp);
+			break;
+		// 验证票据
+		case InfoTypes.COMPONENT_VERIFY_TICKET:
+			handleComponentAccessToken(msg, resp);
+			break;
+		default:
+			fundebug.notify('wx notify unknow InfoType url: ' + req.url + 'body: ' + JSON.stringify(msg));
+			resp.send('SUCCESS');
+	}
+	resp.send('SUCCESS');
+}));
+
+
+const handleWeappAuditSuccess = function ({ToUserName, CreateTime, SuccTime}, resp) {
+	appPublish(ROUTING_KEYS.WX_WxliteAuditSuccess, {
+		originAppId: ToUserName,
+		createTime: CreateTime,
+		succTime: SuccTime
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleWeappAuditSuccess error: %o', err);
+		resp.send('FAIL');
+	})
+}
+
+const handleWeappAuditFail = function ({ToUserName, Reason, CreateTime, FailTime}, resp) {
+	appPublish(ROUTING_KEYS.WX_WxliteAuditFail, {
+		originAppId: ToUserName,
+		createTime: CreateTime,
+		failTime: FailTime,
+		reason: Reason
+	}).then(function () {
+		resp.send('SUCCESS');
+	}, function (err) {
+		errorlog('handleWeappAuditFail error: %o', err);
+		resp.send('FAIL');
+	})
+}
+
+// 公众号消息与事件接收URL
+route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
+	let {appid} = req.params;
+	let msg = req.weixin;
+	if ( !has(msg, 'MsgType') || isEmpty(msg.MsgType) ) {
+		fundebug.notify('wx 3rd callback unknow url: ' + req.url + 'body: ' + JSON.stringify(msg));
+		return resp.send('FAIL');
+	}
+	if (msg.ToUserName === WX_TEST_LITE_USERNAME) {
+		log('verify callback');
+		return verifyMsgApi(msg, resp)
+			.then(function (res) {
+				log('verify-msg-api - ok- ')
+			}, function (err) {
+				errorlog('verify-msg-api - fail -', err)
+			})
+	}
+	if (msg.MsgType === 'event') {
+		switch (msg.Event) {
+			case 'weapp_audit_success':
+				handleWeappAuditSuccess(msg, resp);
+				break;
+			case 'weapp_audit_fail':
+				handleWeappAuditFail(msg, resp);
+				break;
+			default:
+				fundebug.notify('wx 3rd callback unknow MsgType url: ' + req.url + 'body: ' + JSON.stringify(msg));
+		}
+	}
+	resp.reply('客服消息正在开发中，敬请期待...');
+}));
+
+
+module.exports = route;

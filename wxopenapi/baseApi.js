@@ -1,15 +1,13 @@
 // https://github.com/request/request-promise
 const rp = require('request-promise')
-const debug = require('debug')
 
 module.exports = function (moduleName, baseApi) {
 
-  const apierror = debug(moduleName + ":error")
-  const log = debug(moduleName)
-
+  const {log, errorlog} = require('../logger')(moduleName)
+  
   const get = function(apiUrl) {
     var fullUrl = baseApi + apiUrl
-    log('weixin [%s] request url: %s, body: %o', moduleName, fullUrl, body)
+    log('weixin [%s] request url: %s, body: %o', moduleName, fullUrl)
     return rp({
       method: 'GET',
       uri: fullUrl,
@@ -20,7 +18,7 @@ module.exports = function (moduleName, baseApi) {
       return res
     })
     .catch(function(err) {
-      apierror('wxapi [%s] error', moduleName, fullUrl, err)
+      errorlog('wxapi [%s] error', moduleName, fullUrl, err)
     })
   }
 
@@ -38,7 +36,7 @@ module.exports = function (moduleName, baseApi) {
       return res
     })
     .catch(function(err) {
-      apierror('wxapi [%s] error', moduleName, fullUrl, err)
+      errorlog('wxapi [%s] error', moduleName, fullUrl, err)
     })
   }
   return { post, get }

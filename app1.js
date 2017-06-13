@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const wechat = require('wechat')
+const bodyParser = require('body-parser')
 const wxconfig = require('./config').weixin
 
 /**
@@ -31,18 +32,35 @@ msg :  { AppId: 'wxb3d033d520d15fe7',
 
  */
 
-app.use(express.query())
+// app.use(express.query())
 
-app.post('/wx/3rd/notify', wechat(wxconfig, function (req, resp, next) {
-  console.log('url : ', req.url)
-  console.log('msg : ', req.weixin)
-  resp.send('SUCCESS')
-}))
+// app.post('/wx/3rd/notify', wechat(wxconfig, function (req, resp, next) {
+//   console.log('url : ', req.url)
+//   console.log('msg : ', req.weixin)
+//   resp.send('SUCCESS')
+// }))
 
-app.post('/wx/3rd/:appid/callback', wechat(wxconfig, function (req, resp, next) {
+// app.post('/wx/3rd/:appid/callback', wechat(wxconfig, function (req, resp, next) {
+//   console.log('url : ', req.url)
+//   console.log('msg : ', req.weixin)
+//   resp.send('SUCCESS')
+// }))
+
+app.use(bodyParser.text({ type: 'text/xml' }))
+
+app.post('/wx/3rd/notify', function (req, resp) {
   console.log('url : ', req.url)
-  console.log('msg : ', req.weixin)
-  resp.send('SUCCESS')
-}))
+  console.log('body', req.body)
+  console.log('----------------------------')
+  resp.send('ok')
+})
+
+app.post('/wx/3rd/:appid/callback', function (req, resp) {
+  console.log('url : ', req.url)
+  console.log('body', req.body)
+  console.log('----------------------------')
+  resp.send('ok')
+})
 
 app.listen(8081)
+

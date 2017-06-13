@@ -46,11 +46,15 @@ const modifyDomain = function (action) {
   })
 };
 
-// exports.addDomain
-// exports.deleteDomain
-// exports.setDomain
-// exports.getDomain
+function fwupper(str) {
+	return str.substr(0, 1).toUpperCase() + str.substring(1);
+}
 
-['wxAdd', 'wxDelete', 'wxSet', 'wxGet'].forEach(function(action){
-  exports[action + 'Domain'] = modifyDomain(action)
+// exports.wxSddDomain
+// exports.wxDeleteDomain
+// exports.wxSetDomain
+// exports.wxGetDomain
+
+['add', 'delete', 'set', 'get'].forEach(function(action){
+  exports['wx' + fwupper(action) + 'Domain'] = modifyDomain(action)
 })

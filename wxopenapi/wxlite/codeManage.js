@@ -5,8 +5,8 @@
  * 第三方平台可选择将代码添加到代码中，获得代码模版ID后，
  * 可调用以下接口进行代码管理。
  */
-const {post, get, bindTesterErrorMsg} = require('../wxliteApi')
-const {defaultArgs} = require('../defaultArgs')
+const {post, get, getfile, bindTesterErrorMsg} = require('../wxliteApi');
+const {defaultArgs} = require('../defaultArgs');
 
 /**
  * 1、为授权的小程序帐号上传小程序代码
@@ -37,9 +37,7 @@ const {defaultArgs} = require('../defaultArgs')
  * -1     系统繁忙
  * 85013  无效的自定义配置
  * 85014  无效的模版编号
- */
-
-/**
+ * 
  * 错误码说明：
  * 返回码 说明
  * -1    系统繁忙
@@ -53,7 +51,7 @@ export const wxCommit = defaultArgs(function(accessToken, templateId, extJson, v
   return post(`commit?access_token=${accessToken}`, {
     template_id: templateId,
     ext_json: extJson,
-    user_version: userVersion,
+    user_version: version,
     user_desc: desc
   })
   .catch(function(err) {
@@ -89,7 +87,7 @@ export const wxCommit = defaultArgs(function(accessToken, templateId, extJson, v
  * }
  */
 export const wxGetQrcode = defaultArgs(function(accessToken) {
-  return get(`get_qrcode?access_token=${accessToken}`)
+  return getfile(`get_qrcode?access_token=${accessToken}`);
 })
 
 /**
@@ -170,7 +168,7 @@ export const wxGetCategory = defaultArgs(function(accessToken) {
 **/
 
 export const wxGetPage = defaultArgs(function(accessToken) {
-  return get(`get_page?get_page=${accessToken}`)
+  return get(`get_page?access_token=${accessToken}`)
   .catch(function(err) {
     err.errorMsg = bindTesterErrorMsg(err.errcode)
     return err
@@ -228,8 +226,10 @@ export const wxGetPage = defaultArgs(function(accessToken) {
 * 86001     不存在第三方的已经提交的代码
 **/
 
-export const wxSubmitAudit = defaultArgs(function (accessToken) {
-  return get(`submit_audit?access_token=${accessToken}`)
+export const wxSubmitAudit = defaultArgs(function (accessToken, itemList) {
+  return post(`submit_audit?access_token=${accessToken}`, {
+	  item_list: itemList
+  })
   .catch(function(err) {
     err.errorMsg = bindTesterErrorMsg(err.errcode)
     return err
@@ -265,7 +265,7 @@ export const wxRelease = defaultArgs(function (accessToken) {
     err.errorMsg = bindTesterErrorMsg(err.errcode)
     return err
   })
-})
+});
 
 /**
  * 9、修改小程序线上代码的可见状态（仅供第三方代小程序调用）
@@ -295,7 +295,7 @@ export const wxRelease = defaultArgs(function (accessToken) {
  * 85021    状态不可变
  * 85022    action非法
  */
-export const wxRelease = defaultArgs(function (accessToken, isOpne) {
+export const wxChangeVisitStatus = defaultArgs(function (accessToken, isOpne) {
   var action = isOpne ? 'open' : 'close'
   return post(`change_visitstatus?access_token=${accessToken}`, {
     action

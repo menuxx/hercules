@@ -1,31 +1,33 @@
 {{> header}}
-  <style type="text/css">
-  .to-do {
-    display: flex;
-    flex-flow: row flow;
-    justify-content: space-around;
-    align-items: center;
-  }
-  h1.text-success {
-    color: #3eb94e;
-  }
-  </style>
-  <div class="container">
+<style type="text/css">
+    .to-do {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    h1.text-success {
+        color: #3eb94e;
+    }
+</style>
+<pre id="res" style="display: none;">{{JSONstringify authorizer 4}}</pre>
+<div class="container">
     <div class="jumbotron">
-      <h1 class="text-success">恭喜！小程序授权完成</h1>
-      <p>您的 {{diner.corp_name}}小程序 已经委托菜单加管理，发布，审核等工作</p>
-      <span>店铺信息：</span>
-      <ul>
-        <li>店铺名称: {{diner.shop_name}}</li>
-        <li>法人: {{diner.legal_entity}}</li>
-        <li>地址: {{diner.address}}</li>
-      </ul>
-      <div class="to-do">
-        <span style="font-size: 20px; margin: 0 20px;">关注菜单加公众号</span>
-        <img width="200" src="/menuxx_qrcode.jpeg" />
-        <h2 style="font-size: 40px; font-weight: none; margin: 0 20px;">或</h2>
-        <a class="btn btn-primary btn-lg" href="https://www.menuxx.com" role="button">去官网看看</a>
-      </div>
+        <h1 class="text-success">恭喜！小程序授权完成</h1>
+        <p>您的 {{authorizer.diner.shopName}}小程序 已经委托菜单加管理，发布，审核等工作</p>
+        <img class="thumbnail" width="80" height="80" src="{{authorizer.info.head_img}}"/>
+        <span>店铺信息：</span>
+        <ul>
+            <li>店铺名称: {{authorizer.diner.shopName}}</li>
+            <li>店主: {{authorizer.diner.masterName}}</li>
+        </ul>
+        <div class="to-do">
+            <span style="font-size: 20px; margin: 0 20px;">关注菜单加公众号</span>
+            <img width="200" src="/menuxx_qrcode.jpeg"/>
+            <h2 style="font-size: 40px; font-weight: none; margin: 0 20px;">或</h2>
+            <a class="btn btn-primary btn-lg" href="https://www.menuxx.com" role="button">去官网看看</a>
+        </div>
     </div>
-  </div>
+</div>
 {{> footer}}

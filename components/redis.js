@@ -4,8 +4,7 @@ const redisFactory = require("redis")
 // https://github.com/petkaantonov/bluebird Promise
 const bluebird = require('bluebird')
 const {redis} = require('../config')
-const errorlog = require('debug')('redis:error')
-const log = require('debug')('redis')
+const {log, errorlog} = require('../logger')('redis')
 const {assign} = require('lodash')
 
 // 为 redis 添加 Promise 支持

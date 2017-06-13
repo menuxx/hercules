@@ -29,5 +29,5 @@ const _sendText = function (touser, content) {
 }
 
 export const wxSendText = function (accessToken, touser, content) {
-  return post(`/message/custom/send?access_token=${accessToken}`, _sendText(touser, content))
+  return post(`message/custom/send?access_token=${accessToken}`, _sendText(touser, content))
 }

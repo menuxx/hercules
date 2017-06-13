@@ -7,5 +7,5 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 RUN npm install
 COPY . /usr/src/app
-CMD ["pm2-docker", "process.yml", "--only", "MenuxxWeixinComponent"]
+CMD ["pm2-docker", "process.yml"]
 EXPOSE 8080

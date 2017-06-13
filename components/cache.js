@@ -1,6 +1,6 @@
 // 令牌 db index
 const redis = require('./redis')({dbIndex: 2})
-const log = require('debug')('cache')
+const {log, errorlog} = require('../logger')('cache')
 const {assign} = require('lodash')
 
 function getObject(key) {
@@ -38,7 +38,7 @@ export const tokenCache = {
 
 // authorizer_appid, authorizer_access_token, authorizer_refresh_token
 
-export const wxCache = {
+export const authorizerCache = {
   putAuthorizerInfo: function (appId, authorizerInfo) {
     return putObject(`${appId}:authorizer_info`, authorizerInfo)
   },
@@ -46,7 +46,7 @@ export const wxCache = {
     return getObject(`${appId}:authorizer_info`)
   },
   putRefreshTokenMsgId: function(appId, msgId) {
-    var self = this
+    var self = this;
     return self.getAuthorizerInfo(appId).then(function(info) {
       return self.putAuthorizerInfo(appId, assign(info, { refresh_token_msg_id: msgId }))
     })

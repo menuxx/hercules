@@ -1,5 +1,5 @@
 menuxx_3rd:
-  image: daocloud.io/nizhuantech/menuxx_3rd:prod-2203957
+  image: daocloud.io/nizhuantech/menuxx_3rd:prod-e836e3f
   privileged: false
   restart: always
   ports:
@@ -7,20 +7,26 @@ menuxx_3rd:
   volumes:
   - /data/hercules:/usr/src/app/tmp
   environment:
-  - REDIS_01_HOSTNAME=10.23.236.159
-  - WX_3RD_APP_TOKEN=dg156c5719d3202f32a6619e14D0ccqd
-  - REDIS_01_PORT=7389
+  - LOGGER_FUNDEBUG=error
+  - RONGLIAN_ACCOUNT_SID=8a216da857511049015774861894153f
   - WX_3RD_APP_SECRET=99454ebe9eb76b704d9dfd8c34cc310b
-  - WX_3RD_ENCODING_AES_KEY=kat52d5719d320nEj2A6l19u14H21ct2aI8K08rltKl
   - SITE_URL=http://wx3rd.menuxx.com
-  - LEANCLOUD_APPKEY=HqvqMuGWLEKQjc02Dwzmz142
   - REDIS_01_PASSWORD=4cj34t4j9
+  - LEANCLOUD_APPKEY=HqvqMuGWLEKQjc02Dwzmz142
+  - AUTH_PASSWORD=28181820
+  - PORT=8080
+  - REDIS_01_HOSTNAME=10.23.236.159
+  - NODE_ENV=production
+  - WX_3RD_APP_KEY=gh_e9100e798b39
+  - REDIS_01_PORT=7389
+  - LOGGER_FILE=error
   - LEANCLOUD_APPID=98Yqw7EVpTpxvIP5wS4NK6j9-gzGzoHsz
   - CACHE_PUBLISH_POINTERS=http://api.menuxx.com/wx/component_cache,http://dev.api.menuxx.com/wx/component_cache
-  - RABBIT_URI_01=amqp://menuxx:28181820@10.23.236.159:5692/menuxx
   - DEBUG=*,-babel
-  - AUTH_PASSWORD=28181820
+  - WX_3RD_APP_TOKEN=dg156c5719d3202f32a6619e14D0ccqd
   - AUTH_USERNAME=menuxx3rd
-  - PORT=8080
+  - RONGLIAN_APP_ID=8aaf07085aabcbbd015ad084f0fd0bef
+  - RONGLIAN_AUTH_TOKEN=e1de26cde6e24dd28dfedcd81467d1f0
+  - WX_3RD_ENCODING_AES_KEY=kat52d5719d320nEj2A6l19u14H21ct2aI8K08rltKl
+  - RABBIT_URI_01=amqp://menuxx:28181820@10.23.236.159:5692/menuxx
   - WX_3RD_APP_ID=wxb3d033d520d15fe7
-  - WX_3RD_APP_KEY=gh_e9100e798b39

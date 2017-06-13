@@ -1,0 +1,130 @@
+{{> header }}
+<div class="container">
+    <div class="row">
+        <form class="form-horizontal diner" data-appid="{{appInfo.authorizerAppid}}">
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">AppInfo</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control app-info">{{JSONstringify appInfo 4}}</textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">应用服务器 基础数据 有应用服务器维护，只读属性</div>
+                    <a href="https://www.zybuluo.com/donglai/note/782546#app-info" target="_blank">查看样本</a>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">DinerCode</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control diner-code" style="margin-bottom: 15px;">{{JSONstringify dinerCode 4}}</textarea>
+                    {{#if dinerCode}}
+                    <a class="saveDinerCode btn btn-primary pull-right">保存</a>
+                    {{else}}
+                    <a class="createDinerCode btn btn-primary pull-right">创建</a>
+                    {{/if}}
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">LeanCloud 基础数据</div>
+                    <a href="https://www.zybuluo.com/donglai/note/782546#leancloud-dinercode" target="_blank">查看样本</a>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">AuthorizerInfo</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control authorizer-info" disabled>{{JSONstringify authorizerInfo 4}}</textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">微信小程序/公众号用户信息</div>
+                    <a href="https://www.zybuluo.com/donglai/note/782546#authorizer-info" target="_blank">查看样本</a>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">CategoryList</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control" disabled>{{JSONstringify categoryList 1}}</textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">微信小程序类目列表，从微信获取，只读属性</div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">PageList</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control" disabled>{{JSONstringify pageList 1}}</textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">微信小程序页面列表，从微信获取，只读属性</div>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">AuthorizationInfo</label>
+                <div class="col-sm-8">
+                    <textarea type="text" rows="15" class="form-control" disabled>{{JSONstringify authInfo 1}}</textarea>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">微信授权信息，由服务器内部处理，只读属性</div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script>
+    var api = {};
+    ['put', 'post'].forEach(function (method) {
+        api[method] = function (api, data) {
+            fetch(api, {
+                method: method.toUpperCase(),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (res) {
+                if (res.ok) {
+                    alert('保存完成');
+                }
+                return res;
+            }, function (err) {
+                console.error(err.stack);
+                alert('发生错误:' + err.message);
+            })
+        }
+    });
+
+    $('.saveDinerCode').on('click', saveHandler);
+    $('.createDinerCode').on('click', saveHandler);
+    function saveHandler (e) {
+
+    	var isSaveDinerCode = $(this).hasClass('saveDinerCode')
+        var isCreateDinerCode = $(this).hasClass('createDinerCode')
+
+        var appid = $(this).parents('form').data('appid');
+        var $formGroup = $(e.target).parents('.form-group');
+        var $dinerCode = $formGroup.find('textarea.diner-code');
+        try {
+            var data = JSON.parse($dinerCode.val());
+            if (!data) {
+                return alert('数据不能为空')
+            }
+            if (isSaveDinerCode) {
+                api.put(`/api/dinerwxlite/${appid}`, data)
+            }
+            if (isCreateDinerCode) {
+                api.post(`/api/dinerwxlite`, data).then(function () {
+                    $('.saveDinerCode').show();
+                    $('.createDinerCode').hide();
+                })
+            }
+        } catch (e) {
+            console.error(e)
+            return alert('数据格式错误, 请填写正确的 JSON 格式');
+        }
+
+    }
+</script>
+{{> footer }}

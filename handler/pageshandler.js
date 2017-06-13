@@ -1,101 +1,123 @@
-const {Router} = require('express')
-const log = require('debug')('route:info')
-const logerror = require('debug')('route:error')
-const {getDiners, getDinerByAppId} = require('../db/diners')
-const session = require('../components/session')
-const passport = require('passport')
-const {BasicStrategy} = require('passport-http')
-const {auth, appId} = require('../config')
-const {isEmpty} = require('lodash')
-const route = Router()
-const {wxGetAuthorizeUrl, wxQueryAuth} = require('../wxapi/componentApi')
-const {tokenCache, wxCache} = require('../components/cache')
-const {errorPage} = require('../lib/error')
-const {delayRefresh} = require('../components/rabbitmq')
-const {siteUrl} = require('../config').server
-const bb = require('bluebird')
+const {Router} = require('express');
+const {log, errorlog} = require('../logger')('pageshandler');
+const {fetchAuthorizer, putAuthorizerBy, getAuthorizerBy, menuxx} = require('../service');
+const session = require('../components/session');
+const {webNotify} = require('../components/webhook');
+const passport = require('passport');
+const {BasicStrategy} = require('passport-http');
+const {auth} = require('../config');
+const route = Router();
+const {wx3rdApi} = require('../wxopenapi');
+const {tokenCache} = require('../components/cache');
+const {errorPage} = require('../lib/error');
+const {autoValid} = require('../lib/params');
+const wxlite = require('../wxlite');
+const util = require('util');
+const {siteUrl} = require('../config').server;
 
-passport.use(new BasicStrategy(function(username, password, cb) {
-  if (username === auth.username && password === auth.password) {
-    cb(null, {username})
-  } else {
-    cb(new Error('账号密码错误'))
-  }
-}))
+route.use(function (req, resp, next) {
+	req.locals = { siteUrl };
+	next();
+});
 
-route.use(session)
+passport.use(new BasicStrategy(function (username, password, cb) {
+	if (username === auth.username && password === auth.password) {
+		cb(null, {username});
+	} else {
+		cb(new Error('账号密码错误'))
+	}
+}));
+
+route.use(session);
 
 route.get('/commit_fail', function (req, resp) {
-  
-  resp.render('commit_fail', { title: '代码发布失败' })
-})
+
+	resp.render('commit_fail', {title: '代码发布失败'})
+});
 
 route.get('/submit_audit_fail', function (req, resp) {
 
-  resp.render('submit_audit_fail', { title: '代码审核失败' })
-})
+	resp.render('submit_audit_fail', {title: '代码审核失败'})
+});
 
-route.get('/diners', passport.authenticate('basic', { session: false }), 
-  function(req, resp) {
-    bb.all([
-      tokenCache.getPreAuthCode(),
-      getDiners()
-    ])
-    .then(function(results) {
-      var preAuthCode = results[0], diners = results[1]
-      // 筛选出只有 appId 的商户
-      diners = diners.filter(function(item) {
-        return !isEmpty(item.app_id)
-      }).map(function(item){
-        item.authorize_url = wxGetAuthorizeUrl(appId, preAuthCode, `${siteUrl}/wx/3rd/authorize/${item.app_id}`)
-        return item
-      })
-      resp.render('diners', { diners, title: '可授权店铺列表' })
-    })
-})
+route.get('/authorizers/:appkey', passport.authenticate('basic', {session: false}),
+	function (req, resp) {
+		req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
+		autoValid(req, resp).then(function () {
+			let {appkey} = req.params;
+			getAuthorizerBy({appkey})
+				.then(function ({authorizerAppid}) {
+					return Promise.all([
+						wxlite.getCategory(authorizerAppid),
+						wxlite.getPage(authorizerAppid),
+						fetchAuthorizer(authorizerAppid, 7),
+						wxlite.getAuthorizerInfo(authorizerAppid)
+					])
+			})
+				.then(function (res) {
+				resp.render('authorizer', { categoryList: res[0].category_list, pageList: res[1].page_list, ...res[2], authorizerInfo: res[3] });
+			})
+		});
+});
 
-route.get('/wx/3rd/authorize/:appid', function(req, resp) {
-  var {appid} = req.params
-  var {auth_code} = req.query
+// 控制台
+route.get('/dashboard', passport.authenticate('basic', {session: false}), function (req, resp) {
 
-  if (isEmpty(auth_code) || isEmpty(appid)) {
-    return errorPage(resp, '小程序授权请求无效')
-  }
+	resp.render('dashboard')
+});
 
-  bb
-  .all([
-    tokenCache.getComponentAccessToken(),
-    tokenCache.getPreAuthCode()
-  ])
-  .then(function(res) {
-    var componentAccessToken = res[0]
-    return wxQueryAuth(appId, componentAccessToken, auth_code)
-  })
-  .then(function({authorization_info}) {
-    var {authorizer_appid, authorizer_refresh_token} = authorization_info
-    // 全部完成后
-    return bb.all([
-      wxCache.putAuthorizerInfo(appid, authorization_info)
-      ,
-      // 发送延迟消息，到刷新令牌队列
-      // appId, authorizer_appid, authorizer_refresh_token
-      delayRefresh(appid, authorizer_appid, authorizer_refresh_token)
-    ])
-  })
-  .then(function() {
-    // 获取单个店铺的信息
-    return getDinerByAppId(appid)
-  })
-  .then(function(diner) {
-    if (isEmpty(diner)) {
-      return errorPage(resp, '授权的店铺不存在')
-    }
-    resp.render('authorize_success', { title: '授权成功', diner })
-  }, function(err) {
-    logerror('get diner by app_id fail', err)
-    errorPage(resp, '授权的店铺不存在')
-  })
+route.get('/authorizers', passport.authenticate('basic', {session: false}), function (req, resp) {
+	Promise.all([
+		tokenCache.getPreAuthCode(),
+		menuxx.getDiners()
+	])
+	.then(function (results) {
+		let preAuthCode = results[0], authorizers = results[1];
+		authorizers.map(function (item) {
+			item.authorizeUrl = wx3rdApi.wxGetAuthorizeUrl({
+				authCode: preAuthCode,
+				redirectUri: `${siteUrl}/wx/3rd/authorize/${item.appKey}`
+			});
+			return item
+		});
+		resp.render('authorizers', {authorizers, title: '可授权店铺列表'})
+	}, errorlog)
+});
 
-})
+route.get('/wx/3rd/authorize/:appkey', function (req, resp) {
+	req.checkQuery('auth_code', 'url 上的 auth_code 必须存在').notEmpty();
+	req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
+	autoValid(req, resp).then(function () {
+		let {auth_code} = req.query;
+		let {appkey} = req.params;
+		getAuthorizerBy({appkey}).then(function (diner) {
+			return tokenCache.getComponentAccessToken()
+				.then(function (componentAccessToken) {
+					return wx3rdApi.wxQueryAuth({accessToken: componentAccessToken, authCode: auth_code}).then(function ({authorization_info}) {
+						let {authorizer_appid} = authorization_info;
+						return { componentAccessToken,  authorizerAppid: authorizer_appid }
+					});
+				})
+				.then(function ({ componentAccessToken,  authorizerAppid }) {
+					return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then(function ({authorizer_info}) {
+						return {authorizer_info, authorizerAppid}
+					})
+				})
+				.then(function ({authorizer_info, authorizerAppid}) {
+					// 绑定 appid 到 appkey
+					return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid})
+						.then(function () {
+							return {diner, info: authorizer_info}
+						});
+				})
+		}).then(function (authorizer) {
+			return resp.render('authorize_success', {title: '授权成功', authorizer})
+		}, function (err) {
+			errorlog(err);
+			errorPage(resp, '授权的店铺不存在');
+		})
+	});
 
-module.exports = route
+});
+
+module.exports = route;

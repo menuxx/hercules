@@ -1,0 +1,78 @@
+{{> header }}
+<div class="container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#control" aria-controls="home" role="tab" data-toggle="tab">统一管理</a></li>
+        <li role="presentation"><a href="/authorizers">小程序管理</a></li>
+    </ul>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="control">
+            <div class="alert alert-info">
+                对绑定到当前平台的小程序进行同一控制。
+                根据绑定的模板编号进行分类控制。
+            </div>
+            <div class="alert alert-warning">
+                并不是所有的小程序都会自动发布。这要取决于 DinerCode 中的配置 `autoCommit` 的属性
+                , 该属性为 true 则会自动列入发布流水线中。
+                其中 `autoSubmitAudit` 指代是否参与自动提交审核，如果为 `false`，将会进入手动状态
+                其中的 `autoRelease` 同理，其指代当代码审核通过之后，是否自动发布。
+                如果三个属性都是 `true` 将进入无人值守，全自动状态。
+            </div>
+            <div class="btn-group btn-group" role="group">
+                <a class="btn btn-success diner-single">单店版本代码提交</a>
+                <a class="btn btn-success diner-platform">平台版本代码提交</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var api = {};
+    ['get'].forEach(function (method) {
+        api[method] = function (api) {
+            return fetch(api, {
+                method: method.toUpperCase(),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(function (res) {
+                return res.json()
+            }, function (err) {
+                console.error(err.stack);
+                alert('发生错误:' + err.message);
+            })
+        }
+    });
+    ['put', 'post'].forEach(function (method) {
+        api[method] = function (api, data) {
+            return fetch(api, {
+                method: method.toUpperCase(),
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then(function (res) {
+                return res.json();
+            }, function (err) {
+                console.error(err.stack);
+                alert('发生错误:' + err.message);
+            })
+        }
+    });
+    $('.diner-single').on('click', codeCommitHandler)
+    $('.diner-platform').on('click', codeCommitHandler)
+    function codeCommitHandler () {
+        var isSingle = $(this).hasClass('diner-single')
+        var isPlatform = $(this).hasClass('diner-platform')
+        var templateId  = 0;
+        if (isPlatform) {
+            templateId = 1;
+        } else if (isSingle) {
+        	templateId = 0;
+        }
+        api.get(`/api/code?templateId=${templateId}`).then(function (latestCode) {
+            return api.put(`/api/code_commit?version=${latestCode.version}`)
+        }).then(function (res) {
+            alert('参与此次发布的小程序共 : ' + res.count + ' 个')
+        })
+    }
+</script>
+{{> footer }}
