@@ -1,5 +1,3 @@
-require("babel-register");
-
 const {log, errorlog} = require('./logger')('app')
 
 // https://github.com/expressjs/morgan

@@ -43,7 +43,6 @@
 //      "auditid": 1234567
 // }
 **/
-require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('code_submit_audit');
 const {createSimpleWorker} = require('../components/rabbitmq');
@@ -81,6 +80,5 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 		log('a worker done.')
 	}, function (err) {
 		errorlog(err);
-		weixin.sendSimpleText('代码提交审核错误. appid: ' + authorizerAppid + ', 错误原因: ' + err.errMsg);
 	});
 });
