@@ -62,7 +62,6 @@ route.get('/authorizers/:appkey', passport.authenticate('basic', {session: false
 
 // 控制台
 route.get('/dashboard', passport.authenticate('basic', {session: false}), function (req, resp) {
-
 	resp.render('dashboard')
 });
 

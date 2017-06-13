@@ -51,7 +51,7 @@ createSimpleWorker({queueName, routingKey}, function ( msg, channel ) {
 			// 发送通知
 			Promise.all([
 				// 3。给用户发送短信通知
-				sms.sendUnauthorizedSMS(diner.masterPhone, [diner.masterName, diner.shopName, diner.masterPhone]),
+				sms.sendUnauthorizedSMS(diner.masterPhone, [diner.masterName, diner.appName, diner.masterPhone]),
 				// 4. 给平台发送通知
 				pubuWeixin.sendWXUnAuthorized({appId: authorizerAppid, ...diner})
 			]),
