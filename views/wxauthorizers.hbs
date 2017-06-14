@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            {{#echo authorizers}}
+            {{#each authorizers}}
             <form class="form-horizontal">
                 <div class="form-group form-group-sm">
                     <label class="col-sm-2 control-label">AuthorizerAppid</label>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
             </form>
-            {{/echo}}
+            {{/each}}
             <nav aria-label="wx-pages">
                 <ul class="pager">
                     <li class="previous"><a href="/wxauthorizers?pagenum={{_pre_pagenum}}"><span aria-hidden="true">&larr;</span> 上一页</a></li>
