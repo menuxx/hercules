@@ -79,7 +79,9 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 		});
 	}).then(function () {
 		log('a worker done.')
+		return { ok: true }
 	}, function (err) {
 		errorlog(err);
+		return { ok: false, status: false }
 	});
 });
