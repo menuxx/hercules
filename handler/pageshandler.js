@@ -66,7 +66,6 @@ route.get('/dashboard', passport.authenticate('basic', {session: false}), functi
 });
 
 route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), function (req, resp) {
-	req.checkQuery('pagenum', 'url 上的 pagenum 必须存在').notEmpty();
 	autoValid(req, resp).then(function () {
 		let {pagenum=1, pagesize=20} = req.query;
 		if (pagenum < 0) pagenum = 1;
