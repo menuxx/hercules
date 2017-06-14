@@ -25,7 +25,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 		.then(function (releaseOk) {
 			// 获取 商户 和商户 代码发布相关的信息
 			return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
-				return wxcodeApi.firstCode(diner.templateId)
+				return wxcodeApi.firstCodeType(diner.templateType)
 					.then(function (code) {
 						return {diner, code}
 					});
@@ -36,7 +36,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 		// 发送 pubu 通知
 		return pubuWeixin.sendCodeReleaseOK
 		(
-			{ codeVersion: code.version, templateId: code.templateId }, diner.appName, diner.authorizerAppid
+			{ codeVersion: code.version, templateType: code.templateType }, diner.appName, diner.authorizerAppid
 		);
 	}).then(function () {
 		log('a worker done.');

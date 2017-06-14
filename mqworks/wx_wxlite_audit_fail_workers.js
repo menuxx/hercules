@@ -51,9 +51,9 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 					reason
 				}),
 				// 发送 pubuim 通知
-				// {codeVersion, templateId}, shopName, appId, reason
+				// {codeVersion, templateType}, shopName, appId, reason
 				pubuWeixin.sendCodeAuditFail(
-					{ codeVersion: submit.version, templateId: diner.templateId },
+					{ codeVersion: submit.version, templateType: diner.templateType },
 					diner.appName, diner.authorizerAppid, reason
 				)
 			]);

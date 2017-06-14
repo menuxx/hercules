@@ -9,7 +9,7 @@ const {has, isEmpty} = require('lodash')
  *    appKey: 'D560776C-C374-461C-A522-EC315BD3DA3C',
  *    version: '0.1.1',
  *    appName: '芝根芝底披萨餐厅转塘店',
- *    templateId: 0,
+ *    templateType: 1,
  *    originAppId: 'gh_8c862bd1194f',  // 小程序原始 id
  *    corpId: 1,
  *    platformCorpId: 4,
@@ -71,7 +71,7 @@ function reflectDinerWXLiteObject(object) {
 		autoCommit: object.get('autoCommit', false),
 		autoRelease: object.get('autoRelease', false),
 		autoSubmitAudit: object.get('autoSubmitAudit', false),
-		templateId: object.get('templateId'),
+		templateType: object.get('templateType'),
 		appOriginId: object.get('originAppId'),
 		corpId: object.get('corpId'),
 		platformCorpId: object.get('platformCorpId'),
@@ -114,7 +114,7 @@ export const saveAuthorizer = function (appid, data) {
 		dinerObj.set('appKey', data.appKey)
 		dinerObj.set('appName', data.appName)
 		dinerObj.set('version', data.version)      // 小程序当前版本号
-		dinerObj.set('templateId', data.templateId)
+		dinerObj.set('templateType', data.templateType)
 		dinerObj.set('originAppId', data.originAppId)
 		if (has(data, 'corpId')) dinerObj.set('corpId', data.corpId);
 		if (has(data, 'platformCorpId')) dinerObj.set('platformCorpId', data.platformCorpId);
@@ -135,7 +135,7 @@ export const createAuthorizer = function (data) {
 	diner.set('appKey', data.appKey)
 	diner.set('appName', data.appName)
 	diner.set('version', data.version)      // 小程序当前版本号
-	diner.set('templateId', data.templateId)
+	diner.set('templateType', data.templateType)
 	diner.set('originAppId', data.originAppId)
 	if (has(diner, 'corpId')) diner.set('corpId', data.corpId);
 	if (has(diner, 'platformCorpId')) diner.set('platformCorpId', data.platformCorpId);

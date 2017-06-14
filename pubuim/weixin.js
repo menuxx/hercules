@@ -25,9 +25,9 @@ var wxAvatarUrl = "https://file.menuxx.com/image/weixin-logo.png?imageView2/0/w/
 /**
  * 代码提交成功完成信息
  */
-export const sendCodeCommitOk = function ({codeVersion, templateId}, appName, appId, qrCodeUrl) {
+export const sendCodeCommitOk = function ({codeVersion, templateType}, appName, appId, qrCodeUrl) {
   return post({
-    text: `代码提交成功。${appName}[AppId: ${appId}], 扫描下方二维码可以预览\n\n 代码版本：${codeVersion} \n 小程序模板ID: ${templateId}`,
+    text: `代码提交成功。${appName}[AppId: ${appId}], 扫描下方二维码可以预览\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     photoUrl: qrCodeUrl,
     channel: "#微信",
     displayUser: {
@@ -47,9 +47,9 @@ export const sendCodeCommitOk = function ({codeVersion, templateId}, appName, ap
 /**
  * 代码发布成功信息
  */
-export const sendCodeReleaseOK = function ({codeVersion, templateId}, appName, appId) {
+export const sendCodeReleaseOK = function ({codeVersion, templateType}, appName, appId) {
   return post({
-    text: `代码发布成功。${appName}[AppId: ${appId}]，已完成上线\n\n 代码版本：${codeVersion} \n 小程序模板ID: ${templateId}`,
+    text: `代码发布成功。${appName}[AppId: ${appId}]，已完成上线\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     channel: "#微信",
     displayUser: {
       name: '微信小程序',
@@ -61,9 +61,9 @@ export const sendCodeReleaseOK = function ({codeVersion, templateId}, appName, a
 /**
  * 代码审核失败信息
  */
-export const sendCodeAuditFail = function ({codeVersion, templateId}, appName, appId, reason) {
+export const sendCodeAuditFail = function ({codeVersion, templateType}, appName, appId, reason) {
   return post({
-    text: `代码审核没有通过。${appName}[AppId: ${appId}], 具体原因见详情\n\n 代码版本：${codeVersion} \n 小程序模板ID: ${templateId}`,
+    text: `代码审核没有通过。${appName}[AppId: ${appId}], 具体原因见详情\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     channel: "#微信",
     attachments: [{
       "title": "代码审核失败",
@@ -80,9 +80,9 @@ export const sendCodeAuditFail = function ({codeVersion, templateId}, appName, a
 /**
  * 代码审核成功信息
  */
-export const sendCodeAuditSuccess = function ({codeVersion, templateId}, appName, appId) {
+export const sendCodeAuditSuccess = function ({codeVersion, templateType}, appName, appId) {
   return post({
-    text: `代码审核通过。${appName}[AppId: ${appId}]。\n\n 代码版本：${codeVersion} \n 小程序模板ID: ${templateId}`,
+    text: `代码审核通过。${appName}[AppId: ${appId}]。\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     channel: "#微信",
     displayUser: {
       name: '微信小程序',

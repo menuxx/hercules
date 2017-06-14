@@ -55,7 +55,7 @@ createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 						authorizerAppid: diner.authorizerAppid
 					}),
 					pubuWeixin.sendCodeAuditSuccess(
-						{ codeVersion: version, templateId: diner.templateId },
+						{ codeVersion: version, templateType: diner.templateType },
 						diner.appName, diner.authorizerAppid
 					)
 				]);

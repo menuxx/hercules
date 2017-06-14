@@ -7,6 +7,7 @@ const {wxcodeApi} = require('../leancloud')
  *  gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
  *  version: '0.1.4',
  *  templateId: 0,
+ *  templateType: 1,	// 平台版
  *  desc: '修复了一些bug, 提高了稳定性',
  *  _config: {
  *    apiBaseurl: 'https://api.menuxx.com/',
@@ -25,11 +26,12 @@ const {wxcodeApi} = require('../leancloud')
 
 wxcodeApi.saveCode({
 	gitBranch: 'tpl_single_01',
-	gitTag: 'tpl_single_0.1.1',
+	gitTag: 'tpl_single_0_1_7',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: '0.1.2',
-	templateId: 0,
-	desc: '修复了一些bug, 提高了稳定性',
+	version: 'v0.1.7',
+	templateId: 2,
+	templateType: 1,
+	desc: '第三方平台发布再一次测试',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',
@@ -45,6 +47,6 @@ wxcodeApi.saveCode({
 	console.log(res.id)
 })
 
-wxcodeApi.firstCode(0).then(function (a) {
+wxcodeApi.firstCodeByType(1).then(function (a) {
 	console.log(a)
 })

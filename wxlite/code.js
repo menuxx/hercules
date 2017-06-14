@@ -24,7 +24,7 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true) {
 	])
 		.then(function (res) {
 			let accessToken = res[0], diner = res[1];
-			return wxcodeApi.firstCode(diner.templateId).then(function (code) { return {code, accessToken, diner} });
+			return wxcodeApi.firstCodeByType(diner.templateType).then(function (code) { return {code, accessToken, diner} });
 		});
 	if (!onlyCommit) {
 		// 覆盖 domains

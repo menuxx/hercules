@@ -67,10 +67,10 @@ route.get('/wxlite_qrcode/:appid', function (req, resp) {
 });
 
 route.get('/code', function (req, resp) {
-	req.checkQuery('templateId', 'url 上的 version 必须存在').notEmpty();
+	req.checkQuery('template_type', 'url 上的 template_type 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
-		let {templateId} = req.query;
-		wxcodeApi.firstCode(parseInt(templateId, 10)).then(resp.json.bind(resp))
+		let {template_type} = req.query;
+		wxcodeApi.firstCodeByType(parseInt(template_type, 10)).then(resp.json.bind(resp))
 	})
 });
 
@@ -94,7 +94,7 @@ route.put('/code_commit', function (req, resp) {
 route.put('/code_commit/:appid', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
 	function _refResp (res) {
-		return resp.json({ templateId: res.code.templateId, testers: res.diner.testers, version: res.code.version, errcode: res.errcode, errmsg: res.errmsg });
+		return resp.json({ templateType: res.code.templateType, templateId: res.code.templateId, testers: res.diner.testers, version: res.code.version, errcode: res.errcode, errmsg: res.errmsg });
 	}
 	jsonAutoValid(req, resp).then(function () {
 		let {type} = req.query;
@@ -120,7 +120,7 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 		let {appid} = req.params;
 		dinerApi.getAuthorizerByAppid(appid)
 			.then(function ({lastCommitVersion}) {
-				return wxcodeApi.firstCode(lastCommitVersion)
+				return wxcodeApi.getByVersionNumber(lastCommitVersion)
 			})
 			.then(function (code) {
 				return appPublish(ROUTING_KEYS.Hercules_WxliteSubmitAudit, {

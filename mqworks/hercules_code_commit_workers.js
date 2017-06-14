@@ -36,7 +36,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 			// 发送 pubuim 通知, 手动提交审核
 			return pubuWeixin.sendCodeCommitOk
 			(
-				{ codeVersion: code.version, templateId: code.templateId }, diner.appName, diner.authorizerAppid, wxlite.getQrcodeUrl(authorizerAppid)
+				{ codeVersion: code.version, templateType: code.templateType }, diner.appName, diner.authorizerAppid, wxlite.getQrcodeUrl(authorizerAppid)
 			).then(function () {
 				return { diner, code };
 			});

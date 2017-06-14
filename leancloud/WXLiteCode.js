@@ -37,6 +37,7 @@ function reflectWXLiteCodeObject(object) {
 		gitTag: object.get('gitTag'),
 		gitUrl: object.get('gitUrl'),
 		version: object.get('gitTag'),
+		templateType: object.get('templateType'),
 		templateId: object.get('templateId'),
 		desc: object.get('desc'),
 		_config: object.get('_config'),
@@ -45,9 +46,9 @@ function reflectWXLiteCodeObject(object) {
 	}
 }
 
-export const firstCode = function (templateId) {
+export const firstCodeByType = function (templateType) {
 	var query = new AV.Query('WXLiteCode');
-	query.equalTo('templateId', templateId);
+	query.equalTo('templateType', templateType);
 	query.addDescending('createdAt');
 	return query.first().then(reflectWXLiteCodeObject);
 };
