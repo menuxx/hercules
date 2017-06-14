@@ -48,7 +48,6 @@ const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('code_submit_audit');
 const {createSimpleWorker} = require('../components/rabbitmq');
 const {submitAuditLogApi, wxcodeApi} = require('../leancloud');
-const {weixin} = require('../pubuim');
 const wxlite = require('../wxlite');
 
 const queueName = 'wxlite_submit_audit_queue';
@@ -63,6 +62,7 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 	]).then(function (res) {
 		let {auditid} = res[0];	// submit_audit
 		let {version, _objectId} = res[1];	// code
+
 		/**
 		 * {
 		 *    auditid         :  5368259,   // 审核 id
