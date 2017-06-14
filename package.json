@@ -7,7 +7,8 @@
   "author": "yinchangsheng <ychangsheng@gmail.com>",
   "license": "Apache License 2.0",
   "scripts": {
-    "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js"
+    "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js",
+    "code-new": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/code_test.js"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
