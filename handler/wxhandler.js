@@ -232,6 +232,7 @@ const handleUnAuthorize = function ({AppId, AuthorizerAppid, CreateTime}, resp) 
 
 // 授权事件接收URL
 route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
+	fundebug.notify('wx 3rd notify ' + req.url + 'body: ' + JSON.stringify(req.weixin));
 	let msg = req.weixin;
 	if ( !has(msg, 'InfoType') || isEmpty(msg.InfoType) ) {
 		fundebug.notify('wx notify unknow url: ' + req.url + 'body: ' + JSON.stringify(msg));
@@ -293,6 +294,7 @@ const handleWeappAuditFail = function ({ToUserName, Reason, CreateTime, FailTime
 
 // 公众号消息与事件接收URL
 route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
+	fundebug.notify('wx 3rd callback ' + req.url + 'body: ' + JSON.stringify(req.weixin));
 	let {appid} = req.params;
 	let msg = req.weixin;
 	if ( !has(msg, 'MsgType') || isEmpty(msg.MsgType) ) {
