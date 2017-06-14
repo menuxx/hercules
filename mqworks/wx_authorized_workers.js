@@ -84,7 +84,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 			.then(function () {
 				return Promise.all([
 					// 3. 短信通知 用户 成功授权
-					sms.sendUnauthorizedSMS(dinerInfo.masterPhone, [dinerInfo.masterName, dinerInfo.shopName, plInfo.contactPhone]),
+					sms.sendAuthorizedSMS(dinerInfo.masterPhone, [dinerInfo.masterName, dinerInfo.shopName]),
 					// 4. 短信通知 用户 成功授权
 					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, shopName: dinerCode.appName})
 				]);
