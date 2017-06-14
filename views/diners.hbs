@@ -114,7 +114,7 @@
                     <div class="diner-testers"></div>
                     <div class="code-info"></div>
                 </div>
-                <img style="width: 100%;" src="{{siteUrl}}/api/wxlite_qrcode/wx833943b167b4012a">
+                <img style="width: 100%;" class="preview-qr-code">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
@@ -123,6 +123,7 @@
     </div>
 </div>
 <script>
+    var siteUrl = '{{siteUrl}}';
     var api = {};
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
@@ -149,6 +150,7 @@
         api.put(`/api/code_commit/${appid}?type=preview`).then(function (res) {
             $("#qrDialog").find('.diner-testers').html('微信ID: ' + res.testers.join(', ') + '可以体验该小程序');
             $("#qrDialog").find('.code-info').html('version: ' + res.version + ', templateId: ' + res.templateId);
+            $("#qrDialog").find('preview-qr-code').html( siteUrl + '/api/wxlite_qrcode/' + appid)
             $("#qrDialog").modal({
                 backdrop: 'static',
                 show: true,
