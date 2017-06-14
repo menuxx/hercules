@@ -60,6 +60,7 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 		wxlite.submitAudit(authorizerAppid),
 		wxcodeApi.getByVersionNumber(version)
 	]).then(function (res) {
+		errorlog('wxlite_submit_audit_queue', res)
 		let {auditid} = res[0];	// submit_audit
 		let {version, _objectId} = res[1];	// code
 
