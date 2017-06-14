@@ -43,6 +43,6 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 		return { ok : true };
 	}, function (err) {
 		errorlog(err);
-		return { ok : false };
+		return { ok : false, status: false };
 	});
 });
