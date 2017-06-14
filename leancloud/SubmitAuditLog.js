@@ -18,7 +18,7 @@ export const log = function (data) {
 	audit.set('auditid', data.auditid);
 	audit.set('version', data.version);
 	audit.set('authorizerAppid', data.auditid);
-	audit.set('codeId', data.auditid);
+	audit.set('codeId', data.codeId);
 	return audit.save();
 };
 
