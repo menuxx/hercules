@@ -86,7 +86,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 					// 3. 短信通知 用户 成功授权
 					sms.sendAuthorizedSMS(dinerInfo.masterPhone, [dinerInfo.masterName, dinerInfo.shopName]),
 					// 4. 短信通知 用户 成功授权
-					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, shopName: dinerCode.appName})
+					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, appName: dinerCode.appName})
 				]);
 			});
 	}).then(function () {
