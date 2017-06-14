@@ -17,20 +17,10 @@
                 其中的 `autoRelease` 同理，其指代当代码审核通过之后，是否自动发布。
                 如果三个属性都是 `true` 将进入无人值守，全自动状态。
             </div>
-            <form class="form-inline" data-type="1">
-                <div class="form-group">
-                    <label>单店版本</label>
-                    <input type="text" class="form-control" placeholder="TemplateID">
-                </div>
-                <a class="btn btn-success diner-single">启动流水线</a>
-            </form>
-            <form class="form-inline" data-type="2">
-                <div class="form-group">
-                    <label>平台版本</label>
-                    <input type="text" class="form-control" placeholder="TemplateID">
-                </div>
-                <a class="btn btn-success diner-platform">启动流水线</a>
-            </form>
+            <div class="btn-group btn-group" role="group">
+                <a class="btn btn-success diner-single">单店版本代码提交</a>
+                <a class="btn btn-success diner-platform">平台版本代码提交</a>
+            </div>
         </div>
     </div>
 </div>
@@ -70,8 +60,15 @@
     $('.diner-single').on('click', codeCommitHandler)
     $('.diner-platform').on('click', codeCommitHandler)
     function codeCommitHandler () {
-        var templateType = parseInt($(this).parents('form').data('type'), 10);
-        api.get(`/api/code?template_type=${templateType}`).then(function (latestCode) {
+        var isSingle = $(this).hasClass('diner-single')
+        var isPlatform = $(this).hasClass('diner-platform')
+        var templateType  = 1;
+        if (isPlatform) {
+            templateType = 1;
+        } else if (isSingle) {
+            templateType = 0;
+        }
+        api.get(`/api/code?templateType=${templateType}`).then(function (latestCode) {
             return api.put(`/api/code_commit?version=${latestCode.version}`)
         }).then(function (res) {
             alert('参与此次发布的小程序共 : ' + res.count + ' 个')
