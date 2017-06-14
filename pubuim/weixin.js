@@ -101,9 +101,9 @@ export const sendCodeAuditSuccess = function ({codeVersion, templateType}, appNa
 /**
  * 微信新用户授权完成
  */
-export const sendWXAuthorized = function ({appName, appId}) {
+export const sendWXAuthorized = function ({shopName, appId}) {
   return post({
-    text: `用户绑定完成。${appName}[AppId: ${appId}]。`,
+    text: `用户绑定完成。商铺${shopName}[AppId: ${appId}]。`,
     channel: "#微信",
     displayUser: {
       name: '微信小程序',

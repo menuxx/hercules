@@ -59,6 +59,8 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 			})
 			.then(function ({authorizer_refresh_token, expires_in=6000}) {
 				let msgId = uuid();
+				// TODO 可以添加原始id未测试者
+				// originAppId
 				let testers = union(plInfo.testers, []);
 				return Promise.all([
 					// 更新循环 msg_id 是的循环正常运行
@@ -89,7 +91,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 					// 3. 短信通知 用户 成功授权
 					sms.sendAuthorizedSMS(dinerInfo.masterPhone, [dinerInfo.masterName, dinerInfo.shopName]),
 					// 4. 短信通知 用户 成功授权
-					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, appName: dinerCode.appName})
+					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, shopName: dinerInfo.shopName})
 				]);
 			});
 	}).then(function () {
