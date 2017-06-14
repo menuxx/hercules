@@ -69,7 +69,7 @@
         } else if (isSingle) {
             templateType = 0;
         }
-        api.get(`/api/code?templateType=${templateType}`).then(function (latestCode) {
+        api.get(`/api/code?template_type=${templateType}`).then(function (latestCode) {
             return api.put(`/api/code_commit?version=${latestCode.version}`)
         }).then(function (res) {
             alert('参与此次发布的小程序共 : ' + res.count + ' 个')
