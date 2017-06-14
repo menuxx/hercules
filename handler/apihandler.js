@@ -101,11 +101,11 @@ route.put('/code_commit/:appid', function (req, resp) {
 		let {appid} = req.params;
 		// 流水线版本
 		if (type === 'line') {
-			wxlite.codeCommit(appid).then(_refResp);
+			wxlite.codeCommit(appid, false).then(_refResp);
 		}
 		// 仅提交，不做域名，和绑定者的覆盖
 		else if (type === 'preview') {
-			wxlite.codeCommit(appid, true).then(_refResp);
+			wxlite.codeCommit(appid, false).then(_refResp);
 		}
 		else {
 			resp.status(400).json({ ok: false, err_msg: 'type invalid' })

@@ -1,7 +1,7 @@
 const {dinerApi, wxcodeApi} = require('../leancloud');
 const {wxliteApi} = require('../wxopenapi');
 const wxlite = require('../wxlite');
-const fundebug = require('../fundebug');
+const {log, errorlog} = require('../logger')('wxlite_code_api')
 const {getAuthorizerToken} = require('./util');
 
 const makeCommitInfo = function ({code, diner}) {
@@ -42,8 +42,6 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true) {
 	return p
 		.then(function (res) {
 			let data = { accessToken: res.accessToken, ...makeCommitInfo(res) }
-			fundebug.notify('appid: ' + authorizer_appid + ', code commit data: ' + JSON.stringify(data))
-			console.log(data)
 			return wxliteApi.wxCommit(data)
 				.then(function (res0) {
 					dinerApi.putAuthorizerFieldByAppid(authorizer_appid, 'lastCommitVersion', res.code.version);
@@ -66,7 +64,7 @@ export const submitAudit = function (authorizer_appid) {
 		let accessToken = res[0], diner = res[1];
 		return wxliteApi.wxSubmitAudit({accessToken, itemList: diner.itemList})
 	}).then(function (res) {
-		fundebug.notify('appid : '+ authorizer_appid +', code SubmitAudit result : ' + JSON.stringify(res))
+		errorlog('appid : '+ authorizer_appid +', code SubmitAudit result : ' + JSON.stringify(res))
 		return res
 	})
 };

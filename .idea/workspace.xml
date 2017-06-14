@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/apihandler.js" afterPath="$PROJECT_DIR$/handler/apihandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxlite/code.js" afterPath="$PROJECT_DIR$/wxlite/code.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -22,6 +24,16 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="406">
               <caret line="135" column="36" lean-forward="true" selection-start-line="135" selection-start-column="36" selection-end-line="135" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="apihandler.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-6">
+              <caret line="83" column="59" lean-forward="true" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
               <folding />
             </state>
           </provider>
@@ -50,7 +62,7 @@
       <file leaf-file-name="hercules_code_commit_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
+            <state relative-caret-position="95">
               <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
               <folding />
             </state>
@@ -60,8 +72,8 @@
       <file leaf-file-name="code.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wxlite/code.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="45" column="28" lean-forward="false" selection-start-line="45" selection-start-column="28" selection-end-line="45" selection-end-column="28" />
+            <state relative-caret-position="161">
+              <caret line="66" column="16" lean-forward="false" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -98,8 +110,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>firstCode</find>
-      <find>ty</find>
       <find>te</find>
       <find>template</find>
       <find>templateI</find>
@@ -116,7 +126,6 @@
       <find>console.lg</find>
       <find>console.l</find>
       <find>stack</find>
-      <find>errorlog</find>
       <find>form</find>
       <find>console.log</find>
       <find>testers</find>
@@ -128,6 +137,9 @@
       <find>codeCommit</find>
       <find>bindTesters</find>
       <find>makeCommitInfo</find>
+      <find>fundebug</find>
+      <find>errorlog</find>
+      <find>fund</find>
     </findStrings>
     <replaceStrings>
       <replace>authorizationCode</replace>
@@ -191,9 +203,9 @@
         <option value="$PROJECT_DIR$/handler/wxhandler.js" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" />
         <option value="$PROJECT_DIR$/views/dashboard.hbs" />
-        <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/views/diners.hbs" />
         <option value="$PROJECT_DIR$/test/code_test.js" />
+        <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/wxlite/code.js" />
       </list>
     </option>
@@ -620,12 +632,12 @@
       <workItem from="1497234942219" duration="31390000" />
       <workItem from="1497281805904" duration="20125000" />
       <workItem from="1497407405211" duration="6558000" />
-      <workItem from="1497423560634" duration="17383000" />
+      <workItem from="1497423560634" duration="17751000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149627000" />
+    <option name="totallyTimeSpent" value="149995000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="23" width="1276" height="777" extended-state="6" />
@@ -1020,14 +1032,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="386">
-          <caret line="103" column="52" lean-forward="true" selection-start-line="103" selection-start-column="52" selection-end-line="103" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="61">
@@ -1084,9 +1088,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6">
+          <caret line="83" column="59" lean-forward="true" selection-start-line="83" selection-start-column="59" selection-end-line="83" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
+        <state relative-caret-position="95">
           <caret line="22" column="41" lean-forward="true" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
           <folding />
         </state>
@@ -1094,8 +1106,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wxlite/code.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="45" column="28" lean-forward="false" selection-start-line="45" selection-start-column="28" selection-end-line="45" selection-end-column="28" />
+        <state relative-caret-position="161">
+          <caret line="66" column="16" lean-forward="false" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="16" />
           <folding />
         </state>
       </provider>
