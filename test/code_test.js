@@ -21,17 +21,19 @@ const {wxcodeApi} = require('../leancloud')
  *    downloadDomains: ['https://file.menuxx.com']
  *  }
  * }
-
+ oB1f90J-lBQzk0SiTvKbCGvfD2CY
+ wx984ee7ec5f76f9cf
+ 1409172302
  */
 
 wxcodeApi.saveCode({
 	gitBranch: 'tpl_single_01',
 	gitTag: 'tpl_single_0_1_12',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: 'v0.1.12',
-	templateId: 7,
+	version: 'v0.1.13',
+	templateId: 8,
 	templateType: 1,
-	desc: 'debug extjson1',
+	desc: 'extjson 确认发布',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',

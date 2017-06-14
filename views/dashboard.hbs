@@ -65,9 +65,9 @@
         var isPlatform = $(this).hasClass('diner-platform')
         var templateType  = 1;
         if (isPlatform) {
-            templateType = 1;
+            templateType = 2;
         } else if (isSingle) {
-            templateType = 0;
+            templateType = 1;
         }
         api.get(`/api/code?template_type=${templateType}`).then(function (latestCode) {
             return api.put(`/api/code_commit?version=${latestCode.version}`)
