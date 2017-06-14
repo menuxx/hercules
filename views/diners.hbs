@@ -150,7 +150,7 @@
         api.put(`/api/code_commit/${appid}?type=preview`).then(function (res) {
             $("#qrDialog").find('.diner-testers').html('微信ID: ' + res.testers.join(', ') + '可以体验该小程序');
             $("#qrDialog").find('.code-info').html('version: ' + res.version + ', templateId: ' + res.templateId);
-            $("#qrDialog").find('preview-qr-code').html( siteUrl + '/api/wxlite_qrcode/' + appid)
+            $("#qrDialog").find('preview-qr-code').attr('src', siteUrl + '/api/wxlite_qrcode/' + appid)
             $("#qrDialog").modal({
                 backdrop: 'static',
                 show: true,
