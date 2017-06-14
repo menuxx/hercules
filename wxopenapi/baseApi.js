@@ -1,5 +1,6 @@
 // https://github.com/request/request-promise
 const rp = require('request-promise')
+const {has} = require('lodash')
 
 module.exports = function (moduleName, baseApi) {
 
@@ -14,6 +15,9 @@ module.exports = function (moduleName, baseApi) {
       json: true
     })
     .then(function(res) {
+      if ( has(res, 'errcode') && has(res, 'errmsg')) {
+        return Promise.reject(res)
+      }
       log('weixin [%s] response url: %s, body %o', moduleName, fullUrl, res)
       return res
     })

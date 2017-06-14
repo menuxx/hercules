@@ -66,6 +66,7 @@ export const saveCode = function (code) {
 	wxCode.set('gitUrl', code.gitUrl)
 	wxCode.set('version', code.version)
 	wxCode.set('templateId', code.templateId)
+	wxCode.set('templateType', code.templateType)
 	wxCode.set('desc', code.desc)
 	wxCode.set('_config', code._config)
 	wxCode.set('_domains', code._domains)
