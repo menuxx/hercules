@@ -8,6 +8,37 @@ export const InfoTypes = {
   COMPONENT_VERIFY_TICKET: 'component_verify_ticket'
 };
 
+/**
+ * 参数说明：
+ * 参数	是否必须	说明
+ * component_appid  是	第三方平台APPID
+ * offset	        是	偏移位置/起始位置
+ * count            是	拉取数量，最大为500
+ * 正常情况下，会返回：
+ * {
+ *    total_count: 33,
+ *    list: [
+ *		 {
+ *			   "authorizer_appid": "authorizer_appid_1",
+ *			   "refresh_token": "refresh_token_1",
+ *			   "auth_time": auth_time_1
+ *		  },
+ *		  {
+ *			   "authorizer_appid": "authorizer_appid_2",
+ *			   "refresh_token": "refresh_token_2",
+ *			   "auth_time": auth_time_2
+ *		   }
+ *    ]
+ * }
+ */
+export const getAuthorizerList = defaultArgs(function (componentAppid, componentAccessToken, offset, count) {
+	return post(`/api_get_authorizer_list?component_access_token=${componentAccessToken}`, {
+		component_appid: componentAppid,
+		offset,
+		count
+    })
+});
+
 
 /**
  * 第三方平台compoment_access_token是第三方平台的下文中接口的调用凭据，

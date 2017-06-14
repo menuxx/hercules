@@ -16,4 +16,16 @@ function getAuthorizerInfo(authorizer_appid) {
 	})
 }
 
+function getAuthorizerList(offset, count) {
+	return componentCacheGet().then(function ({component_access_token}) {
+		return wx3rdApi.getAuthorizerList({
+			offset,
+			count,
+			componentAccessToken: component_access_token
+		})
+	})
+}
+
 module.exports.getAuthorizerInfo = getAuthorizerInfo;
+
+module.exports.getAuthorizerList = getAuthorizerList;

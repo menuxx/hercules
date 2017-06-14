@@ -65,7 +65,20 @@ route.get('/dashboard', passport.authenticate('basic', {session: false}), functi
 	resp.render('dashboard')
 });
 
-route.get('/authorizers', passport.authenticate('basic', {session: false}), function (req, resp) {
+route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), function (req, resp) {
+	req.checkQuery('pagenum', 'url 上的 pagenum 必须存在').notEmpty();
+	autoValid(req, resp).then(function () {
+		let {pagenum=1, pagesize=20} = req.query;
+		if (pagenum < 0) pagenum = 1;
+		if (pagesize > 500) pagesize = 500;
+		let offset = pagenum * pagesize;
+		wxlite.getAuthorizerList(offset, pagesize).then(function ({total_count, list}) {
+			resp.render('wxauthorizers', { authorizers: list, total: total_count, _pagenum: pagenum })
+		})
+	})
+});
+
+route.get('/diners', passport.authenticate('basic', {session: false}), function (req, resp) {
 	Promise.all([
 		tokenCache.getPreAuthCode(),
 		menuxx.getDiners()
@@ -79,7 +92,7 @@ route.get('/authorizers', passport.authenticate('basic', {session: false}), func
 			});
 			return item
 		});
-		resp.render('authorizers', {authorizers, title: '可授权店铺列表'})
+		resp.render('diners', {authorizers, title: '可授权店铺列表'})
 	}, errorlog)
 });
 

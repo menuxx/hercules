@@ -1,0 +1,50 @@
+{{> header }}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            {{#echo authorizers}}
+            <form class="form-horizontal">
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">AuthorizerAppid</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" disabled value="{{authorizer_appid}}">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="help-block">小程序Appid</div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">RefreshToken</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" disabled value="{{refresh_token}}">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="help-block">刷新 authorizer_access_token 的令牌</div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <label class="col-sm-2 control-label">AuthTime</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" disabled value="{{auth_time}}">
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="help-block">授权的时间</div>
+                    </div>
+                </div>
+            </form>
+            {{/echo}}
+            <nav aria-label="wx-pages">
+                <ul class="pager">
+                    <li class="previous"><a href="/wxauthorizers?pagenum={{subtract _pagenum 1}}"><span aria-hidden="true">&larr;</span> 上一页</a></li>
+                    <li class="next"><a href="/wxauthorizers?pagenum={{add _pagenum 1}}">下一页 <span aria-hidden="true">&rarr;</span></a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-md-2">
+            <div class="alert alert-info">
+                共 {{total}} 位授权用户，本页 {{authorizers.length}} 个
+            </div>
+        </div>
+    </div>
+</div>
+{{> footer }}
