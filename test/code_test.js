@@ -26,12 +26,12 @@ const {wxcodeApi} = require('../leancloud')
 
 wxcodeApi.saveCode({
 	gitBranch: 'tpl_single_01',
-	gitTag: 'tpl_single_0_1_10',
+	gitTag: 'tpl_single_0_1_12',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: 'v0.1.10',
-	templateId: 5,
+	version: 'v0.1.12',
+	templateId: 7,
 	templateType: 1,
-	desc: '上传一个新的版本',
+	desc: 'debug extjson1',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',

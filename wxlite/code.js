@@ -5,11 +5,19 @@ const {log, errorlog} = require('../logger')('wxlite_code_api')
 const {getAuthorizerToken} = require('./util');
 
 const makeCommitInfo = function ({code, diner}) {
+	// TODO 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1489140610_Uavc4&token=&lang=zh_CN
 	// accessToken, templateId, extJson, version, desc
 	let {version, desc, templateId} = code;
 	return {
 		templateId, version, desc,
-		extJson: JSON.stringify(diner.config)
+		extJson: JSON.stringify({
+			extAppid: diner.authorizerAppid,
+			ext: diner.config,
+			networkTimeout: {
+				request: 10000,
+				downloadFile: 10000
+			}
+		})
 	}
 };
 
