@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/pageshandler.js" afterPath="$PROJECT_DIR$/handler/pageshandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/dashboard.hbs" afterPath="$PROJECT_DIR$/views/dashboard.hbs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/wxauthorizers.hbs" afterPath="$PROJECT_DIR$/views/wxauthorizers.hbs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -43,11 +41,11 @@
       <file leaf-file-name="wxauthorizers.hbs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="38" column="71" lean-forward="true" selection-start-line="38" selection-start-column="71" selection-end-line="38" selection-end-column="71" />
+            <state relative-caret-position="238">
+              <caret line="37" column="87" lean-forward="false" selection-start-line="37" selection-start-column="87" selection-end-line="37" selection-end-column="87" />
               <folding>
-                <element signature="e#1794#1800#1#HTML" expanded="true" />
-                <element signature="e#1937#1943#1#HTML" expanded="true" />
+                <element signature="e#1798#1804#1#HTML" expanded="true" />
+                <element signature="e#1942#1948#1#HTML" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -618,12 +616,12 @@
       <workItem from="1497234942219" duration="31390000" />
       <workItem from="1497281805904" duration="20125000" />
       <workItem from="1497407405211" duration="6558000" />
-      <workItem from="1497423560634" duration="13068000" />
+      <workItem from="1497423560634" duration="13109000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="145312000" />
+    <option name="totallyTimeSpent" value="145353000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="23" width="1276" height="777" extended-state="6" />
@@ -1089,11 +1087,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="38" column="71" lean-forward="true" selection-start-line="38" selection-start-column="71" selection-end-line="38" selection-end-column="71" />
+        <state relative-caret-position="238">
+          <caret line="37" column="87" lean-forward="false" selection-start-line="37" selection-start-column="87" selection-end-line="37" selection-end-column="87" />
           <folding>
-            <element signature="e#1794#1800#1#HTML" expanded="true" />
-            <element signature="e#1937#1943#1#HTML" expanded="true" />
+            <element signature="e#1798#1804#1#HTML" expanded="true" />
+            <element signature="e#1942#1948#1#HTML" expanded="true" />
           </folding>
         </state>
       </provider>
