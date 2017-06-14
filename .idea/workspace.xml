@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/pageshandler.js" afterPath="$PROJECT_DIR$/handler/pageshandler.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/diners.hbs" afterPath="$PROJECT_DIR$/views/diners.hbs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/wxauthorizers.hbs" afterPath="$PROJECT_DIR$/views/wxauthorizers.hbs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -28,25 +30,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pageshandler.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="pageshandler.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="275">
-              <caret line="74" column="54" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="54" />
+              <caret line="74" column="36" lean-forward="false" selection-start-line="74" selection-start-column="36" selection-end-line="74" selection-end-column="36" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wxauthorizers.hbs" pinned="false" current-in-tab="true">
+      <file leaf-file-name="wxauthorizers.hbs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+            <state relative-caret-position="30">
+              <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
               <folding>
-                <element signature="e#1798#1804#1#HTML" expanded="true" />
-                <element signature="e#1942#1948#1#HTML" expanded="true" />
+                <element signature="e#1832#1838#1#HTML" expanded="true" />
+                <element signature="e#1976#1982#1#HTML" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="diners.hbs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/diners.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="7" column="38" lean-forward="false" selection-start-line="7" selection-start-column="38" selection-end-line="7" selection-end-column="38" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -59,16 +71,6 @@
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="diners.hbs" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/diners.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="30" column="52" lean-forward="true" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -140,7 +142,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/wxlite/member.js" />
         <option value="$PROJECT_DIR$/components/rabbitmq_delay.js" />
         <option value="$PROJECT_DIR$/views/authorize_success.hbs" />
         <option value="$PROJECT_DIR$/views/authorizer.hbs" />
@@ -189,8 +190,9 @@
         <option value="$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js" />
         <option value="$PROJECT_DIR$/wxlite/index.js" />
         <option value="$PROJECT_DIR$/views/dashboard.hbs" />
-        <option value="$PROJECT_DIR$/handler/pageshandler.js" />
+        <option value="$PROJECT_DIR$/views/diners.hbs" />
         <option value="$PROJECT_DIR$/views/wxauthorizers.hbs" />
+        <option value="$PROJECT_DIR$/handler/pageshandler.js" />
       </list>
     </option>
   </component>
@@ -616,18 +618,18 @@
       <workItem from="1497234942219" duration="31390000" />
       <workItem from="1497281805904" duration="20125000" />
       <workItem from="1497407405211" duration="6558000" />
-      <workItem from="1497423560634" duration="13333000" />
+      <workItem from="1497423560634" duration="13527000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="145577000" />
+    <option name="totallyTimeSpent" value="145771000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="23" width="1276" height="777" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23027888" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Weex Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -1061,14 +1063,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/diners.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="30" column="52" lean-forward="true" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/dashboard.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-212">
@@ -1077,22 +1071,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
+    <entry file="file://$PROJECT_DIR$/views/diners.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="74" column="54" lean-forward="false" selection-start-line="74" selection-start-column="43" selection-end-line="74" selection-end-column="54" />
+        <state relative-caret-position="105">
+          <caret line="7" column="38" lean-forward="false" selection-start-line="7" selection-start-column="38" selection-end-line="7" selection-end-column="38" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
+        <state relative-caret-position="30">
+          <caret line="2" column="31" lean-forward="false" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
           <folding>
-            <element signature="e#1798#1804#1#HTML" expanded="true" />
-            <element signature="e#1942#1948#1#HTML" expanded="true" />
+            <element signature="e#1832#1838#1#HTML" expanded="true" />
+            <element signature="e#1976#1982#1#HTML" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="74" column="36" lean-forward="false" selection-start-line="74" selection-start-column="36" selection-end-line="74" selection-end-column="36" />
+          <folding />
         </state>
       </provider>
     </entry>
