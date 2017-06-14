@@ -55,6 +55,7 @@ const routingKey = ROUTING_KEYS.Hercules_WxliteSubmitAudit;
 
 createSimpleWorker({queueName, routingKey}, function (msg) {
 	let {authorizerAppid, version} = msg;
+	console.log('wxlite_submit_audit_queue version： ', version)
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	return Promise.all([
 		wxlite.submitAudit(authorizerAppid),
