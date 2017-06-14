@@ -26,7 +26,7 @@ const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
 const {putAuthorizerBy, getAuthorizerBy} = require('../service');
 const {wx3rdApi} = require('../wxopenapi');
-const {dinerApi} = require('../leancloud')
+const {dinerApi, authorizeApi} = require('../leancloud')
 // https://github.com/kelektiv/node-uuid
 const uuid = require('uuid/v4');
 const webNotify = require('../components/webhook').start({queue: 'wx_authorized'});
@@ -39,7 +39,7 @@ let delayPublisherChannel = null;
 // 如果扫描的系统在当前系统中不存在，就忽略该用户
 createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 
-	let {appId, authorizerAppid, authorizationCode} = msg;
+	let {appId, authorizerAppid, authorizationCode, createTime} = msg;
 
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 
@@ -83,6 +83,11 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 			// 先完成重要任务，然后再通知
 			.then(function () {
 				return Promise.all([
+					authorizeApi.logAuthorized({
+						authorizerAppid,
+						authorizationCode,
+						actionTime: createTime
+					}),
 					// 3. 短信通知 用户 成功授权
 					sms.sendAuthorizedSMS(dinerInfo.masterPhone, [dinerInfo.masterName, dinerInfo.shopName]),
 					// 4. 短信通知 用户 成功授权
@@ -99,7 +104,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 		} else {
 			errorlog('do authorized has error: %s, stack -> ', err.message, err.stack);
 		}
-		return {ok: false, status: false};
+		return { ok: false, status: false };
 	});
 });
 

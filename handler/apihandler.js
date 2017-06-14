@@ -148,8 +148,6 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
  */
 route.post('/pubuim/diners/:appid/code', function (req, resp) {
 
-	log('000')
-
 	// valid rules
 	req.checkBody('type', 'type required and string in body').notEmpty();
 	req.checkBody('action', 'action required and string in body').notEmpty();

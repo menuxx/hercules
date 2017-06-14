@@ -23,7 +23,6 @@ const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
 const {putAuthorizerBy, getAuthorizerBy} = require('../service');
 const {dinerApi, authorizeApi} = require('../leancloud');
-const {plInfo} = require('../config');
 
 const webNotify = require('../components/webhook').start({queue: 'wx_unauthorize'});
 
@@ -58,7 +57,11 @@ createSimpleWorker({queueName, routingKey}, function ( msg, channel ) {
 			// 5. 通知服务器，更改状态
 			putAuthorizerBy(webNotify, { appid: authorizerAppid}, { authorizerStatus: 0 }),
 			// 6. 写入日志
-			authorizeApi.unauthorizeLog(msg)
+			authorizeApi.logUnauthorize({
+				authorizerAppid,
+				actionTime: createTime,
+				componentAppid: appId
+			})
 		]);
 		log('a worker done.');
 	})

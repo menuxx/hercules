@@ -73,8 +73,8 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 		 */
 		return submitAuditLogApi.log({
 			auditid,
-			version: version,
-			authorizerAppid: authorizerAppid,
+			version,
+			authorizerAppid,
 			codeId: _objectId
 		});
 	}).then(function () {
