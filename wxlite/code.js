@@ -41,7 +41,9 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true) {
 	}
 	return p
 		.then(function (res) {
-			return wxliteApi.wxCommit({ accessToken: res.accessToken, ...makeCommitInfo(res) })
+			let data = { accessToken: res.accessToken, ...makeCommitInfo(res) }
+			fundebug.notify('appid: ' + authorizer_appid + ', code commit data: ' + JSON.stringify(data))
+			return wxliteApi.wxCommit(data)
 				.then(function (res0) {
 					dinerApi.putAuthorizerFieldByAppid(authorizer_appid, 'lastCommitVersion', res.code.version);
 					return Object.assign(res0, res)
