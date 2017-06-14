@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/wxauthorizers.hbs" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/views/authorizers.hbs" afterPath="$PROJECT_DIR$/views/diners.hbs" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/pageshandler.js" afterPath="$PROJECT_DIR$/handler/pageshandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/wxhandler.js" afterPath="$PROJECT_DIR$/handler/wxhandler.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/dashboard.hbs" afterPath="$PROJECT_DIR$/views/dashboard.hbs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxlite/index.js" afterPath="$PROJECT_DIR$/wxlite/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js" afterPath="$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/wxauthorizers.hbs" afterPath="$PROJECT_DIR$/views/wxauthorizers.hbs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -27,8 +23,8 @@
       <file leaf-file-name="dashboard.hbs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/dashboard.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" column="55" lean-forward="false" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="55" />
+            <state relative-caret-position="-212">
+              <caret line="5" column="69" lean-forward="false" selection-start-line="5" selection-start-column="69" selection-end-line="5" selection-end-column="69" />
               <folding />
             </state>
           </provider>
@@ -37,8 +33,8 @@
       <file leaf-file-name="pageshandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="75" column="90" lean-forward="false" selection-start-line="75" selection-start-column="82" selection-end-line="75" selection-end-column="90" />
+            <state relative-caret-position="279">
+              <caret line="75" column="122" lean-forward="false" selection-start-line="75" selection-start-column="110" selection-end-line="75" selection-end-column="122" />
               <folding />
             </state>
           </provider>
@@ -47,11 +43,23 @@
       <file leaf-file-name="wxauthorizers.hbs" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="35" column="39" lean-forward="true" selection-start-line="35" selection-start-column="39" selection-end-line="35" selection-end-column="39" />
+            <state relative-caret-position="253">
+              <caret line="38" column="71" lean-forward="true" selection-start-line="38" selection-start-column="71" selection-end-line="38" selection-end-column="71" />
               <folding>
-                <element signature="e#1805#1811#1#HTML" expanded="true" />
-                <element signature="e#1950#1956#1#HTML" expanded="true" />
+                <element signature="e#1794#1800#1#HTML" expanded="true" />
+                <element signature="e#1937#1943#1#HTML" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/components/view.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="29" lean-forward="true" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -60,8 +68,8 @@
       <file leaf-file-name="diners.hbs" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/diners.hbs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="50" column="42" lean-forward="true" selection-start-line="31" selection-start-column="32" selection-end-line="50" selection-end-column="42" />
+            <state relative-caret-position="173">
+              <caret line="30" column="52" lean-forward="true" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -180,9 +188,9 @@
         <option value="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" />
         <option value="$PROJECT_DIR$/pubuim/weixin.js" />
         <option value="$PROJECT_DIR$/handler/wxhandler.js" />
-        <option value="$PROJECT_DIR$/views/dashboard.hbs" />
         <option value="$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js" />
         <option value="$PROJECT_DIR$/wxlite/index.js" />
+        <option value="$PROJECT_DIR$/views/dashboard.hbs" />
         <option value="$PROJECT_DIR$/handler/pageshandler.js" />
         <option value="$PROJECT_DIR$/views/wxauthorizers.hbs" />
       </list>
@@ -610,12 +618,12 @@
       <workItem from="1497234942219" duration="31390000" />
       <workItem from="1497281805904" duration="20125000" />
       <workItem from="1497407405211" duration="6558000" />
-      <workItem from="1497423560634" duration="12658000" />
+      <workItem from="1497423560634" duration="13068000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="144902000" />
+    <option name="totallyTimeSpent" value="145312000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3" y="23" width="1276" height="777" extended-state="6" />
@@ -630,7 +638,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26861313" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26861313" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -679,13 +687,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/amqplib/examples/tutorials/callback_api/worker.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="36" lean-forward="false" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -1036,14 +1037,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/dashboard.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="55" lean-forward="false" selection-start-line="5" selection-start-column="42" selection-end-line="5" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
@@ -1060,29 +1053,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/components/view.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="29" lean-forward="true" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/diners.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="50" column="42" lean-forward="true" selection-start-line="31" selection-start-column="32" selection-end-line="50" selection-end-column="42" />
+        <state relative-caret-position="173">
+          <caret line="30" column="52" lean-forward="true" selection-start-line="30" selection-start-column="52" selection-end-line="30" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/dashboard.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-212">
+          <caret line="5" column="69" lean-forward="false" selection-start-line="5" selection-start-column="69" selection-end-line="5" selection-end-column="69" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="75" column="90" lean-forward="false" selection-start-line="75" selection-start-column="82" selection-end-line="75" selection-end-column="90" />
+        <state relative-caret-position="279">
+          <caret line="75" column="122" lean-forward="false" selection-start-line="75" selection-start-column="110" selection-end-line="75" selection-end-column="122" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/wxauthorizers.hbs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="35" column="39" lean-forward="true" selection-start-line="35" selection-start-column="39" selection-end-line="35" selection-end-column="39" />
+        <state relative-caret-position="253">
+          <caret line="38" column="71" lean-forward="true" selection-start-line="38" selection-start-column="71" selection-end-line="38" selection-end-column="71" />
           <folding>
-            <element signature="e#1805#1811#1#HTML" expanded="true" />
-            <element signature="e#1950#1956#1#HTML" expanded="true" />
+            <element signature="e#1794#1800#1#HTML" expanded="true" />
+            <element signature="e#1937#1943#1#HTML" expanded="true" />
           </folding>
         </state>
       </provider>

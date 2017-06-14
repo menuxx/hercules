@@ -73,7 +73,7 @@ route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), fu
 		if (pagesize > 500) pagesize = 500;
 		let offset = pagenum * pagesize;
 		wxlite.getAuthorizerList(offset, pagesize).then(function ({total_count, list}) {
-			resp.render('wxauthorizers', { authorizers: list, total: total_count, _pagenum: pagenum })
+			resp.render('wxauthorizers', { authorizers: list, total: total_count, _next_pagenum: pagenum + 1, _pre_pagenum: pagenum - 1 })
 		})
 	})
 });
