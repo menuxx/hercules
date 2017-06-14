@@ -21,11 +21,13 @@ const {wxcodeApi} = require('../leancloud')
  *  }
  * }
 
+ */
+
 wxcodeApi.saveCode({
-	gitBranch: '3rd_single',
-	gitTag: '0.1.4',
+	gitBranch: 'tpl_single_01',
+	gitTag: 'tpl_single_0.1.1',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: '0.1.4',
+	version: '0.1.2',
 	templateId: 0,
 	desc: '修复了一些bug, 提高了稳定性',
 	_config: {
@@ -42,8 +44,6 @@ wxcodeApi.saveCode({
 }).then(function (res) {
 	console.log(res.id)
 })
-
- */
 
 wxcodeApi.firstCode(0).then(function (a) {
 	console.log(a)

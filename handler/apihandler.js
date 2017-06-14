@@ -184,7 +184,7 @@ route.post('/pubuim/diners/:appid/code', function (req, resp) {
 			let successReply = function (action) {
 				return function () {
 					resp.json({
-						text: `${diner.appName} - ${action}成功`,
+						text: `${diner.shopName} - ${action}成功`,
 						icon_url: 'https://file.menuxx.com/image/menuxx-logo-mini.png',
 						username: '菜单加'
 					})
@@ -194,7 +194,7 @@ route.post('/pubuim/diners/:appid/code', function (req, resp) {
 			let failReply = function (action) {
 				return function (err) {
 					resp.json({
-						text: `${diner.appName} - ${action}失败`,
+						text: `${diner.shopName} - ${action}失败`,
 						icon_url: 'https://file.menuxx.com/image/menuxx-logo-mini.png',
 						attachments: [{
 							description: err.message,
