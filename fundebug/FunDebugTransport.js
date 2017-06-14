@@ -70,8 +70,6 @@ FundebugHttp.prototype._request = function (options, callback) {
     res.resume();
   });
   
-  console.log(options)
-
   req.end(new Buffer(JSON.stringify(options), 'utf8'));
 
 };

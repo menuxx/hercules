@@ -26,7 +26,7 @@ const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
 const {putAuthorizerBy, getAuthorizerBy} = require('../service');
 const {wx3rdApi} = require('../wxopenapi');
-const {dinerApi, authorizeApi} = require('../leancloud')
+const {authorizeApi} = require('../leancloud')
 // https://github.com/kelektiv/node-uuid
 const uuid = require('uuid/v4');
 const webNotify = require('../components/webhook').start({queue: 'wx_authorized'});
@@ -45,9 +45,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 
 	return Promise.all([
 		getAuthorizerBy({appid: authorizerAppid}),
-		dinerApi.getAuthorizerByAppid(authorizerAppid)
-	]).then(function (res) {
-		let dinerInfo = res[0], dinerCode = res[1];
+	]).then(function (dinerInfo) {
 		return tokenCache.getComponentAccessToken()
 			.then(function (componentAccessToken) {
 				// 此处 appId 可以 当做 componentAppid 使用
@@ -61,7 +59,7 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 			})
 			.then(function ({authorizer_refresh_token, expires_in=6000}) {
 				let msgId = uuid();
-				let testers = union(plInfo.testers, dinerCode.testers);
+				let testers = union(plInfo.testers, []);
 				return Promise.all([
 					// 更新循环 msg_id 是的循环正常运行
 					authorizerCache.putRefreshTokenMsgId(authorizerAppid, msgId),

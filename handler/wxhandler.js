@@ -284,6 +284,7 @@ const handleWeappAuditFail = function ({ToUserName, Reason, CreateTime, FailTime
 		reason: Reason
 	}).then(function () {
 		resp.send('SUCCESS');
+		// wx833943b167b4012a
 	}, function (err) {
 		errorlog('handleWeappAuditFail error: %o', err);
 		resp.send('FAIL');
