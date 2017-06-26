@@ -59,8 +59,6 @@ createSimpleWorker({queueName, routingKey}, function (msg, channel) {
 			})
 			.then(function ({authorizer_refresh_token, expires_in=6000}) {
 				let msgId = uuid();
-				// TODO 可以添加原始id未测试者
-				// originAppId
 				let testers = union(plInfo.testers, []);
 				return Promise.all([
 					// 更新循环 msg_id 是的循环正常运行

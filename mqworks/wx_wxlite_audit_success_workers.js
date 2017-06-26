@@ -1,8 +1,7 @@
 /**
 // 微信小程序审核成功
 // routingKey: wx.wxlite.audit_success
-// { originAppId, successTime, createTime }
-// originAppId: 小程序原始id
+// { authorizerAppid, successTime, createTime }
 // successTime: 成功时间，用于记录log
 // 根据小程序原始id 在 leancloud DinerWXLite Class 中查找到对应的 diner 然后在 AuditLog Class 中 生成对应的记录
 // 1. pubuim 通知 authorizer_appid 小程序已经完成审核，待发布
@@ -23,19 +22,19 @@ let publisherChannel = null;
 
 createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 	log('a worker begin...');
-	let {originAppId, successTime, createTime} = msg;
+	let {authorizerAppid, successTime, createTime} = msg;
+	log('a worker begin... authorizerAppid:' + authorizerAppid);
 	// 获取当前用户是否支持，自动发布
-	return dinerApi
-		.getAuthorizerByOriginAppId(originAppId).then(function (diner) {
+	return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
 		// 如果支持 autoRelease ，就自动发布，否则 中断 将发布权限交给 pubuim
 		if (diner.autoRelease) {
 			return publish2(publisherChannel, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
-				authorizer_appid: diner.authorizerAppid
+				authorizer_appid: authorizerAppid
 			});
 		} else {
 			// 获取最近一次代码提交审核记录
 			// {codeVersion, templateId}, shopName, appId
-			return submitAuditLogApi.getNewest(diner.authorizerAppid).then(function (submit) {
+			return submitAuditLogApi.getNewest(authorizerAppid).then(function (submit) {
 				let {version, _objectId} = submit;
 				/*
 				 * struct:
@@ -52,7 +51,7 @@ createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 						succTime: wxtime(successTime),
 						createTime: wxtime(createTime),
 						submitId: _objectId,
-						authorizerAppid: diner.authorizerAppid
+						authorizerAppid: authorizerAppid
 					}),
 					pubuWeixin.sendCodeAuditSuccess(
 						{ codeVersion: version, templateType: diner.templateType },

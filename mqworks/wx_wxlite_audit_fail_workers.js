@@ -1,8 +1,8 @@
 /**
 // 微信小程序审核失败
 // routingKey: wx.wxlite.audit_fail
-// { originAppId, failTime, reason, createTime }
-// app_origin_id: 小程序原始id
+// { authorizerAppId, failTime, reason, createTime }
+// authorizerAppId: 小程序 Id
 // fail_time: 失败时间，用于记录log
 // 根据小程序原始id 在 leancloud DinerWXLite Class 中查找到对应的 diner 然后在 AuditLog Class 中 生成对应的记录
 // 1. pubuim 通知 authorizer_appid 小程序审核失败，并显示原因。
@@ -19,10 +19,10 @@ const queueName = 'wx_wxlite_audit_fail_queue';
 const routingKey = ROUTING_KEYS.WX_WxliteAuditFail;
 
 createSimpleWorker({queueName, routingKey}, function (msg, ch) {
-	log('a worker begin...');
-	let {originAppId, reason, failTime, createTime} = msg;
-	return dinerApi.getAuthorizerByOriginAppId(originAppId).then(function (diner) {
-		return submitAuditLogApi.getNewest(diner.authorizerAppid)
+	let {authorizerAppid, reason, failTime, createTime} = msg;
+	log('a worker begin... authorizerAppid:' + authorizerAppid);
+	return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
+		return submitAuditLogApi.getNewest(authorizerAppid)
 			.then(function (submit) { return {submit, diner} })
 		})
 		.then(function ({submit, diner}) {

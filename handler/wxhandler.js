@@ -9,7 +9,6 @@ const {appPublish, appDelayPublish} = require('../components/rabbitmq');
 const {wxApi, wx3rdApi} = require('../wxopenapi');
 const {InfoTypes} = wx3rdApi;
 const {ROUTING_KEYS} = require('../mqworks');
-const fundebug = require('../fundebug');
 const {isEmpty, has} = require('lodash');
 
 const route = Router();
@@ -232,10 +231,8 @@ const handleUnAuthorize = function ({AppId, AuthorizerAppid, CreateTime}, resp) 
 
 // 授权事件接收URL
 route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
-	fundebug.notify('wx 3rd notify ' + req.url + 'body: ' + JSON.stringify(req.weixin));
 	let msg = req.weixin;
 	if ( !has(msg, 'InfoType') || isEmpty(msg.InfoType) ) {
-		fundebug.notify('wx notify unknow url: ' + req.url + 'body: ' + JSON.stringify(msg));
 		return resp.status(401).send('FAIL');
 	}
 	log('weixin notify InfoType : %s', msg.InfoType);
@@ -257,16 +254,15 @@ route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
 			handleComponentAccessToken(msg, resp);
 			break;
 		default:
-			fundebug.notify('wx notify unknow InfoType url: ' + req.url + 'body: ' + JSON.stringify(msg));
 			resp.send('SUCCESS');
 	}
 	resp.send('SUCCESS');
 }));
 
 
-const handleWeappAuditSuccess = function ({ToUserName, CreateTime, SuccTime}, resp) {
+const handleWeappAuditSuccess = function ({AppId, CreateTime, SuccTime}, resp) {
 	appPublish(ROUTING_KEYS.WX_WxliteAuditSuccess, {
-		originAppId: ToUserName,
+		authorizerAppid: AppId,
 		createTime: CreateTime,
 		succTime: SuccTime
 	}).then(function () {
@@ -277,9 +273,9 @@ const handleWeappAuditSuccess = function ({ToUserName, CreateTime, SuccTime}, re
 	})
 }
 
-const handleWeappAuditFail = function ({ToUserName, Reason, CreateTime, FailTime}, resp) {
+const handleWeappAuditFail = function ({AppId, Reason, CreateTime, FailTime}, resp) {
 	appPublish(ROUTING_KEYS.WX_WxliteAuditFail, {
-		originAppId: ToUserName,
+		authorizerAppid: AppId,
 		createTime: CreateTime,
 		failTime: FailTime,
 		reason: Reason
@@ -294,11 +290,13 @@ const handleWeappAuditFail = function ({ToUserName, Reason, CreateTime, FailTime
 
 // 公众号消息与事件接收URL
 route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
-	fundebug.notify('wx 3rd callback ' + req.url + 'body: ' + JSON.stringify(req.weixin));
 	let {appid} = req.params;
 	let msg = req.weixin;
+
+	// 将 appid 附加到消息时体重
+	msg.AppId = appid;
+
 	if ( !has(msg, 'MsgType') || isEmpty(msg.MsgType) ) {
-		fundebug.notify('wx 3rd callback unknow url: ' + req.url + 'body: ' + JSON.stringify(msg));
 		return resp.send('FAIL');
 	}
 	if (msg.ToUserName === WX_TEST_LITE_USERNAME) {
@@ -319,7 +317,6 @@ route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
 				handleWeappAuditFail(msg, resp);
 				break;
 			default:
-				fundebug.notify('wx 3rd callback unknow MsgType url: ' + req.url + 'body: ' + JSON.stringify(msg));
 		}
 	}
 	resp.reply('客服消息正在开发中，敬请期待...');

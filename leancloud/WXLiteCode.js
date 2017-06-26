@@ -36,7 +36,7 @@ function reflectWXLiteCodeObject(object) {
 		gitBranch: object.get('gitBranch'),
 		gitTag: object.get('gitTag'),
 		gitUrl: object.get('gitUrl'),
-		version: object.get('gitTag'),
+		version: object.get('version'),
 		templateType: object.get('templateType'),
 		templateId: object.get('templateId'),
 		desc: object.get('desc'),
