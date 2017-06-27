@@ -20,20 +20,6 @@ route.get('/component_cache', function (req, resp) {
 	})
 });
 
-route.get('/dinerwxlite/:appid', function (req, resp) {
-	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
-	jsonAutoValid(req, resp).then(function () {
-		let {appid} = req.params;
-		return Promise.all([
-			wxlite.getCategory(appid),
-			dinerApi.getAuthorizerByAppid(appid)
-		])
-		.then(function (res) {
-
-		})
-	});
-});
-
 // 保存 item_list
 route.put('/dinerwxlite/:appid', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();

@@ -71,9 +71,9 @@ export const submitAudit = function (authorizer_appid) {
 	]).then(function (res) {
 		let accessToken = res[0], diner = res[1];
 		return wxliteApi.wxSubmitAudit({accessToken, itemList: diner.itemList})
-	}).then(function (res) {
-		errorlog('appid : '+ authorizer_appid +', code SubmitAudit result : ' + JSON.stringify(res))
-		return res
+	}, function (err) {
+		errorlog('appid : '+ authorizer_appid +', code SubmitAudit result : ' + JSON.stringify(err))
+		return err
 	})
 };
 
