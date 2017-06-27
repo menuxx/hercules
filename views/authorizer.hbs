@@ -71,6 +71,19 @@
                 </div>
             </div>
 
+            <div class="form-group form-group-sm">
+                <label class="col-sm-2 control-label">VisitStatus</label>
+                <div class="col-sm-8">
+                    <a class="change-visit btn btn-block btn-{{#if dinerCode.visible}}primary{{else}}warning{{/if}} pull-right">
+                        修改可是状态
+                        {{#if dinerCode.visible}}可见{{else}}不可见{{/if}}
+                    </a>
+                </div>
+                <div class="col-sm-2">
+                    <div class="help-block">修改小程序线上代码的可见状态</div>
+                </div>
+            </div>
+
         </form>
     </div>
 </div>
@@ -124,7 +137,16 @@
             console.error(e)
             return alert('数据格式错误, 请填写正确的 JSON 格式');
         }
-
     }
+    $(".change-visit").on('click', function () {
+        var appid = $(this).parents('form.diner').data('appid');
+        api.put(`/api/change_visit/${appid}`).then(function (res) {
+            if (res.visible) {
+                $(".btn.change-visit").addClass('btn-primary').removeClass('btn-warning').html("修改可是状态-可见")
+            } else {
+                $(".btn.change-visit").addClass('btn-warning').removeClass('btn-primary').html("修改可是状态-不可见")
+            }
+        })
+    });
 </script>
 {{> footer }}

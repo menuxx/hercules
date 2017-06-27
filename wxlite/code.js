@@ -99,3 +99,9 @@ export const getPage = function (authorizer_appid) {
 		return wxliteApi.wxGetPage({accessToken});
 	})
 }
+
+export const changeVisit = function (authorizer_appid, isOpne) {
+	return getAuthorizerToken(authorizer_appid).then(function (accessToken) {
+		return wxliteApi.wxChangeVisitStatus({accessToken, isOpne})
+	})
+}

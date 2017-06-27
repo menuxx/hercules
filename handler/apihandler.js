@@ -6,6 +6,7 @@ const {jsonAutoValid} = require('../lib/params');
 const {dinerApi, wxcodeApi} = require('../leancloud');
 const {componentCacheGet} = require('../components/cache');
 const wxlite = require('../wxlite');
+const {toggleVisible} = require('../service')
 const {ROUTING_KEYS} = require('../mqworks');
 const {appPublish} = require('../components/rabbitmq');
 
@@ -43,7 +44,7 @@ route.post('/dinerwxlite', function (req, resp) {
 
 route.get('/wxlite_qrcode/:appid', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
-	jsonAutoValid(req).then(function () {
+	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
 		wxlite.getQrcode(appid).then(function (res) {
 			resp.type('jpeg');
@@ -59,6 +60,16 @@ route.get('/code', function (req, resp) {
 		wxcodeApi.firstCodeByType(parseInt(template_type, 10)).then(resp.json.bind(resp))
 	})
 });
+
+route.put('/change_visit/:appid', function (req, resp) {
+	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
+	jsonAutoValid(req).then(function () {
+		let {appid} = req.params;
+		toggleVisible(appid).then(function (res) {
+			resp.json({ visible: res })
+		})
+	});
+})
 
 route.put('/code_commit', function (req, resp) {
 	req.checkQuery('version', 'url 上的 version 必须存在').notEmpty();
@@ -78,7 +89,7 @@ route.put('/code_commit', function (req, resp) {
 });
 
 route.put('/code_commit/:appid', function (req, resp) {
-	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
+	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
 	function _refResp (res) {
 		return resp.json({ templateType: res.code.templateType, templateId: res.code.templateId, testers: res.diner.testers, version: res.code.version, errcode: res.errcode, errmsg: res.errmsg });
 	}
@@ -101,7 +112,7 @@ route.put('/code_commit/:appid', function (req, resp) {
 
 // 代码审核
 route.put('/code_submitaudit/:appid', function (req, resp) {
-	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
+	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
 		dinerApi.getAuthorizerByAppid(appid)

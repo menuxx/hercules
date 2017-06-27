@@ -16,6 +16,7 @@ const {has, isEmpty} = require('lodash')
  *    autoRelease: true,  // 是否自动化发布
  *    autoSubmitAudit: true, // 是否自动提交审核
  *    lastCommitVersion: '0.1.2',
+ *	  visible: true,
  *    config: {
  *      codeVersion: '0.1.1',
  *      appName: '芝根芝底披萨餐厅转塘店',
@@ -67,6 +68,7 @@ function reflectDinerWXLiteObject(object) {
 		appKey: object.get('appKey'),
 		appName: object.get('appName'),
 		version: object.get('version'),
+		visible: object.get('visible'),
 		autoCommit: object.get('autoCommit', false),
 		autoRelease: object.get('autoRelease', false),
 		autoSubmitAudit: object.get('autoSubmitAudit', false),
@@ -112,6 +114,7 @@ export const saveAuthorizer = function (appid, data) {
 		dinerObj.set('authorizerAppid', data.authorizerAppid)
 		dinerObj.set('appKey', data.appKey)
 		dinerObj.set('appName', data.appName)
+		dinerObj.set('visible', data.visible)
 		dinerObj.set('version', data.version)      // 小程序当前版本号
 		dinerObj.set('templateType', data.templateType)
 		if (has(data, 'corpId')) dinerObj.set('corpId', data.corpId);
@@ -134,6 +137,7 @@ export const createAuthorizer = function (data) {
 	diner.set('appKey', data.appKey)
 	diner.set('appName', data.appName)
 	diner.set('version', data.version)      // 小程序当前版本号
+	diner.set('visible', data.visible)
 	diner.set('templateType', data.templateType)
 	if (has(diner, 'corpId')) diner.set('corpId', data.corpId);
 	if (has(diner, 'platformCorpId')) diner.set('platformCorpId', data.platformCorpId);

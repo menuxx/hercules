@@ -1,5 +1,7 @@
 const {wxcodeApi, dinerApi} = require('../leancloud')
 
+const {toggleVisible} = require('../service')
+
 /**
  * {
  *  gitBranch: '3rdcomponent',
@@ -54,3 +56,7 @@ const {wxcodeApi, dinerApi} = require('../leancloud')
 // })
 
 // dinerApi.putAuthorizerFieldByAppid('wx833943b167b4012a', 'lastCommitVersion', 'v0.0.14');
+
+// toggleVisible('wx833943b167b4012a').then(function (res) {
+// 	console.log(res)
+// })

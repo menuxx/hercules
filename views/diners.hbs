@@ -160,8 +160,7 @@
     });
     $(".code-audit").on('click', function () {
         var appid = $(this).parents('form.diner-form').data('appid');
-        api.put(`/api/code_submitaudit/${appid}`).then(function (res) {
-            console.log(res)
+        api.put(`/api/code_submitaudit/${appid}`).then(function () {
             alert('已经提交审核')
         })
     });
