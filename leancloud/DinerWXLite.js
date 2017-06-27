@@ -99,7 +99,7 @@ export const findAutoCommitAuthorizers = function () {
 export const putAuthorizerFieldByAppid = function (appid, field, data) {
 	query.equalTo('authorizerAppid', appid);
 	return query.first().then(function (diner) {
-		var obj = AV.Object.createWithoutData(DinerWXLite, diner.id);
+		let obj = AV.Object.createWithoutData('DinerWXLite', diner.id);
 		obj.set(field, data);
 		return obj.save();
 	})
