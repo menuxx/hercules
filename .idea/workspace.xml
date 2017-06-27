@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/apihandler.js" afterPath="$PROJECT_DIR$/handler/apihandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/code_test.js" afterPath="$PROJECT_DIR$/test/code_test.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxlite/code.js" afterPath="$PROJECT_DIR$/wxlite/code.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" afterPath="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,61 +17,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="hercules_code_submit_audit_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6">
-              <caret line="47" column="30" lean-forward="false" selection-start-line="47" selection-start-column="30" selection-end-line="47" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="code_test.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/code_test.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="118">
-              <caret line="30" column="32" lean-forward="true" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wxlite/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="42" lean-forward="false" selection-start-line="4" selection-start-column="42" selection-end-line="4" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="code.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wxlite/code.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5">
-              <caret line="39" column="23" lean-forward="false" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="23" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="apihandler.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="93" column="48" lean-forward="false" selection-start-line="93" selection-start-column="48" selection-end-line="93" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="229" column="59" lean-forward="false" selection-start-line="229" selection-start-column="59" selection-end-line="229" selection-end-column="59" />
+            <state relative-caret-position="202">
+              <caret line="62" column="20" lean-forward="false" selection-start-line="62" selection-start-column="13" selection-end-line="62" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -171,7 +128,6 @@
         <option value="$PROJECT_DIR$/views/wxauthorizers.hbs" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" />
         <option value="$PROJECT_DIR$/views/diners.hbs" />
-        <option value="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
         <option value="$PROJECT_DIR$/views/dashboard.hbs" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js" />
         <option value="$PROJECT_DIR$/leancloud/WXLiteCode.js" />
@@ -188,6 +144,7 @@
         <option value="$PROJECT_DIR$/test/code_test.js" />
         <option value="$PROJECT_DIR$/wxlite/code.js" />
         <option value="$PROJECT_DIR$/handler/apihandler.js" />
+        <option value="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
       </list>
     </option>
   </component>
@@ -616,12 +573,12 @@
       <workItem from="1497423560634" duration="23943000" />
       <workItem from="1497691091863" duration="24000" />
       <workItem from="1498469250680" duration="4940000" />
-      <workItem from="1498527574862" duration="3996000" />
+      <workItem from="1498527574862" duration="5394000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165147000" />
+    <option name="totallyTimeSpent" value="166545000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1323" y="98" width="1375" height="851" extended-state="0" />
@@ -961,14 +918,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="229" column="59" lean-forward="false" selection-start-line="229" selection-start-column="59" selection-end-line="229" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leancloud/SubmitAuditLog.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="52">
@@ -993,10 +942,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/code_test.js">
+    <entry file="file://$PROJECT_DIR$/wxopenapi/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="118">
-          <caret line="30" column="32" lean-forward="true" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
+        <state relative-caret-position="-32">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="80" column="21" lean-forward="false" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wxlite/code.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="42" column="55" lean-forward="true" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
           <folding />
         </state>
       </provider>
@@ -1009,34 +974,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test/code_test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="30" column="32" lean-forward="true" selection-start-line="30" selection-start-column="32" selection-end-line="30" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6">
-          <caret line="47" column="30" lean-forward="false" selection-start-line="47" selection-start-column="30" selection-end-line="47" selection-end-column="30" />
+        <state relative-caret-position="202">
+          <caret line="62" column="20" lean-forward="false" selection-start-line="62" selection-start-column="13" selection-end-line="62" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/index.js">
+    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-32">
-          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wxlite/code.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5">
-          <caret line="39" column="23" lean-forward="false" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="93" column="48" lean-forward="false" selection-start-line="93" selection-start-column="48" selection-end-line="93" selection-end-column="48" />
+        <state relative-caret-position="360">
+          <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
           <folding />
         </state>
       </provider>
