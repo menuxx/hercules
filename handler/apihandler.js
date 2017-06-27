@@ -106,9 +106,11 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 		let {appid} = req.params;
 		dinerApi.getAuthorizerByAppid(appid)
 			.then(function ({lastCommitVersion}) {
+				console.log('================ lastCommitVersion', lastCommitVersion)
 				return wxcodeApi.getByVersionNumber(lastCommitVersion)
 			})
 			.then(function (code) {
+				console.log("=============== code", code)
 				return appPublish(ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid: appid,
 					version: code.version
