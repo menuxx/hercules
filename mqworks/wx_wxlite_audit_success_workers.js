@@ -28,9 +28,7 @@ createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 	return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
 		// 如果支持 autoRelease ，就自动发布，否则 中断 将发布权限交给 pubuim
 		if (diner.autoRelease) {
-			return publish2(publisherChannel, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
-				authorizer_appid: authorizerAppid
-			});
+			return publish2(publisherChannel, ROUTING_KEYS.Hercules_WxliteCodeRelease, { authorizerAppid });
 		} else {
 			// 获取最近一次代码提交审核记录
 			// {codeVersion, templateId}, shopName, appId
