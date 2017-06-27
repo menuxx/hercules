@@ -28,19 +28,19 @@ const {wxcodeApi} = require('../leancloud')
 
 wxcodeApi.saveCode({
 	gitBranch: 'tpl_single_01',
-	gitTag: 'tpl_single_0_1_12',
+	gitTag: 'tpl_single_0_1_14',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: 'v0.1.13',
-	templateId: 8,
+	version: 'v0.1.14',
+	templateId: 9,
 	templateType: 1,
-	desc: 'extjson 确认发布',
+	desc: '1. 修改了，我要开店页面的 title文案。 2.首页添加分享按钮 3.其他文案修改',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',
 		fundebugApikey: '337b61f714201cbc40911fcb17a19a16e54399e26d68497f0a8681a999c66909'
 	},
 	_domains: {
-		requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com'],
+		requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com', 'https://fundebug.com'],
 		wsRequestDomains: ['wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
 		uploadDomains: ['https://file.menuxx.com'],
 		downloadDomains: ['https://file.menuxx.com']

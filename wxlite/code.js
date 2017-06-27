@@ -4,20 +4,31 @@ const wxlite = require('../wxlite');
 const {log, errorlog} = require('../logger')('wxlite_code_api')
 const {getAuthorizerToken} = require('./util');
 
-const makeCommitInfo = function ({code, diner}) {
+const makeCommitInfo = function ({code, diner}, usDebug = false) {
 	// TODO 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1489140610_Uavc4&token=&lang=zh_CN
 	// accessToken, templateId, extJson, version, desc
 	let {version, desc, templateId} = code;
-	return {
-		templateId, version, desc,
-		extJson: JSON.stringify({
-			extAppid: diner.authorizerAppid,
-			ext: diner.config,
-			networkTimeout: {
-				request: 10000,
-				downloadFile: 10000
-			}
-		})
+	let _dinerCodeConfig = {
+		extAppid: diner.authorizerAppid,
+		ext: diner.config,
+		networkTimeout: {
+			request: 10000,
+			downloadFile: 10000
+		}
+	};
+	if ( usDebug ) {
+		return {
+			templateId, version, desc,
+			extJson: JSON.stringify(_dinerCodeConfig)
+		}
+	} else {
+		return {
+			templateId, version, desc,
+			extJson: JSON.stringify(Object.assign({
+				debug: true,
+				extEnable: true
+			}, _dinerCodeConfig))
+		}
 	}
 };
 
@@ -26,7 +37,7 @@ const makeCommitInfo = function ({code, diner}) {
  * onlyCommit, 只提交代码，
  * 不做 域名覆盖, 测试者覆盖
  */
-export const codeCommit = function (authorizer_appid, onlyCommit = true) {
+export const codeCommit = function (authorizer_appid, onlyCommit = true, usDebug = false) {
 	let p = Promise.all([
 		getAuthorizerToken(authorizer_appid),
 		dinerApi.getAuthorizerByAppid(authorizer_appid)
@@ -49,7 +60,7 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true) {
 	}
 	return p
 		.then(function (res) {
-			let data = { accessToken: res.accessToken, ...makeCommitInfo(res) }
+			let data = { accessToken: res.accessToken, ...makeCommitInfo(res, usDebug) }
 			return wxliteApi.wxCommit(data)
 				.then(function (res0) {
 					dinerApi.putAuthorizerFieldByAppid(authorizer_appid, 'lastCommitVersion', res.code.version);
