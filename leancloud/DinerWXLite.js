@@ -70,6 +70,7 @@ function reflectDinerWXLiteObject(object) {
 		autoCommit: object.get('autoCommit', false),
 		autoRelease: object.get('autoRelease', false),
 		autoSubmitAudit: object.get('autoSubmitAudit', false),
+		lastCommitVersion: object.get('lastCommitVersion'),
 		templateType: object.get('templateType'),
 		corpId: object.get('corpId'),
 		platformCorpId: object.get('platformCorpId'),
@@ -118,6 +119,7 @@ export const saveAuthorizer = function (appid, data) {
 		dinerObj.set('autoCommit', data.autoCommit || false)
 		dinerObj.set('autoSubmitAudit', data.autoSubmitAudit || false)
 		dinerObj.set('autoRelease', data.autoRelease || false)
+		dinerObj.set('lastCommitVersion', data.lastCommitVersion)
 		dinerObj.set('config', data.config)
 		dinerObj.set('itemList', data.itemList)
 		dinerObj.set('testers', data.testers)
@@ -142,6 +144,7 @@ export const createAuthorizer = function (data) {
 	diner.set('itemList', data.itemList)
 	diner.set('testers', data.testers)
 	diner.set('domains', data.domains)
+	diner.set('lastCommitVersion', data.lastCommitVersion)
 	return diner.save();
 };
 
