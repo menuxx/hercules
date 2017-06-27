@@ -84,7 +84,7 @@
                                         <div class="form-group form-group-sm">
                                             <label class="col-sm-2 control-label">SubmitAudit</label>
                                             <div class="col-sm-6">
-                                                <a class="btn btn-block btn-primary">提交审核</a>
+                                                <a class="code-audit btn btn-block btn-primary">提交审核</a>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="help-block">为该用户单独提交审核一个版本的小程序</div>
@@ -156,6 +156,13 @@
                 show: true,
                 keyboard: false
             })
+        })
+    });
+    $(".code-audit").on('click', function () {
+        var appid = $(this).parents('form.diner-form').data('appid');
+        api.put(`/api/code_submitaudit/${appid}`).then(function (res) {
+            console.log(res)
+            alert('已经提交审核')
         })
     });
 </script>

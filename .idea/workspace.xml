@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" afterPath="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/diners.hbs" afterPath="$PROJECT_DIR$/views/diners.hbs" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,12 +18,44 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
+            <state relative-caret-position="225">
+              <caret line="234" column="14" lean-forward="true" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="apihandler.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="311">
+              <caret line="110" column="35" lean-forward="true" selection-start-line="110" selection-start-column="35" selection-end-line="110" selection-end-column="35" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pageshandler.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="42" column="7" lean-forward="true" selection-start-line="42" selection-start-column="7" selection-end-line="42" selection-end-column="7" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="diners.hbs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/diners.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="334">
+              <caret line="161" column="69" lean-forward="true" selection-start-line="161" selection-start-column="69" selection-end-line="161" selection-end-column="69" />
+              <folding>
+                <element signature="e#6871#6891#0#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -124,10 +157,8 @@
         <option value="$PROJECT_DIR$/pubuim/weixin.js" />
         <option value="$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js" />
         <option value="$PROJECT_DIR$/wxlite/index.js" />
-        <option value="$PROJECT_DIR$/handler/pageshandler.js" />
         <option value="$PROJECT_DIR$/views/wxauthorizers.hbs" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" />
-        <option value="$PROJECT_DIR$/views/diners.hbs" />
         <option value="$PROJECT_DIR$/views/dashboard.hbs" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_commit_workers.js" />
         <option value="$PROJECT_DIR$/leancloud/WXLiteCode.js" />
@@ -145,6 +176,8 @@
         <option value="$PROJECT_DIR$/wxlite/code.js" />
         <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
+        <option value="$PROJECT_DIR$/handler/pageshandler.js" />
+        <option value="$PROJECT_DIR$/views/diners.hbs" />
       </list>
     </option>
   </component>
@@ -160,8 +193,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1323" />
-    <option name="y" value="98" />
+    <option name="x" value="1321" />
+    <option name="y" value="36" />
     <option name="width" value="1375" />
     <option name="height" value="851" />
   </component>
@@ -573,15 +606,15 @@
       <workItem from="1497423560634" duration="23943000" />
       <workItem from="1497691091863" duration="24000" />
       <workItem from="1498469250680" duration="4940000" />
-      <workItem from="1498527574862" duration="5394000" />
+      <workItem from="1498527574862" duration="6149000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166545000" />
+    <option name="totallyTimeSpent" value="167300000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1323" y="98" width="1375" height="851" extended-state="0" />
+    <frame x="1321" y="36" width="1375" height="851" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2296898" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -775,13 +808,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="18" column="26" lean-forward="false" selection-start-line="18" selection-start-column="19" selection-end-line="18" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/memberManage.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -793,13 +819,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-866">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/diners.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="148" column="69" lean-forward="true" selection-start-line="148" selection-start-column="69" selection-end-line="148" selection-end-column="69" />
         </state>
       </provider>
     </entry>
@@ -950,14 +969,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="80" column="21" lean-forward="false" selection-start-line="80" selection-start-column="21" selection-end-line="80" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wxlite/code.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="50">
@@ -982,6 +993,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="234" column="14" lean-forward="true" selection-start-line="234" selection-start-column="14" selection-end-line="234" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="202">
@@ -990,11 +1009,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
+    <entry file="file://$PROJECT_DIR$/handler/pageshandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="243" column="26" lean-forward="false" selection-start-line="243" selection-start-column="26" selection-end-line="243" selection-end-column="26" />
+        <state relative-caret-position="273">
+          <caret line="42" column="7" lean-forward="true" selection-start-line="42" selection-start-column="7" selection-end-line="42" selection-end-column="7" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="110" column="35" lean-forward="true" selection-start-line="110" selection-start-column="35" selection-end-line="110" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/diners.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="334">
+          <caret line="161" column="69" lean-forward="true" selection-start-line="161" selection-start-column="69" selection-end-line="161" selection-end-column="69" />
+          <folding>
+            <element signature="e#6871#6891#0#HTML" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
