@@ -17,7 +17,7 @@ export const log = function (data) {
 	var audit = new SubmitAuditLog();
 	audit.set('auditid', data.auditid);
 	audit.set('version', data.version);
-	audit.set('authorizerAppid', data.auditid);
+	audit.set('authorizerAppid', data.authorizerAppid);
 	audit.set('codeId', data.codeId);
 	return audit.save();
 };

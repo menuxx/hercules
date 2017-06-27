@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/apihandler.js" afterPath="$PROJECT_DIR$/handler/apihandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/wxlite/code.js" afterPath="$PROJECT_DIR$/wxlite/code.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/leancloud/SubmitAuditLog.js" afterPath="$PROJECT_DIR$/leancloud/SubmitAuditLog.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -22,8 +21,28 @@
       <file leaf-file-name="hercules_code_submit_audit_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="142">
-              <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
+            <state relative-caret-position="388">
+              <caret line="76" column="27" lean-forward="false" selection-start-line="76" selection-start-column="12" selection-end-line="76" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/leancloud/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SubmitAuditLog.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/leancloud/SubmitAuditLog.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" column="53" lean-forward="false" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -59,7 +78,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="codeManage.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="215">
@@ -84,7 +103,6 @@
       <find>makeCommitInfo</find>
       <find>errorlog</find>
       <find>fund</find>
-      <find>log</find>
       <find>ext_json</find>
       <find>findAutoCommitAuthorizers</find>
       <find>code_commit</find>
@@ -110,6 +128,7 @@
       <find>originAppId</find>
       <find>or</find>
       <find>wxSubmitAudit</find>
+      <find>log</find>
     </findStrings>
     <replaceStrings>
       <replace>authorizationCode</replace>
@@ -160,7 +179,6 @@
         <option value="$PROJECT_DIR$/views/wxauthorizers.hbs" />
         <option value="$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js" />
         <option value="$PROJECT_DIR$/views/diners.hbs" />
-        <option value="$PROJECT_DIR$/leancloud/SubmitAuditLog.js" />
         <option value="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
         <option value="$PROJECT_DIR$/test/code_test.js" />
         <option value="$PROJECT_DIR$/views/dashboard.hbs" />
@@ -177,6 +195,7 @@
         <option value="$PROJECT_DIR$/mqworks/wx_wxlite_audit_success_workers.js" />
         <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/wxlite/code.js" />
+        <option value="$PROJECT_DIR$/leancloud/SubmitAuditLog.js" />
       </list>
     </option>
   </component>
@@ -192,8 +211,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1299" />
-    <option name="y" value="147" />
+    <option name="x" value="1380" />
+    <option name="y" value="97" />
     <option name="width" value="1666" />
     <option name="height" value="845" />
   </component>
@@ -605,15 +624,15 @@
       <workItem from="1497423560634" duration="23943000" />
       <workItem from="1497691091863" duration="24000" />
       <workItem from="1498469250680" duration="4940000" />
-      <workItem from="1498527574862" duration="2116000" />
+      <workItem from="1498527574862" duration="2344000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="163267000" />
+    <option name="totallyTimeSpent" value="163495000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1299" y="147" width="1666" height="845" extended-state="0" />
+    <frame x="1380" y="97" width="1666" height="845" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18905775" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -888,13 +907,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/leancloud/SubmitAuditLog.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="47" lean-forward="true" selection-start-line="19" selection-start-column="47" selection-end-line="19" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leancloud/ReleaseLog.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -940,13 +952,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/leancloud/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="37" lean-forward="false" selection-start-line="5" selection-start-column="37" selection-end-line="5" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/leancloud/WXLiteSample.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -986,14 +991,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wxopenapi/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1010,6 +1007,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="229" column="59" lean-forward="false" selection-start-line="229" selection-start-column="59" selection-end-line="229" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wxlite/code.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -1018,10 +1023,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js">
+    <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_submit_audit_workers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="229" column="59" lean-forward="false" selection-start-line="229" selection-start-column="59" selection-end-line="229" selection-end-column="59" />
+        <state relative-caret-position="388">
+          <caret line="76" column="27" lean-forward="false" selection-start-line="76" selection-start-column="12" selection-end-line="76" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/leancloud/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="44" lean-forward="false" selection-start-line="8" selection-start-column="44" selection-end-line="8" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/leancloud/SubmitAuditLog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="53" lean-forward="false" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
           <folding />
         </state>
       </provider>
