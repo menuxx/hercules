@@ -226,7 +226,7 @@ export const wxGetPage = defaultArgs(function(accessToken) {
 * 86001     不存在第三方的已经提交的代码
 **/
 
-export const wxSubmitAudit1 = defaultArgs(function (accessToken, itemList) {
+export const wxSubmitAudit = defaultArgs(function (accessToken, itemList) {
   return post(`submit_audit?access_token=${accessToken}`, {
 	  item_list: itemList
   })
@@ -234,16 +234,6 @@ export const wxSubmitAudit1 = defaultArgs(function (accessToken, itemList) {
     err.errorMsg = bindTesterErrorMsg(err.errcode)
     return err
   })
-})
-
-export const wxSubmitAudit = defaultArgs(function (accessToken, itemList) {
-	return new Promise(function (resolve, reject) {
-		resolve({
-			errcode: 0,
-			errmsg: 'ok',
-			auditid: 15601
-        });
-    });
 })
 
 /**
