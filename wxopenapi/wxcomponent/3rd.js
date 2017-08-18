@@ -224,6 +224,8 @@ export const wxGetAuthorizerInfo = defaultArgs(function (componentAppid, authori
   })
 });
 
+
+
 export const wxGetCategory = defaultArgs(function (accessToken) {
   return get(`/get_category?access_token=${accessToken}`)
 });
