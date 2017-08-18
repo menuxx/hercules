@@ -6,7 +6,6 @@ const {webNotify} = require('../components/webhook');
 const passport = require('passport');
 const {BasicStrategy} = require('passport-http');
 const {auth} = require('../config');
-const route = Router();
 const {wx3rdApi} = require('../wxopenapi');
 const {tokenCache} = require('../components/cache');
 const {errorPage} = require('../lib/error');
@@ -14,6 +13,8 @@ const {autoValid} = require('../lib/params');
 const wxlite = require('../wxlite');
 const util = require('util');
 const {siteUrl} = require('../config').server;
+
+const route = Router();
 
 route.use(function (req, resp, next) {
 	req.locals = { siteUrl };

@@ -43,7 +43,9 @@ route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
 			console.log('-------', authorization_info)
 			let {authorizer_refresh_token} = authorization_info
 			console.log('1111111111111', authorizer_refresh_token)
-			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function ({authorizer_access_token}) {
+			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function (aaaa) {
+				var authorizer_access_token = aaaa.authorizer_access_token
+				console.log('222222222222', aaaa)
 				console.log('222222222222', authorizer_access_token)
 				return authorizerCache.getAuthorizerInfo(appid).then(function (cache_data) {
 					console.log('333333333333', cache_data)
