@@ -97,7 +97,7 @@
     var api = {};
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
-            fetch(api, {
+            return fetch(api, {
                 method: method.toUpperCase(),
                 headers: {
                     'Content-Type': 'application/json'
