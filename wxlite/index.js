@@ -31,7 +31,7 @@ function getAuthorizerAccessToken(authorizer_appid, refresh_token) {
 		return wx3rdApi.wxRefreshApiAuthorizerToken({
 				componentAccessToken: component_access_token,
 				authorizerAppid: authorizer_appid,
-				authorizerRefreshToken: refreshToken
+				authorizerRefreshToken: refresh_token
 		})
 	})
 
