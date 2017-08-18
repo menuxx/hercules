@@ -4,7 +4,7 @@ const {log, errorlog} = require('../logger')('apihandler');
 const {getAuthorizerBy} = require('../service');
 const {jsonAutoValid} = require('../lib/params');
 const {dinerApi, wxcodeApi} = require('../leancloud');
-const {componentCacheGet} = require('../components/cache');
+const {componentCacheGet, authorizerCache} = require('../components/cache');
 const wxlite = require('../wxlite');
 const {toggleVisible} = require('../service')
 const {ROUTING_KEYS} = require('../mqworks');
@@ -22,7 +22,7 @@ route.get('/component_cache', function (req, resp) {
 });
 
 // 保存 item_list
-route.put('/dinerwxlite/:appid', function (req, resp) {
+route.put('/shop_wxlite/:appid', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
@@ -32,7 +32,29 @@ route.put('/dinerwxlite/:appid', function (req, resp) {
 	}, errorlog);
 });
 
-route.post('/dinerwxlite', function (req, resp) {
+// 恢复 access_token
+route.post('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
+	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
+	jsonAutoValid(req, resp).then(function () {
+		let {appid} = req.params;
+		// 获取该店铺的 access_token
+		wxlite.getAuthorizerInfo(appid).then(function ({authorizer_refresh_token}) {
+			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function ({authorizer_access_token}) {
+				return authorizerCache.getAuthorizerInfo(appid).then(function (cache_data) {
+					cache_data.authorizer_access_token = authorizer_access_token
+					// 存放到 redis 中
+					return authorizerCache.putAuthorizerInfo(appid, cache_data).then(function () {
+						return cache_data
+					})
+				})
+			})
+		}).then(function (cache_data) {
+			resp.json(cache_data)
+		})
+	}, errorlog);
+})
+
+route.post('/shop_wxlite', function (req, resp) {
 	req.checkBody('authorizerAppid', 'body 上的 authorizerAppid 必须存在').notEmpty();
 	req.checkBody('appKey', 'body 上的 appKey 必须存在').notEmpty();
 	req.checkBody('appName', 'body 上的 appName 必须存在').notEmpty();

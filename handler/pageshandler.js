@@ -40,7 +40,7 @@ route.get('/submit_audit_fail', function (req, resp) {
 	resp.render('submit_audit_fail', {title: '代码审核失败'})
 });
 
-route.get('/authorizers/:appkey', passport.authenticate('basic', {session: false}),
+route.get('/shops/:appkey', passport.authenticate('basic', {session: false}),
 	function (req, resp) {
 		req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
 		autoValid(req, resp).then(function () {
@@ -80,7 +80,7 @@ route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), fu
 	})
 });
 
-route.get('/diners', passport.authenticate('basic', {session: false}), function (req, resp) {
+route.get('/shops', passport.authenticate('basic', {session: false}), function (req, resp) {
 	Promise.all([
 		tokenCache.getPreAuthCode(),
 		menuxx.getDiners()
@@ -94,7 +94,7 @@ route.get('/diners', passport.authenticate('basic', {session: false}), function 
 			});
 			return item
 		});
-		resp.render('diners', {authorizers, title: '可授权店铺列表'})
+		resp.render('shops', {authorizers, title: '可授权店铺列表'})
 	}, errorlog)
 });
 

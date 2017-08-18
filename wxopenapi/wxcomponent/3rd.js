@@ -130,11 +130,11 @@ export const wxGetAuthorizeUrl = defaultArgs(function (componentAppid, authCode,
  * expires_in  有效期，为2小时
  * authorizer_refresh_token  刷新令牌
  */
-export const wxRefreshApiAuthorizerToken = defaultArgs(function (componentAppid, component_access_token, authorizer_appid, authorizer_refresh_token) {
-  return post(`/api_authorizer_token?component_access_token=${component_access_token}`, {
+export const wxRefreshApiAuthorizerToken = defaultArgs(function (componentAppid, componentAccessToken, authorizerAppid, authorizerRefreshToken) {
+  return post(`/api_authorizer_token?component_access_token=${componentAccessToken}`, {
     component_appid: componentAppid,
-    authorizer_appid,
-    authorizer_refresh_token
+    authorizerAppid,
+    authorizerRefreshToken
   })
 });
 

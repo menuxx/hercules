@@ -39,13 +39,13 @@ const makeCommitInfo = function ({code, diner}, usDebug = false) {
  */
 export const codeCommit = function (authorizer_appid, onlyCommit = true, usDebug = false) {
 	let p = Promise.all([
-		getAuthorizerToken(authorizer_appid),
-		dinerApi.getAuthorizerByAppid(authorizer_appid)
+			getAuthorizerToken(authorizer_appid),
+			dinerApi.getAuthorizerByAppid(authorizer_appid)
 	])
-		.then(function (res) {
+	.then(function (res) {
 			let accessToken = res[0], diner = res[1];
 			return wxcodeApi.firstCodeByType(diner.templateType).then(function (code) { return {code, accessToken, diner} });
-		});
+	});
 	if (!onlyCommit) {
 		// 覆盖 domains
 		p

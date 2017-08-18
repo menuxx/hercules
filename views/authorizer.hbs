@@ -4,6 +4,12 @@
         <form class="form-horizontal diner" data-appid="{{appInfo.authorizerAppid}}">
 
             <div class="form-group form-group-sm">
+                <div class="col-sm-12">
+                    <a class="btn btn-primary" class="resumeAccessToken">恢复 authorizer_access_token</a>
+                </div>
+            </div>
+
+            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">AppInfo</label>
                 <div class="col-sm-8">
                     <textarea type="text" rows="15" class="form-control app-info">{{JSONstringify appInfo 4}}</textarea>
@@ -15,7 +21,7 @@
             </div>
 
             <div class="form-group form-group-sm">
-                <label class="col-sm-2 control-label">DinerCode</label>
+                <label class="col-sm-2 control-label">ShopCode</label>
                 <div class="col-sm-8">
                     <textarea type="text" rows="15" class="form-control diner-code" style="margin-bottom: 15px;">{{JSONstringify dinerCode 4}}</textarea>
                     {{#if dinerCode}}
@@ -109,14 +115,21 @@
         }
     });
 
+    var appid = $('form.diner').data('appid');
+
+    $('.resumeAccessToken').on('click', function (e) {
+        api.put(`/api/shop_wxlite/${appid}/access_token_resume`).then(function (access) {
+            console.log(access)
+            alert('access_token 恢复完成');
+        })
+    });
+
     $('.saveDinerCode').on('click', saveHandler);
     $('.createDinerCode').on('click', saveHandler);
     function saveHandler (e) {
 
     	var isSaveDinerCode = $(this).hasClass('saveDinerCode')
         var isCreateDinerCode = $(this).hasClass('createDinerCode')
-
-        var appid = $(this).parents('form').data('appid');
         var $formGroup = $(e.target).parents('.form-group');
         var $dinerCode = $formGroup.find('textarea.diner-code');
         try {
@@ -125,10 +138,10 @@
                 return alert('数据不能为空')
             }
             if (isSaveDinerCode) {
-                api.put(`/api/dinerwxlite/${appid}`, data)
+                api.put(`/api/shop_wxlite/${appid}`, data)
             }
             if (isCreateDinerCode) {
-                api.post(`/api/dinerwxlite`, data).then(function () {
+                api.post(`/api/shop_wxlite`, data).then(function () {
                     $('.saveDinerCode').show();
                     $('.createDinerCode').hide();
                 })
