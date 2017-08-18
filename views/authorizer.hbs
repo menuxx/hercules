@@ -119,7 +119,6 @@
 
     $('.resumeAccessToken').on('click', function (e) {
         api.put(`/api/shop_wxlite/${appid}/access_token_resume`).then(function (access) {
-            console.log(access)
             alert('access_token 恢复完成');
         })
     });
