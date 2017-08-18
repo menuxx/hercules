@@ -38,12 +38,17 @@ route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
 	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
 		// 获取该店铺的 access_token
-		wxlite.getAuthorizerInfo(appid).then(function ({authorizer_refresh_token}) {
+		console.log('00000000000000')
+		return wxlite.getAuthorizerInfo(appid).then(function ({authorizer_refresh_token}) {
+			console.log('1111111111111')
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function ({authorizer_access_token}) {
+				console.log('222222222222')
 				return authorizerCache.getAuthorizerInfo(appid).then(function (cache_data) {
+					console.log('333333333333')
 					cache_data.authorizer_access_token = authorizer_access_token
 					// 存放到 redis 中
 					return authorizerCache.putAuthorizerInfo(appid, cache_data).then(function () {
+						console.log('4444444444444')
 						return cache_data
 					})
 				})
