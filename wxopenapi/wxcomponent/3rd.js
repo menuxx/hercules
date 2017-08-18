@@ -133,8 +133,8 @@ export const wxGetAuthorizeUrl = defaultArgs(function (componentAppid, authCode,
 export const wxRefreshApiAuthorizerToken = defaultArgs(function (componentAppid, componentAccessToken, authorizerAppid, authorizerRefreshToken) {
   return post(`/api_authorizer_token?component_access_token=${componentAccessToken}`, {
     component_appid: componentAppid,
-    authorizerAppid,
-    authorizerRefreshToken
+    authorizer_appid: authorizerAppid,
+    authorizer_refresh_token: authorizerRefreshToken
   })
 });
 
