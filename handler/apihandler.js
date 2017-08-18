@@ -39,7 +39,8 @@ route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
 		let {appid} = req.params;
 		// 获取该店铺的 access_token
 		console.log('00000000000000', appid)
-		return wxlite.getAuthorizerInfo(appid).then(function ({authorizer_refresh_token}) {
+		return wxlite.getAuthorizerInfo(appid).then(function ({authorizer_info}) {
+			let {authorizer_refresh_token} = authorizer_info
 			console.log('1111111111111', authorizer_refresh_token)
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function ({authorizer_access_token}) {
 				console.log('222222222222', authorizer_access_token)
