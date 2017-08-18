@@ -33,7 +33,7 @@ route.put('/shop_wxlite/:appid', function (req, resp) {
 });
 
 // 恢复 access_token
-route.post('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
+route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
