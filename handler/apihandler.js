@@ -4,22 +4,44 @@ const {log, errorlog} = require('../logger')('apihandler');
 const {getAuthorizerBy} = require('../service');
 const {jsonAutoValid} = require('../lib/params');
 const {dinerApi, wxcodeApi} = require('../leancloud');
-const {componentCacheGet, authorizerCache} = require('../components/cache');
+const {tokenCache, authorizerCache} = require('../components/cache');
 const wxlite = require('../wxlite');
+const {wx3rdApi} = require('../wxopenapi')
+const {server} = require('../config')
 const {toggleVisible} = require('../service')
 const {ROUTING_KEYS} = require('../mqworks');
 const {appPublish} = require('../components/rabbitmq');
 
 const route = Router();
 
-route.get('/component_cache', function (req, resp) {
-	componentCacheGet().then(function (values) {
-		resp.json(values)
+route.get('/component_token', function (req, resp) {
+	tokenCache.getComponentAccessToken().then(function (accessToken) {
+		resp.json({ componentAccessToken: accessToken })
 	}, function (err) {
 		errorlog(err);
 		resp.status(500).json(makeError(err, 500, err.message))
 	})
 });
+
+// 获取 pre_auth_code
+route.get('/pre_auth_url/:appkey', function (req, resp) {
+	req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
+	jsonAutoValid(req, resp).then( () => {
+		let {appkey} = req.params;
+		wxlite.getPreAuthCode().then( ({ pre_auth_code }) => {
+			log(pre_auth_code)
+			log(`${server.siteUrl}/wx/3rd/authorize/${appkey}`)
+			return wx3rdApi.wxGetAuthorizeUrl({
+				authCode: pre_auth_code,
+				redirectUri: `${server.siteUrl}/wx/3rd/authorize/${appkey}`
+			});
+		}).then(function (url) {
+			resp.json({ url })
+		}, function (err) {
+			log(err)
+		})
+	}, errorlog)
+})
 
 // 保存 item_list
 route.put('/shop_wxlite/:appid', function (req, resp) {

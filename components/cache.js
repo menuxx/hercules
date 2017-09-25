@@ -1,7 +1,7 @@
 // 令牌 db index
-const redis = require('./redis')({dbIndex: 2})
-const {log, errorlog} = require('../logger')('cache')
-const {assign} = require('lodash')
+const redis = require('./redis')({dbIndex: 5})
+const {log} = require('../logger')('cache')
+const {wxOpen} = require('../config')
 
 function getObject(key) {
   return redis.getAsync(key).then(function(data){
@@ -16,19 +16,14 @@ function putObject(key, obj) {
 }
 
 export const componentCacheSave = function (obj) {
-  return putObject(`component_cache`, obj)
+  return putObject(`component_token:${wxOpen.appid}`, obj)
 }
 
 export const componentCacheGet = function () {
-  return getObject(`component_cache`)
+  return getObject(`component_token:${wxOpen.appid}`)
 }
 
 export const tokenCache = {
-  getPreAuthCode: function() {
-    return componentCacheGet().then(function (data) {
-      return data.pre_auth_code
-    })
-  },
   getComponentAccessToken: function() {
     return componentCacheGet().then(function (data) {
       return data.component_access_token
@@ -37,24 +32,12 @@ export const tokenCache = {
 }
 
 // authorizer_appid, authorizer_access_token, authorizer_refresh_token
-
 export const authorizerCache = {
-  putAuthorizerInfo: function (appId, authorizerInfo) {
-    return putObject(`${appId}:authorizer_info`, authorizerInfo)
+  putAuthorization: function (appId, authorizationInfo) {
+    return putObject(`authorizer_info:${appId}`, authorizationInfo)
   },
-  getAuthorizerInfo: function (appId) {
-    return getObject(`${appId}:authorizer_info`)
-  },
-  putRefreshTokenMsgId: function(appId, msgId) {
-    var self = this;
-    return self.getAuthorizerInfo(appId).then(function(info) {
-      return self.putAuthorizerInfo(appId, assign(info, { refresh_token_msg_id: msgId }))
-    })
-  },
-  getRefreshTokenMsgId: function(appId) {
-    return this.getAuthorizerInfo(appId).then(function(info) {
-      return info.refresh_token_msg_id
-    })
+  getAuthorization: function (appId) {
+    return getObject(`authorizer_info:${appId}`)
   }
 }
 

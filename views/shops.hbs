@@ -24,7 +24,7 @@
                             {{#if authorizerStatus}}
                             <a class="btn btn-link" href="{{siteUrl}}/shops/{{appKey}}">> 详情</a>
                             {{/if}}
-                            <a href="{{authorizeUrl}}" class="btn btn-link">授权链接</a>
+                            <a href="javascript:void(0);" data-appkey="{{ appKey }}" class="authLink btn btn-link">授权链接</a>
                         </div>
                         <div id="collapseOne_{{@index}}" class="panel-collapse collapse in" role="tabpanel"
                              aria-labelledby="headingOne">
@@ -126,6 +126,22 @@
 <script>
     var siteUrl = '{{siteUrl}}';
     var api = {};
+    ['get'].forEach(function (method) {
+        api[method] = function (api) {
+            return fetch(api, {
+                method: method.toUpperCase()
+            }).then(function (res) {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    return Promise.reject();
+                }
+            }, function (err) {
+                console.error(err.stack);
+                alert('发生错误:' + err.message);
+            })
+        }
+    });
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
             return fetch(api, {
@@ -165,5 +181,12 @@
             alert('已经提交审核')
         })
     });
+    $(".authLink").on('click', function () {
+        var appkey = $(this).data('appkey')
+        api.get('/api/pre_auth_url/' + appkey).then(function (data) {
+        	// 获取 p
+        	window.open(data.url, '_blank')
+        })
+    })
 </script>
 {{> footer }}

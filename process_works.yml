@@ -2,7 +2,7 @@ apps:
   # Web 平台
   - script: app.js
     name: WebApp
-    cwd : /usr/src/app/
+    #cwd : /usr/src/app/
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
     max_memory_restart: 600M
@@ -11,33 +11,9 @@ apps:
     env_production:
       NODE_ENV: production
 
-  # 力士平台 component_access_token 更新
-  - script: mqworks/hercules_update_access_token_workers.js
-    cwd : /usr/src/app/
-    name: hercules_UpdateAccessToken
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
-
-  # 力士平台 component_access_token 更新成功
-  - script: mqworks/hercules_update_access_token_success_workers.js
-    cwd : /usr/src/app/
-    name: hercules_UpdateAccessTokenSuccess
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
-  
   # 代码提交
   - script: mqworks/hercules_code_commit_workers.js
-    cwd : /usr/src/app/
+    #cwd : /usr/src/app/
     name: hercules_CodeCommit
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -46,10 +22,10 @@ apps:
       NODE_ENV: production
     env_production:
       NODE_ENV: production
-  
+
   # 代码审核
   - script: mqworks/hercules_code_submit_audit_workers.js
-    cwd : /usr/src/app/
+    #cwd : /usr/src/app/
     name: hercules_WxliteCodeSubmitAudit
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -58,10 +34,10 @@ apps:
       NODE_ENV: production
     env_production:
       NODE_ENV: production
-  
+
   # 代码发布
   - script: mqworks/hercules_code_release_workers.js
-    cwd : /usr/src/app/
+    #cwd : /usr/src/app/
     name: hercules_WxliteCodeRelease
     exec_mode: fork
     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -71,50 +47,50 @@ apps:
     env_production:
       NODE_ENV: production
 
-  # 用户授权完成
+   # 用户授权完成
   - script: mqworks/wx_authorized_workers.js
-    cwd : /usr/src/app/
-    name: weixin_Authorizerd
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 100M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
-  
-  # 用户取消授权
-  - script: mqworks/wx_unauthorize_workers.js
-    cwd : /usr/src/app/
-    name: weixin_UnAuthorize
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
-  
-  # 用户授权更新
-  - script: mqworks/wx_updateauthorize_workers.js
-    cwd : /usr/src/app/
-    name: weixin_UpdateAuthorize
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 50M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
+     cwd : /usr/src/app/
+     name: weixin_Authorizerd
+     exec_mode: fork
+     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
+     max_memory_restart: 100M
+     env:
+       NODE_ENV: production
+     env_production:
+       NODE_ENV: production
 
-  # 刷新令牌循环
+   # 用户取消授权
+  - script: mqworks/wx_unauthorize_workers.js
+     cwd : /usr/src/app/
+     name: weixin_UnAuthorize
+     exec_mode: fork
+     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
+     max_memory_restart: 50M
+     env:
+       NODE_ENV: production
+     env_production:
+       NODE_ENV: production
+
+   # 用户授权更新
+  - script: mqworks/wx_updateauthorize_workers.js
+     cwd : /usr/src/app/
+     name: weixin_UpdateAuthorize
+     exec_mode: fork
+     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
+     max_memory_restart: 50M
+     env:
+       NODE_ENV: production
+     env_production:
+       NODE_ENV: production
+
+   # 刷新令牌循环
   - script: mqworks/hercules_refresh_authorizer_access_token_workers.js
-    cwd : /usr/src/app/
-    name: hercules_RefreshAuthorizerAccessToken
-    exec_mode: fork
-    exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
-    max_memory_restart: 200M
-    env:
-      NODE_ENV: production
-    env_production:
-      NODE_ENV: production
+     cwd : /usr/src/app/
+     name: hercules_RefreshAuthorizerAccessToken
+     exec_mode: fork
+     exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
+     max_memory_restart: 200M
+     env:
+       NODE_ENV: production
+     env_production:
+       NODE_ENV: production

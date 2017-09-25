@@ -13,58 +13,58 @@ const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');
 const {wxtime} = require('../lib/date');
 const {createSimpleWorker} = require('../components/rabbitmq');
 const {pubuWeixin} = require('../pubuim');
-const {dinerApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
+const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 
-const queueName = 'wx_wxlite_audit_fail_queue';
-const routingKey = ROUTING_KEYS.WX_WxliteAuditFail;
+const exchangeName = 'wxlite'
+const queueName = 'wx_wxlite_audit_fail_queue'
+const routingKey = ROUTING_KEYS.WX_WxliteAuditFail
 
-createSimpleWorker({queueName, routingKey}, function (msg, ch) {
+createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid, reason, failTime, createTime} = msg;
 	log('a worker begin... authorizerAppid:' + authorizerAppid);
-	return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
-		return submitAuditLogApi.getNewest(authorizerAppid)
-			.then(function (submit) { return {submit, diner} })
-		})
-		.then(function ({submit, diner}) {
-			/**
-			 * struct:
-			 * {
-			 *    createTime: 1488856741,
-			 *    failTime : 1488856591,
-			 *    reason   : '1:账号信息不符合规范:<br>
-			 * (1):包含色情因素<br>
-			 * 2:服务类目"金融业-保险_"与你提交代码审核时设置的功能页面内容不一致:<br>
-			 * (1):功能页面设置的部分标签不属于所选的服务类目范围。<br>
-			 * (2):功能页面设置的部分标签与该页面内容不相关。<br>',
-			 *    authorizerAppid    : 'wx833943b167b4012a',  // 关联的 用户 appid
-			 *    submitId :  '543745419728372387cv34879532',   // 审核提交 id
-			 * }
-			 */
-			return Promise.all
-			([
-				// 记录日志
-				auditLogApi.log({
-					createTime: wxtime(createTime),
-					failTime: wxtime(failTime),
-					authorizerAppid: diner.authorizerAppid,
-					submitId: submit._objectId,
-					reason
-				}),
-				// 发送 pubuim 通知
-				// {codeVersion, templateType}, shopName, appId, reason
-				pubuWeixin.sendCodeAuditFail(
-					{ codeVersion: submit.version, templateType: diner.templateType },
-					diner.appName, diner.authorizerAppid, reason
-				)
-			]);
-		})
-		.then(function () {
-			log('a worker done.');
-			return { ok: true };
-		}, function (err) {
-			// 如果失败丢弃该消息
-			// 通过手动触发执行
-			errorlog('worker fire error: ', err);
-			return { ok: false, status: false };
-		});
+	return Promise.all([
+		shopApi.getAuthorizerByAppid(authorizerAppid),
+		submitAuditLogApi.getNewest(authorizerAppid)
+	]).then(function (res) {
+		let submit = res[0], shop = res[1]
+		/**
+		 * struct:
+		 * {
+		 *    createTime: 1488856741,
+		 *    failTime : 1488856591,
+		 *    reason   : '1:账号信息不符合规范:<br>
+		 * (1):包含色情因素<br>
+		 * 2:服务类目"金融业-保险_"与你提交代码审核时设置的功能页面内容不一致:<br>
+		 * (1):功能页面设置的部分标签不属于所选的服务类目范围。<br>
+		 * (2):功能页面设置的部分标签与该页面内容不相关。<br>',
+		 *    authorizerAppid    : 'wx833943b167b4012a',  // 关联的 用户 appid
+		 *    submitId :  '543745419728372387cv34879532',   // 审核提交 id
+		 * }
+		 */
+		return Promise.all([
+			// 记录日志
+			auditLogApi.log({
+				createTime: wxtime(createTime),
+				failTime: wxtime(failTime),
+				authorizerAppid: shop.authorizerAppid,
+				submitId: submit.id,
+				reason
+			}),
+			// 发送 pubuim 通知
+			// {codeVersion, templateType}, shopName, appId, reason
+			pubuWeixin.sendCodeAuditFail(
+				{ codeVersion: submit.version, templateType: shop.templateType },
+				shop.appName, shop.authorizerAppid, reason
+			)
+		]);
+	})
+	.then(function () {
+		log('a worker done.');
+		return { ok: true };
+	}, function (err) {
+		// 如果失败丢弃该消息
+		// 通过手动触发执行
+		errorlog('worker fire error: ', err);
+		return { ok: false, status: false };
+	});
 });

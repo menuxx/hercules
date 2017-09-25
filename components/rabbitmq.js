@@ -5,8 +5,6 @@ const {rabbit} = require('../config');
 
 var amqpConn = null;
 
-export const exchangeName = 'excg1';
-
 var offlinePubQueue = [];
 
 const start = function (callback) {
@@ -79,25 +77,25 @@ export const publish1 = function publish1(channel, exchange, routingKey, content
 };
 
 // 忽略
-export const publishDelay = function (delayChannel, delayMs, routingKey, msg) {
+export const publishDelay = function (delayChannel, exchangeName, delayMs, routingKey, msg) {
 	if (!delayChannel) {
 		return Promise.reject(new Error('channel not ready !'))
 	}
 	return delayChannel.delay(delayMs).publish(exchangeName, routingKey, msg);
 };
 
-export const publish2 = function (channel, routingKey, content) {
+export const publish2 = function (channel, exchangeName, routingKey, content) {
 	let msg = new Buffer(JSON.stringify(content));
 	return publish1(channel, exchangeName, routingKey, msg);
 };
 
-const publishObject = function (channel, exchange, routingKey, msg, options) {
+const publishObject = function (channel, exchangeName, routingKey, msg, options) {
 	let content = new Buffer(JSON.stringify(msg));
-	return publish1(channel, exchange, routingKey, content, options);
-}
+	return publish1(channel, exchangeName, routingKey, content, options);
+};
 
 // 创建普通 publisher
-export const createPublisher = function (callback) {
+export const createPublisher = function (exchangeName, callback) {
 	function attach(ch) {
 		while (true) {
 			let m = offlinePubQueue.shift();
@@ -112,15 +110,15 @@ export const createPublisher = function (callback) {
 			if (closeOnErr(err)) {
 				return;
 			}
-			startPublisher(conn, attach);
+			startPublisher(conn, exchangeName, attach);
 		});
 	} else {
-		startPublisher(amqpConn, attach);
+		startPublisher(amqpConn, exchangeName, attach);
 	}
 };
 
 // 创建延迟 publisher
-export const createDelayPublisher = function (callback) {
+export const createDelayPublisher = function (exchangeName, callback) {
 	function attachDelay(ch) {
 		while (true) {
 			var m = offlinePubQueue.shift();
@@ -136,10 +134,10 @@ export const createDelayPublisher = function (callback) {
 			if (closeOnErr(err)) {
 				return;
 			}
-			startPublisher(conn, attachDelay);
+			startPublisher(conn, exchangeName, attachDelay);
 		});
 	} else {
-		startPublisher(amqpConn, attachDelay);
+		startPublisher(amqpConn, exchangeName, attachDelay);
 	}
 };
 
@@ -151,7 +149,7 @@ export const createDelayPublisher = function (callback) {
  * `offlinePubQueue` is an internal queue for messages that could not be sent when the application was offline.
  * The application will check this queue and send the messages in the queue if a message is added to the queue.
  */
-function startPublisher(conn, callback) {
+function startPublisher(conn, exchangeName, callback) {
 	conn.createConfirmChannel(function (err, ch) {
 		if (closeOnErr(err)) return;
 		ch.on('error', function (err) {
@@ -160,7 +158,7 @@ function startPublisher(conn, callback) {
 		ch.on('close', function () {
 			log('[AMQP] channel closed');
 		});
-		ch.assertExchange(exchangeName, 'topic', {}, function (err, _ok) {
+		ch.assertExchange(exchangeName, 'fanout', {}, function (err, _ok) {
 			if (closeOnErr(err)) return;
 			callback(ch);
 		});
@@ -178,7 +176,7 @@ function startWorker(conn, {exchangeName, queueName, routingKey, prefetch = 10},
 			log('[AMQP] channel closed');
 		});
 		ch.prefetch(prefetch);
-		ch.assertExchange(exchangeName, 'topic', {}, function (err, _ok) {
+		ch.assertExchange(exchangeName, 'fanout', {}, function (err, _ok) {
 			if (closeOnErr(err)) return;
 			ch.assertQueue(queueName, {durable: true}, function (err, _ok) {
 				if (closeOnErr(err)) return;
@@ -198,7 +196,6 @@ function startWorker(conn, {exchangeName, queueName, routingKey, prefetch = 10},
 			let promise = workCallback(data, ch);
 			if (!promise.then) {
 					errorlog('startWorker workerCallback must be return Promise object');
-
 			} else {
 				promise.then(function success({ok, status = true}) {
 					try {
@@ -211,7 +208,12 @@ function startWorker(conn, {exchangeName, queueName, routingKey, prefetch = 10},
 						closeOnErr(e);
 					}
 				}, function fail(e) {
-					closeOnErr(e);
+					var {ok, status} = e
+					if (!ok) {
+						ch.reject(msg, status);
+					} else {
+						closeOnErr(e);
+					}
 				});
 			}
 		}
@@ -228,7 +230,7 @@ export const createSimpleWorker = function (opts, callback) {
 		if (closeOnErr(err)) {
 			return;
 		}
-		opts = Object.assign(opts, {exchangeName})
+		opts = Object.assign(opts)
 		startWorker(conn, opts, callback);
 	});
 };
@@ -236,7 +238,6 @@ export const createSimpleWorker = function (opts, callback) {
 export const createCustomWorker = function (opts, callback) {
 	start(function (err, conn) {
 		if (closeOnErr(err)) {
-			reject(err);
 			return;
 		}
 		startWorker(conn, opts, callback);
@@ -246,24 +247,24 @@ export const createCustomWorker = function (opts, callback) {
 var appPublisherChannel = null;
 
 export const appPublish = function (routingKey, content) {
-	if (appPublisherChannel == null) {
+	if (appPublisherChannel === null) {
 		log('! appPublisherChannel is not ready ....')
 	} else {
-		return publish2(appPublisherChannel, routingKey, content)
+		return publish2(appPublisherChannel, "yth3rd", routingKey, content)
 	}
 };
 
 export const appDelayPublish = function (delayMs, routingKey, content) {
-	if (appPublisherChannel == null) {
+	if (appPublisherChannel === null) {
 		log('! appPublisherChannel is not ready ....')
 	} else {
-		return appPublisherChannel.delay(delayMs).publish(exchangeName, routingKey, content);
+		return appPublisherChannel.delay(delayMs).publish("yth3rd", routingKey, content);
 	}
 };
 
 // 初始化
 export const appPublisher = function () {
-	createDelayPublisher(function (ch) {
+	createDelayPublisher("yth3rd", function (ch) {
 		appPublisherChannel = ch
 	});
 };

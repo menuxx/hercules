@@ -78,8 +78,8 @@ export const wxGetComponentToken = defaultArgs(function (componentAppid, compone
  *  "expires_in":600
  * }
  */
-export const wxGetPreAuthCode = defaultArgs(function (componentAppid, accessToken) {
-  return post(`/api_create_preauthcode?component_access_token=${accessToken}`, {
+export const wxGetPreAuthCode = defaultArgs(function (componentAppid, componentAccessToken) {
+  return post(`/api_create_preauthcode?component_access_token=${componentAccessToken}`, {
     component_appid: componentAppid
   })
 });
@@ -95,9 +95,34 @@ export const wxGetPreAuthCode = defaultArgs(function (componentAppid, accessToke
 * 参数  说明
 * component_appid 第三方平台appid
 * authorization_code  授权code,会在授权成功时返回给第三方平台，详见第三方平台授权流程说明
+{ 
+  "authorization_info": {
+    "authorizer_appid": "wxf8b4f85f3a794e77", 
+    "authorizer_access_token": "QXjUqNqfYVH0yBE1iI_7vuN_9gQbpjfK7hYwJ3P7xOa88a89-Aga5x1NMYJyB8G2yKt1KCl0nPC3W9GJzw0Zzq_dBxc8pxIGUNi_bFes0qM", 
+    "expires_in": 7200, 
+    "authorizer_refresh_token": "dTo-YCXPL4llX-u1W1pPpnp8Hgm4wpJtlR6iV0doKdY", 
+    "func_info": [
+      {
+        "funcscope_category": {
+          "id": 1
+        }
+      }, 
+      {
+        "funcscope_category": {
+          "id": 2
+        }
+      }, 
+      {
+        "funcscope_category": {
+          "id": 3
+        }
+      }
+    ]
+  }
+}
 */
-export const wxQueryAuth = defaultArgs(function (componentAppid, accessToken, authCode) {
-  return post(`/api_query_auth?component_access_token=${accessToken}`, {
+export const wxQueryAuth = defaultArgs(function (componentAppid, componentAccessToken, authCode) {
+  return post(`/api_query_auth?component_access_token=${componentAccessToken}`, {
     component_appid: componentAppid,
     authorization_code: authCode
   })
@@ -224,8 +249,6 @@ export const wxGetAuthorizerInfo = defaultArgs(function (componentAppid, authori
   })
 });
 
-
-
-export const wxGetCategory = defaultArgs(function (accessToken) {
-  return get(`/get_category?access_token=${accessToken}`)
+export const wxGetCategory = defaultArgs(function (componentAccessToken) {
+  return get(`/get_category?access_token=${componentAccessToken}`)
 });

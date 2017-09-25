@@ -3,19 +3,19 @@ const AV = require('leancloud-storage');
 
 const Authorize = AV.Object.extend('Authorize');
 
-export const logAuthorized = function ({ componentAppid, authorizerAppid, actionTime, authorizationCode }) {
+export const logAuthorized = function ({ componentAppid, authorizerAppid, authorizationCode, primaryName }) {
 	let authorize = new Authorize();
 	authorize.set('componentAppid', componentAppid);
 	authorize.set('authorizerAppid', authorizerAppid);
 	authorize.set('authorizationCode', authorizationCode)
-	authorize.set('actionTime', actionTime);
+	authorize.set('primaryName', primaryName)
 	return authorize.save();
 };
 
-export const logUnauthorize = function ({ componentAppid, authorizerAppid, actionTime }) {
+export const logUnauthorize = function ({ componentAppid, authorizerAppid, primaryName }) {
 	let authorize = new Authorize();
 	authorize.set('componentAppid', componentAppid);
 	authorize.set('authorizerAppid', authorizerAppid);
-	authorize.set('actionTime', actionTime);
+	authorize.set('primaryName', primaryName)
 	return authorize.save();
 };

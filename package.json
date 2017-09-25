@@ -8,7 +8,9 @@
   "license": "Apache License 2.0",
   "scripts": {
     "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js",
-    "code-new": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/code_test.js"
+    "code-new": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/code_test.js",
+    "dumpuser": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/dump_user_to_leancloud.js",
+    "authorized": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/wx_unauthorize_workers.js"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
@@ -38,7 +40,6 @@
     "request-promise": "^4.2.1",
     "requestretry": "^1.12.0",
     "session-file-store": "^1.0.0",
-    "uuid": "^3.0.1",
     "wechat": "^2.1.0",
     "wechat-api": "^1.32.1",
     "wechat-crypto": "^0.0.2",

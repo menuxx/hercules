@@ -8,22 +8,34 @@ const {dinerApi} = require('../leancloud')
 // mode 2: 只获取 auth 从缓存
 // mode 4: 只获取 info 从微信
 
-const fetchAuthorizer = module.exports = function (authorizer_appid, mode=7) {
+/**
+* shopName
+* masterName
+* masterPhone
+* appKey
+* authorizerAppid
+* authorizerStatus
+* wxliteTemplateType
+* wxliteVersion
+* wxliteStatus
+*/
+
+const fetchAuthorizer = module.exports = function (authorizerAppid, mode=7) {
 
   var _get1 = function() {
     return rp({
       method: 'GET',
-      uri: getAuthorizerUrl + '?appid=' + authorizer_appid,
+      uri: getAuthorizerUrl + '?appid=' + authorizerAppid,
       json: true
     })
   };
 
   var _get2 = function() {
-    return authorizerCache.getAuthorizerInfo(authorizer_appid)
+    return authorizerCache.getAuthorizerInfo(authorizerAppid)
   };
 
   var _get3 = function() {
-	  return dinerApi.getAuthorizerByAppid(authorizer_appid);
+	  return dinerApi.getAuthorizerByAppid(authorizerAppid);
   };
 
   if (mode === 7) {

@@ -143,10 +143,10 @@ function startWebhookWorker() {
 			if (data.retryDelay > 0) {
 				opts.retryDelay = data.retryDelay;
 			}
-			if (data.retryStrategy == 'HTTPError') {
+			if (data.retryStrategy === 'HTTPError') {
 				opts.retryStrategy = request.RetryStrategies.HTTPError;
 			}
-			if (data.retryStrategy == 'NetworkError') {
+			if (data.retryStrategy === 'NetworkError') {
 				opts.retryStrategy = request.RetryStrategies.NetworkError;
 			}
 

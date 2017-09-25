@@ -42,7 +42,7 @@ function reflectWXLiteCodeObject(object) {
 		desc: object.get('desc'),
 		_config: object.get('_config'),
 		_domains: object.get('_domains'),
-		_objectId: object.id
+		id: object.id
 	}
 }
 

@@ -28,37 +28,14 @@ const {toggleVisible} = require('../service')
  //wx984ee7ec5f76f9cf
  //1409172302
 
-// wxcodeApi.saveCode({
-// 	gitBranch: 'tpl_single_01',
-// 	gitTag: 'tpl_single_0_1_22',
-// 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-// 	version: 'v0.1.22s',
-// 	templateId: 36,
-// 	templateType: 1,
-// 	desc: '1.添加面价活动 2.修复多出错误 3.增强稳定性',
-// 	_config: {
-// 		apiBaseurl: 'https://dev.api.menuxx.com/',
-// 		cdnBaseurl: 'https://file.menuxx.com',
-// 		fundebugApikey: '337b61f714201cbc40911fcb17a19a16e54399e26d68497f0a8681a999c66909'
-// 	},
-// 	_domains: {
-// 		requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com', 'https://fundebug.com'],
-// 		wsRequestDomains: ['wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
-// 		uploadDomains: ['https://file.menuxx.com'],
-// 		downloadDomains: ['https://file.menuxx.com']
-// 	}
-// }).then(function (res) {
-// 	console.log(res.id)
-// })
-
 wxcodeApi.saveCode({
-	gitBranch: 'tpl_large_single_02',
-	gitTag: 'tpl_large_single_0_2',
+	gitBranch: 'tpl_single_01',
+	gitTag: 'tpl_single_0_2',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: 'v0.1.22ls',
-	templateId: 37,
-	templateType: 3,
-	desc: '1.添加面价活动 2.修复多出错误 3.增强稳定性',
+	version: 'v0.2.6s',
+	templateId: 56,
+	templateType: 1,
+	desc: '1. 添加会员卡功能',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',
@@ -66,7 +43,7 @@ wxcodeApi.saveCode({
 	},
 	_domains: {
 		requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com', 'https://fundebug.com'],
-		wsRequestDomains: ['wss://menuxx_debug.mqtt.iot.gz.baidubce.com:8884', 'wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
+		wsRequestDomains: ['wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
 		uploadDomains: ['https://file.menuxx.com'],
 		downloadDomains: ['https://file.menuxx.com']
 	}
@@ -75,13 +52,36 @@ wxcodeApi.saveCode({
 })
 
 // wxcodeApi.saveCode({
-// 	gitBranch: 'tpl_platform_01',
-// 	gitTag: 'tpl_platform_0_1_21',
+// 	gitBranch: 'tpl_large_single_02',
+// 	gitTag: 'tpl_large_single_0_2',
 // 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-// 	version: 'v0.1.21p',
-// 	templateId: 35,
+// 	version: 'v0.1.25ls',
+// 	templateId: 41,
+// 	templateType: 3,
+// 	desc: '修复授权导致的bug',
+// 	_config: {
+// 		apiBaseurl: 'https://dev.api.menuxx.com/',
+// 		cdnBaseurl: 'https://file.menuxx.com',
+// 		fundebugApikey: '337b61f714201cbc40911fcb17a19a16e54399e26d68497f0a8681a999c66909'
+// 	},
+// 	_domains: {
+// 		requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com', 'https://fundebug.com'],
+// 		wsRequestDomains: ['wss://menuxx_debug.mqtt.iot.gz.baidubce.com:8884', 'wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
+// 		uploadDomains: ['https://file.menuxx.com'],
+// 		downloadDomains: ['https://file.menuxx.com']
+// 	}
+// }).then(function (res) {
+// 	console.log(res.id)
+// })
+
+// wxcodeApi.saveCode({
+// 	gitBranch: 'tpl_platform_02',
+// 	gitTag: 'tpl_platform_0_2_2',
+// 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
+// 	version: 'v0.2.5p',
+// 	templateId: 55,
 // 	templateType: 2,
-// 	desc: '1.添加面价活动 2.修复多出错误 3,增强稳定性',
+// 	desc: '1. 修复一些已知bug 2. 添加个人页面 3. 修复外卖获取gps的bug',
 // 	_config: {
 // 		apiBaseurl: 'https://dev.api.menuxx.com/',
 // 		cdnBaseurl: 'https://file.menuxx.com',

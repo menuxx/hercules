@@ -11,29 +11,29 @@ require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {wxtime} = require('../lib/date');
 const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');
-const {dinerApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
+const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 const {pubuWeixin} = require('../pubuim');
 const {createSimpleWorker, createPublisher, publish2} = require('../components/rabbitmq');
 
+const exchangeName = 'wxlite'
 const queueName = 'wx_wxlite_audit_success';
 const routingKey = ROUTING_KEYS.WX_WxliteAuditSuccess;
 
 let publisherChannel = null;
 
-createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
+createSimpleWorker({ exchangeName, queueName, routingKey }, function (msg, ch) {
 	log('a worker begin...');
 	let {authorizerAppid, successTime, createTime} = msg;
 	log('a worker begin... authorizerAppid:' + authorizerAppid);
 	// 获取当前用户是否支持，自动发布
-	return dinerApi.getAuthorizerByAppid(authorizerAppid).then(function (diner) {
+	return shopApi.getAuthorizerByAppid(authorizerAppid).then(function (shop) {
 		// 如果支持 autoRelease ，就自动发布，否则 中断 将发布权限交给 pubuim
-		if (diner.autoRelease) {
+		if (shop.autoRelease) {
 			return publish2(publisherChannel, ROUTING_KEYS.Hercules_WxliteCodeRelease, { authorizerAppid });
 		} else {
 			// 获取最近一次代码提交审核记录
 			// {codeVersion, templateId}, shopName, appId
 			return submitAuditLogApi.getNewest(authorizerAppid).then(function (submit) {
-				let {version, _objectId} = submit;
 				/*
 				 * struct:
 				 * {
@@ -48,12 +48,12 @@ createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 					auditLogApi.log({
 						succTime: wxtime(successTime),
 						createTime: wxtime(createTime),
-						submitId: _objectId,
+						submitId: submit.id,
 						authorizerAppid: authorizerAppid
 					}),
 					pubuWeixin.sendCodeAuditSuccess(
-						{ codeVersion: version, templateType: diner.templateType },
-						diner.appName, diner.authorizerAppid
+						{ codeVersion: submit.version, templateType: shop.templateType },
+						shop.appName, shop.authorizerAppid
 					)
 				]);
 			});
@@ -73,5 +73,5 @@ createSimpleWorker({ queueName, routingKey }, function (msg, ch) {
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createPublisher(function (ch) { publisherChannel = ch });
+	createPublisher(exchangeName, function (ch) { publisherChannel = ch });
 }, 2000);

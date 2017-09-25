@@ -1,4 +1,4 @@
-const {componentCacheGet} = require('../components/cache');
+const {tokenCache} = require('../components/cache');
 const {wx3rdApi} = require('../wxopenapi')
 
 module.exports = {};
@@ -7,37 +7,43 @@ Object.assign(module.exports, require('./qrcode'));
 Object.assign(module.exports, require('./member'));
 Object.assign(module.exports, require('./url'));
 
-function getAuthorizerInfo(authorizer_appid) {
-	return componentCacheGet().then(function ({component_access_token}) {
+function getAuthorizerInfo(authorizerAppid) {
+	return tokenCache.getComponentAccessToken().then(componentAccessToken => {
 		return wx3rdApi.wxGetAuthorizerInfo({
-			authorizerAppid: authorizer_appid,
-			componentAccessToken: component_access_token
+			authorizerAppid, componentAccessToken
 		})
 	})
 }
 
 function getAuthorizerList(offset, count) {
-	return componentCacheGet().then(function ({component_access_token}) {
+	return tokenCache.getComponentAccessToken().then(componentAccessToken =>  {
 		return wx3rdApi.getAuthorizerList({
 			offset,
 			count,
-			componentAccessToken: component_access_token
+			componentAccessToken
 		})
 	})
 }
 
-function getAuthorizerAccessToken(authorizer_appid, refresh_token) {
-	return componentCacheGet().then(function ({component_access_token}) {
+function getAuthorizerAccessToken(authorizerAppid, refreshToken) {
+	return tokenCache.getComponentAccessToken().then(componentAccessToken => {
 		return wx3rdApi.wxRefreshApiAuthorizerToken({
-				componentAccessToken: component_access_token,
-				authorizerAppid: authorizer_appid,
-				authorizerRefreshToken: refresh_token
+				componentAccessToken,
+				authorizerAppid,
+				authorizerRefreshToken: refreshToken
 		})
 	})
-
 }
 
+function getPreAuthCode() {
+	return tokenCache.getComponentAccessToken().then(componentAccessToken => {
+		return wx3rdApi.wxGetPreAuthCode({
+			componentAccessToken
+		})
+	})
+}
 
+module.exports.getPreAuthCode = getPreAuthCode
 
 module.exports.getAuthorizerInfo = getAuthorizerInfo;
 

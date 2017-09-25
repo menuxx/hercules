@@ -80,7 +80,7 @@ function reflectDinerWXLiteObject(object) {
 		domains: object.get('domains'),
 		testers: object.get('testers'),
 		itemList: object.get('itemList'),
-		_objectId: object.id
+		id: object.id
 	}
 }
 

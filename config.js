@@ -25,7 +25,7 @@ module.exports = {
 	plInfo: {
 		name: '菜单加',
 		contactPhone: '13575762817',
-		testers: ['yin80871901', 'susoft2008'],  // 测试者
+		testers: ['yin80871901', 'susoft2008', 'xph970828'],  // 测试者
 		testPhone: '13575762817',
 		enable: false	// 是否启用短信
 	},
@@ -38,8 +38,6 @@ module.exports = {
 		encodingAESKey: process.env.WX_3RD_ENCODING_AES_KEY,
 		checkSignature: true // 可选，默认为true。由于微信公众平台接口调试工具在明文模式下不发送签名，所以如要使用该测试工具，请将其设置为false
 	}),
-	// 缓存发布通知地址
-	cachePublishPointers: (process.env.CACHE_PUBLISH_POINTERS || '').split(',') || [],
 	// 荣联云短信
 	ronglian: {
 		accountSid: process.env.RONGLIAN_ACCOUNT_SID,
@@ -60,7 +58,8 @@ module.exports = {
 	},
 	leancloud: {
 		appId: process.env.LEANCLOUD_APPID,
-		appKey: process.env.LEANCLOUD_APPKEY
+		appKey: process.env.LEANCLOUD_APPKEY,
+		masterKey: 'ugBbaGFOXc0VCJlKcUDNJGcN'
 	},
 	server: {
 		port: process.env.PORT || 8081,

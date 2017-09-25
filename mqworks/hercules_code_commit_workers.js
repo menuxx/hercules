@@ -14,16 +14,17 @@ const wxlite = require('../wxlite')
 const {pubuWeixin} = require('../pubuim')
 const {createSimpleWorker, publish2, createPublisher} = require('../components/rabbitmq');
 
+const exchangeName = 'wxlite'
 const queueName = 'wxlite_code_commit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteCodeCommit;
 
 let publisherChannel = null;
 
-createSimpleWorker({queueName, routingKey}, function (msg, ch) {
+createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid, version} = msg;
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	// 每次都覆盖 domains
-	return wxlite.codeCommit(authorizerAppid, true).then(function ({diner, code}) {
+	return wxlite.codeCommit(authorizerAppid, true).then(function ({shop, code}) {
 		log('appid %s code commit ok', authorizerAppid);
 		// 是否支持自动提交审核
 		if (diner.autoSubmitAudit) {
@@ -36,9 +37,9 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 			// 发送 pubuim 通知, 手动提交审核
 			return pubuWeixin.sendCodeCommitOk
 			(
-				{ codeVersion: code.version, templateType: code.templateType }, diner.appName, diner.authorizerAppid, wxlite.getQrcodeUrl(authorizerAppid)
+				{ codeVersion: code.version, templateType: code.templateType }, shop.appName, shop.authorizerAppid, wxlite.getQrcodeUrl(authorizerAppid)
 			).then(function () {
-				return { diner, code };
+				return { shop, code };
 			});
 		}
 	})
@@ -54,5 +55,5 @@ createSimpleWorker({queueName, routingKey}, function (msg, ch) {
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createPublisher(function (ch) { publisherChannel = ch });
+	createPublisher(exchangeName, function (ch) { publisherChannel = ch });
 }, 2000);

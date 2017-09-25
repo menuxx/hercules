@@ -28,7 +28,7 @@ function reflectWXLiteCodeObject(object) {
 		version: object.get('version'),
 		authorizerAppid: object.get('authorizerAppid'),
 		codeId: object.get('codeId'),
-		_objectId: object.id
+		id: object.id
 	};
 }
 

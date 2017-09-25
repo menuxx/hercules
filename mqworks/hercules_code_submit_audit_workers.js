@@ -50,19 +50,19 @@ const {createSimpleWorker} = require('../components/rabbitmq');
 const {submitAuditLogApi, wxcodeApi} = require('../leancloud');
 const wxlite = require('../wxlite');
 
+const exchangeName = 'wxlite'
 const queueName = 'wxlite_submit_audit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteSubmitAudit;
 
-createSimpleWorker({queueName, routingKey}, function (msg) {
+createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 	let {authorizerAppid, version} = msg;
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	return Promise.all([
 		wxlite.submitAudit(authorizerAppid),
 		wxcodeApi.getByVersionNumber(version)
-	]).then(function (res) {
+	]).then( (res) => {
 		let {auditid} = res[0];	// submit_audit
-		let {version, _objectId} = res[1];	// code
-
+		let code = res[1];	// code
 		/**
 		 * {
 		 *    auditid         :  5368259,   // 审核 id
@@ -73,14 +73,14 @@ createSimpleWorker({queueName, routingKey}, function (msg) {
 		 */
 		return submitAuditLogApi.log({
 			auditid,
-			version,
+			version: code.version,
 			authorizerAppid,
-			codeId: _objectId
+			codeId: code.id
 		});
-	}).then(function () {
+	}).then( () => {
 		log('a worker done.')
 		return { ok: true }
-	}, function (err) {
+	}, (err) => {
 		errorlog(err);
 		return { ok: false, status: false }
 	});

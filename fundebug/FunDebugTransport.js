@@ -112,8 +112,6 @@ FundebugHttp.prototype.log = function (level, msg, meta, callback) {
     appVersion    : this.appVersion,
     releaseStage  : this.releaseStage,
     apikey        : this.apikey,
-    releaseStage  : this.releaseStage,
-    appVersion    : this.appVersion,
     metaData      : this.metaData,
     user          : this.user
   })

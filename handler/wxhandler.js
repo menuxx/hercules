@@ -3,9 +3,9 @@ const {log, errorlog} = require('../logger')('wxhandler');
 const wechat = require('wechat');
 const wxconfig = require('../config').wxOpen;
 // 平台配置
-const {componentCacheGet} = require('../components/cache');
+const {tokenCache} = require('../components/cache');
 const {Router} = require('express');
-const {appPublish, appDelayPublish} = require('../components/rabbitmq');
+const {appPublish} = require('../components/rabbitmq');
 const {wxApi, wx3rdApi} = require('../wxopenapi');
 const {InfoTypes} = wx3rdApi;
 const {ROUTING_KEYS} = require('../mqworks');
@@ -49,9 +49,9 @@ const verifyMsgApi = function (msg, resp) {
 	let {Content} = msg;
 	resp.send('');
 	let queryAuthCode = Content.replace('QUERY_AUTH_CODE:', '');
-	return componentCacheGet()
-		.then(function ({component_access_token}) {
-			return wx3rdApi.wxQueryAuth({accessToken: component_access_token, authCode: queryAuthCode})
+	return tokenCache.getComponentAccessToken()
+		.then( componentAccessToken => {
+			return wx3rdApi.wxQueryAuth({accessToken: componentAccessToken, authCode: queryAuthCode})
 		})
 		.then(function ({authorization_info}) {
 			let {authorizer_access_token} = authorization_info;
@@ -173,95 +173,98 @@ const verifyMsgApi = function (msg, resp) {
  **/
 
 // 处理微信第三方验证票据
-const handleComponentAccessToken = function ({ComponentVerifyTicket, AppId}, resp) {
-	appPublish(ROUTING_KEYS.Hercules_UpdateAccessToken, {
-		verifyTicket: ComponentVerifyTicket,
-		appId: AppId
-	}).then(function () {
-		resp.send('SUCCESS');
-	}, function (err) {
-		errorlog('handleComponentAccessToken error: %o', err);
-		resp.send('FAIL');
-	});
-};
+// const handleComponentAccessToken = function ({ComponentVerifyTicket, AppId}, req, resp) {
+// appPublish(ROUTING_KEYS.Hercules_UpdateAccessToken, {
+// 	verifyTicket: ComponentVerifyTicket,
+// 	appId: AppId
+// }).then(function () {
+// 	resp.send('SUCCESS');
+// }, function (err) {
+// 	errorlog('handleComponentAccessToken error: %o', err);
+// 	resp.send('FAIL');
+// });
+// };
+
+// // 处理授权更新
+// const handleUpdateAuthorized = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
+// 	appPublish(ROUTING_KEYS.WX_UpdateAuthorize, {
+// 		appId: AppId,
+// 		authorizerAppid: AuthorizerAppid,
+// 		authorizationCode: AuthorizationCode
+// 	}).then(function () {
+// 		resp.send('SUCCESS');
+// 	}, function (err) {
+// 		errorlog('handleUpdateAuthorized error: %o', err);
+// 		resp.send('FAIL');
+// 	});
+// };
+
 
 // 处理授权更新
-const handleUpdateAuthorized = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
-	appPublish(ROUTING_KEYS.WX_UpdateAuthorize, {
-		appId: AppId,
-		authorizerAppid: AuthorizerAppid,
-		authorizationCode: AuthorizationCode
-	}).then(function () {
-		resp.send('SUCCESS');
-	}, function (err) {
-		errorlog('handleUpdateAuthorized error: %o', err);
-		resp.send('FAIL');
-	});
-};
+// const handleAuthorize = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
+// 	// 消息延迟一秒发送到目标消费者
+// 	// 已提供足够的时间来修改通知业务服务器，来关联 appkey 和 appid
+// 	appDelayPublish(3000, ROUTING_KEYS.WX_Authorized, {
+// 		appId: AppId,
+// 		authorizerAppid: AuthorizerAppid,
+// 		authorizationCode: AuthorizationCode
+// 	}).then(function () {
+// 		resp.send('SUCCESS');
+// 	}, function (err) {
+// 		errorlog('handleAuthorize error: %o', err);
+// 		resp.send('FAIL');
+// 	});
+// };
 
+// const handleUnAuthorize = function ({AppId, AuthorizerAppid, CreateTime}, resp) {
+// 	appPublish(ROUTING_KEYS.WX_UnAuthorize, {
+// 		appId: AppId,
+// 		authorizerAppid: AuthorizerAppid,
+// 		createTime: CreateTime
+// 	}).then(function () {
+// 		resp.send('SUCCESS');
+// 	}, function (err) {
+// 		errorlog('handleAuthorize error: %o', err);
+// 		resp.send('FAIL');
+// 	});
+// };
 
-// 处理授权更新
-const handleAuthorize = function ({AppId, AuthorizerAppid, AuthorizationCode}, resp) {
-	// 消息延迟一秒发送到目标消费者
-	// 已提供足够的时间来修改通知业务服务器，来关联 appkey 和 appid
-	appDelayPublish(3000, ROUTING_KEYS.WX_Authorized, {
-		appId: AppId,
-		authorizerAppid: AuthorizerAppid,
-		authorizationCode: AuthorizationCode
-	}).then(function () {
-		resp.send('SUCCESS');
-	}, function (err) {
-		errorlog('handleAuthorize error: %o', err);
-		resp.send('FAIL');
-	});
-};
+// // 授权事件接收URL
+// route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
+// 	let msg = req.weixin;
+// 	if ( !has(msg, 'InfoType') || isEmpty(msg.InfoType) ) {
+// 		return resp.status(401).send('FAIL');
+// 	}
+// 	log('weixin notify InfoType : %s', msg.InfoType);
+// 	switch (msg.InfoType) {
+// 		// 取消授权
+// 		case InfoTypes.UNAUTHORIZED:
+// 			handleUnAuthorize(msg, resp);
+// 			break;
+// 		// 授权成功
+// 		case InfoTypes.AUTHORIZED:
+// 			handleAuthorize(msg, resp);
+// 			break;
+// 		// 授权更新
+// 		case InfoTypes.UPDATEAUTHORIZED:
+// 			handleUpdateAuthorized(msg, resp);
+// 			break;
+// 		// 验证票据
+// 		case InfoTypes.COMPONENT_VERIFY_TICKET:
+// 			handleComponentAccessToken(msg, req, resp);
+// 			break;
+// 		default:
+// 			resp.send('SUCCESS');
+// 	}
+// 	resp.send('SUCCESS');
+// }));
 
-const handleUnAuthorize = function ({AppId, AuthorizerAppid, CreateTime}, resp) {
-	appPublish(ROUTING_KEYS.WX_UnAuthorize, {
-		appId: AppId,
-		authorizerAppid: AuthorizerAppid,
-		createTime: CreateTime
-	}).then(function () {
-		resp.send('SUCCESS');
-	}, function (err) {
-		errorlog('handleAuthorize error: %o', err);
-		resp.send('FAIL');
-	});
-};
-
-// 授权事件接收URL
-route.post('/3rd/notify', wechat(wxconfig, function (req, resp) {
-	let msg = req.weixin;
-	if ( !has(msg, 'InfoType') || isEmpty(msg.InfoType) ) {
-		return resp.status(401).send('FAIL');
-	}
-	log('weixin notify InfoType : %s', msg.InfoType);
-	switch (msg.InfoType) {
-		// 取消授权
-		case InfoTypes.UNAUTHORIZED:
-			handleUnAuthorize(msg, resp);
-			break;
-		// 授权成功
-		case InfoTypes.AUTHORIZED:
-			handleAuthorize(msg, resp);
-			break;
-		// 授权更新
-		case InfoTypes.UPDATEAUTHORIZED:
-			handleUpdateAuthorized(msg, resp);
-			break;
-		// 验证票据
-		case InfoTypes.COMPONENT_VERIFY_TICKET:
-			handleComponentAccessToken(msg, resp);
-			break;
-		default:
-			resp.send('SUCCESS');
-	}
-	resp.send('SUCCESS');
-}));
-
+const wxlitePublish = function (routingKey, data) {
+	appPublish('yth3rd', routingKey, data)
+}
 
 const handleWeappAuditSuccess = function ({AppId, CreateTime, SuccTime}, resp) {
-	appPublish(ROUTING_KEYS.WX_WxliteAuditSuccess, {
+	wxlitePublish(ROUTING_KEYS.WX_WxliteAuditSuccess, {
 		authorizerAppid: AppId,
 		createTime: CreateTime,
 		succTime: SuccTime
@@ -274,7 +277,7 @@ const handleWeappAuditSuccess = function ({AppId, CreateTime, SuccTime}, resp) {
 }
 
 const handleWeappAuditFail = function ({AppId, Reason, CreateTime, FailTime}, resp) {
-	appPublish(ROUTING_KEYS.WX_WxliteAuditFail, {
+	wxlitePublish(ROUTING_KEYS.WX_WxliteAuditFail, {
 		authorizerAppid: AppId,
 		createTime: CreateTime,
 		failTime: FailTime,
@@ -287,7 +290,6 @@ const handleWeappAuditFail = function ({AppId, Reason, CreateTime, FailTime}, re
 		resp.send('FAIL');
 	})
 }
-
 // 公众号消息与事件接收URL
 route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
 	let {appid} = req.params;
@@ -312,10 +314,10 @@ route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
 		switch (msg.Event) {
 			case 'weapp_audit_success':
 				handleWeappAuditSuccess(msg, resp);
-				break;
+				return;
 			case 'weapp_audit_fail':
 				handleWeappAuditFail(msg, resp);
-				break;
+				return;
 			default:
 		}
 	}

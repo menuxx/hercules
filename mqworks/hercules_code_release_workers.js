@@ -15,10 +15,11 @@ const {dinerApi, wxcodeApi} = require('../leancloud');
 
 const {createSimpleWorker} = require('../components/rabbitmq');
 
+const exchangeName = 'wxlite'
 const queueName = 'wxlite_code_release';
 const routingKey = ROUTING_KEYS.Hercules_WxliteCodeRelease;
 
-createSimpleWorker({queueName, routingKey}, function (msg, ch) {
+createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid} = msg;
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	return wxlite.codeRelease(authorizerAppid)
