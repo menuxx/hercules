@@ -13,7 +13,7 @@ exports.getAuthorizerBy = function (by) {
     json: true
   }).then(function (res) {
     if (isEmpty(res)) {
-      return Promise.reject(new Error('diner not found'));
+      return Promise.reject(new Error('shop not found'));
     }
     return res;
   })

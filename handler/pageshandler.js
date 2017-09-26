@@ -41,12 +41,12 @@ route.get('/submit_audit_fail', function (req, resp) {
 	resp.render('submit_audit_fail', {title: '代码审核失败'})
 });
 
-route.get('/shops/:appkey', passport.authenticate('basic', {session: false}),
+route.get('/shops/:appKey', passport.authenticate('basic', {session: false}),
 	function (req, resp) {
 		req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
 		autoValid(req, resp).then(function () {
-			let {appkey} = req.params;
-			getAuthorizerBy({appkey})
+			let {appKey} = req.params;
+			getAuthorizerBy({appKey})
 				.then(function ({authorizerAppid}) {
 					return Promise.all([
 						wxlite.getCategory(authorizerAppid),
@@ -88,21 +88,21 @@ route.get('/shops', passport.authenticate('basic', {session: false}), function (
 	}, errorlog)
 });
 
-route.get('/wx3rd/authorize/:appkey', function (req, resp) {
+route.get('/wx3rd/authorize/:appKey', function (req, resp) {
 	req.checkQuery('auth_code', 'url 上的 auth_code 必须存在').notEmpty(); // 安全授权码.. 这里暂时没用
-	req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
+	req.checkParams('appKey', 'url 上的 appkey 必须存在').notEmpty();
 	autoValid(req, resp).then(function () {
 		let {auth_code} = req.query; // 安全授权码
-		let {appkey} = req.params;
+		let {appKey} = req.params;
 		Promise.all([
-			getAuthorizerBy({appkey}),
+			getAuthorizerBy({appKey}),
 			tokenCache.getComponentAccessToken()
 		]).then((res) => {
 			let shop = res[0], componentAccessToken = res[1]
 			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then((res) => {
 				let {authorizer_info} = res[0]
 				// 更新订单，绑定 appkey 与 appid 之间的关系
-				return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
+				return putAuthorizerBy(webNotify, {appKey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
 			})
 		}).then(({shop, authorizer_info}) => {
 			return resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})

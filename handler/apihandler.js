@@ -33,7 +33,7 @@ route.get('/pre_auth_url/:appkey', function (req, resp) {
 			log(`${server.siteUrl}/wx/3rd/authorize/${appkey}`)
 			return wx3rdApi.wxGetAuthorizeUrl({
 				authCode: pre_auth_code,
-				redirectUri: `${server.siteUrl}/wx/3rd/authorize/${appkey}`
+				redirectUri: `${server.siteUrl}/wx3rd/authorize/${appkey}`
 			});
 		}).then(function (url) {
 			resp.json({ url })
