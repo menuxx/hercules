@@ -41,12 +41,12 @@ route.get('/submit_audit_fail', function (req, resp) {
 	resp.render('submit_audit_fail', {title: '代码审核失败'})
 });
 
-route.get('/shops/:appKey', passport.authenticate('basic', {session: false}),
+route.get('/shops/:appkey', passport.authenticate('basic', {session: false}),
 	function (req, resp) {
 		req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
 		autoValid(req, resp).then(function () {
-			let {appKey} = req.params;
-			getAuthorizerBy({appKey})
+			let {appkey} = req.params;
+			getAuthorizerBy({appkey})
 				.then(function ({authorizerAppid}) {
 					return Promise.all([
 						wxlite.getCategory(authorizerAppid),
@@ -88,17 +88,14 @@ route.get('/shops', passport.authenticate('basic', {session: false}), function (
 	}, errorlog)
 });
 
-route.get('/wx3rd/authorize/:appKey', function (req, resp) {
+route.get('/wx3rd/authorize/:appkey', function (req, resp) {
 	req.checkQuery('auth_code', 'url 上的 auth_code 必须存在').notEmpty(); // 安全授权码.. 这里暂时没用
-	req.checkParams('appKey', 'url 上的 appkey 必须存在').notEmpty();
-	console.log("=================================")
+	req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
 	autoValid(req, resp).then(function () {
 		let {auth_code} = req.query; // 安全授权码
-		let {appKey} = req.params;
-		console.log("--------------------------------")
-		console.log(auth_code, appKey)
+		let {appkey} = req.params;
 		Promise.all([
-			getAuthorizerBy({appKey}),
+			getAuthorizerBy({appkey}),
 			tokenCache.getComponentAccessToken()
 		]).then((res) => {
 			let shop = res[0], componentAccessToken = res[1]
@@ -106,7 +103,7 @@ route.get('/wx3rd/authorize/:appKey', function (req, resp) {
 			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then((res) => {
 				let {authorizer_info} = res[0]
 				// 更新订单，绑定 appkey 与 appid 之间的关系
-				return putAuthorizerBy(webNotify, {appKey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
+				return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
 			})
 		}).then(({shop, authorizer_info}) => {
 			return resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})
