@@ -94,11 +94,13 @@ route.get('/wx3rd/authorize/:appKey', function (req, resp) {
 	autoValid(req, resp).then(function () {
 		let {auth_code} = req.query; // 安全授权码
 		let {appKey} = req.params;
+		console.log(auth_code, appKey)
 		Promise.all([
 			getAuthorizerBy({appKey}),
 			tokenCache.getComponentAccessToken()
 		]).then((res) => {
 			let shop = res[0], componentAccessToken = res[1]
+			console.log(shop, componentAccessToken)
 			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then((res) => {
 				let {authorizer_info} = res[0]
 				// 更新订单，绑定 appkey 与 appid 之间的关系

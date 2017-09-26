@@ -49,7 +49,7 @@ apps:
 
    # 用户授权完成
   - script: mqworks/wx_authorized_workers.js
-     cwd : /usr/src/app/
+     #cwd : /usr/src/app/
      name: weixin_Authorizerd
      exec_mode: fork
      exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -61,7 +61,7 @@ apps:
 
    # 用户取消授权
   - script: mqworks/wx_unauthorize_workers.js
-     cwd : /usr/src/app/
+     #cwd : /usr/src/app/
      name: weixin_UnAuthorize
      exec_mode: fork
      exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -73,7 +73,7 @@ apps:
 
    # 用户授权更新
   - script: mqworks/wx_updateauthorize_workers.js
-     cwd : /usr/src/app/
+     #cwd : /usr/src/app/
      name: weixin_UpdateAuthorize
      exec_mode: fork
      exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
@@ -85,7 +85,7 @@ apps:
 
    # 刷新令牌循环
   - script: mqworks/hercules_refresh_authorizer_access_token_workers.js
-     cwd : /usr/src/app/
+     #cwd : /usr/src/app/
      name: hercules_RefreshAuthorizerAccessToken
      exec_mode: fork
      exec_interpreter: './node_modules/babel-cli/bin/babel-node.js'
