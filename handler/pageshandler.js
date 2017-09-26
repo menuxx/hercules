@@ -91,9 +91,11 @@ route.get('/shops', passport.authenticate('basic', {session: false}), function (
 route.get('/wx3rd/authorize/:appKey', function (req, resp) {
 	req.checkQuery('auth_code', 'url 上的 auth_code 必须存在').notEmpty(); // 安全授权码.. 这里暂时没用
 	req.checkParams('appKey', 'url 上的 appkey 必须存在').notEmpty();
+	console.log("=================================")
 	autoValid(req, resp).then(function () {
 		let {auth_code} = req.query; // 安全授权码
 		let {appKey} = req.params;
+		console.log("--------------------------------")
 		console.log(auth_code, appKey)
 		Promise.all([
 			getAuthorizerBy({appKey}),

@@ -9,8 +9,7 @@
   "scripts": {
     "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js",
     "code-new": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/code_test.js",
-    "dumpuser": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/dump_user_to_leancloud.js",
-    "authorized": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/wx_unauthorize_workers.js"
+    "dumpuser": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/dump_user_to_leancloud.js"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
