@@ -99,9 +99,7 @@ route.get('/wx3rd/authorize/:appkey', function (req, resp) {
 			tokenCache.getComponentAccessToken()
 		]).then((res) => {
 			let shop = res[0], componentAccessToken = res[1]
-			console.log(shop, componentAccessToken)
-			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then((res) => {
-				let {authorizer_info} = res[0]
+			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then(({authorizer_info}) => {
 				// 更新订单，绑定 appkey 与 appid 之间的关系
 				return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
 			})
