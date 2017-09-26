@@ -94,21 +94,26 @@ route.get('/wx3rd/authorize/:appkey', function (req, resp) {
 	autoValid(req, resp).then(function () {
 		let {auth_code} = req.query; // 安全授权码
 		let {appkey} = req.params;
-		Promise.all([
-			getAuthorizerBy({appkey}),
-			tokenCache.getComponentAccessToken()
-		]).then((res) => {
-			let shop = res[0], componentAccessToken = res[1]
-			return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then(({authorizer_info}) => {
-				// 更新订单，绑定 appkey 与 appid 之间的关系
-				return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
+		try {
+			Promise.all([
+				getAuthorizerBy({appkey}),
+				tokenCache.getComponentAccessToken()
+			]).then((res) => {
+				let shop = res[0], componentAccessToken = res[1]
+				console.log(shop, componentAccessToken)
+				return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid}).then(({authorizer_info}) => {
+					// 更新订单，绑定 appkey 与 appid 之间的关系
+					return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
+				})
+			}).then(({shop, authorizer_info}) => {
+				return resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})
+			}, (err) => {
+				errorlog(err);
+				return errorPage(resp, '授权的店铺不存在');
 			})
-		}).then(({shop, authorizer_info}) => {
-			return resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})
-		}, (err) => {
-			errorlog(err);
-			return errorPage(resp, '授权的店铺不存在');
-		})
+		} catch (e) {
+			console.log(e)
+		}
 	});
 
 });
