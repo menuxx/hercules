@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/wxhandler.js" afterPath="$PROJECT_DIR$/handler/wxhandler.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/leancloud/WXAuthorizer.js" afterPath="$PROJECT_DIR$/leancloud/WXAuthorizer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" afterPath="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pubuim/weixin.js" afterPath="$PROJECT_DIR$/pubuim/weixin.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/components/cache.js" afterPath="$PROJECT_DIR$/components/cache.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -42,11 +38,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="wxhandler.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="wxhandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/handler/wxhandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+            <state relative-caret-position="143">
+              <caret line="291" column="1" lean-forward="true" selection-start-line="291" selection-start-column="1" selection-end-line="291" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cache.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/components/cache.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="44" lean-forward="false" selection-start-line="1" selection-start-column="44" selection-end-line="1" selection-end-column="44" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="319">
+              <caret line="28" column="48" lean-forward="true" selection-start-line="28" selection-start-column="48" selection-end-line="28" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -102,26 +118,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rabbitmq.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/components/rabbitmq.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="181" column="44" lean-forward="true" selection-start-line="181" selection-start-column="44" selection-end-line="181" selection-end-column="44" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="env.sh" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/env.sh">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
-              <caret line="27" column="30" lean-forward="false" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -133,9 +129,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>delayMs</find>
-      <find>getQrcode</find>
-      <find>dinerApi</find>
       <find>makeCommitInfo</find>
       <find>console.log</find>
       <find>bindTester</find>
@@ -163,6 +156,9 @@
       <find>updateUnauthorize</find>
       <find>sendWXUnAuthorized</find>
       <find>handleComponentAccessToken</find>
+      <find>wxQueryAuth</find>
+      <find>verifyMsgApi</find>
+      <find>route</find>
     </findStrings>
     <replaceStrings>
       <replace>authorizationCode</replace>
@@ -181,7 +177,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/wxopenapi/wxlite/codeManage.js" />
         <option value="$PROJECT_DIR$/views/diners.hbs" />
         <option value="$PROJECT_DIR$/test/code_test.js" />
         <option value="$PROJECT_DIR$/leancloud/Authorize.js" />
@@ -225,13 +220,14 @@
         <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/wxlite/member.js" />
         <option value="$PROJECT_DIR$/views/shops.hbs" />
-        <option value="$PROJECT_DIR$/components/cache.js" />
         <option value="$PROJECT_DIR$/handler/pageshandler.js" />
         <option value="$PROJECT_DIR$/leancloud/WXAuthorizer.js" />
         <option value="$PROJECT_DIR$/pubuim/weixin.js" />
         <option value="$PROJECT_DIR$/mqworks/wx_unauthorize_workers.js" />
         <option value="$PROJECT_DIR$/mqworks/wx_authorized_workers.js" />
+        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/handler/wxhandler.js" />
+        <option value="$PROJECT_DIR$/components/cache.js" />
       </list>
     </option>
   </component>
@@ -247,8 +243,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1572" />
-    <option name="y" value="-35" />
+    <option name="x" value="1407" />
+    <option name="y" value="163" />
     <option name="width" value="1618" />
     <option name="height" value="948" />
   </component>
@@ -585,7 +581,7 @@
       <workItem from="1498923160892" duration="299000" />
       <workItem from="1499322376581" duration="322000" />
       <workItem from="1506266983972" duration="69040000" />
-      <workItem from="1506486479577" duration="15954000" />
+      <workItem from="1506486479577" duration="19313000" />
     </task>
     <task id="LOCAL-00001" summary="appkey =&gt; appKey">
       <created>1506384841996</created>
@@ -706,14 +702,29 @@
       <option name="project" value="LOCAL" />
       <updated>1506503641731</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="功能稳定">
+      <created>1506517022676</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1506517022676</updated>
+    </task>
+    <task id="LOCAL-00019" summary="功能稳定">
+      <created>1506519516976</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1506519516976</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="268475000" />
+    <option name="totallyTimeSpent" value="271834000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1572" y="-35" width="1618" height="948" extended-state="0" />
+    <frame x="1407" y="163" width="1618" height="948" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19098309" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -723,7 +734,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4240654" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4240654" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -776,7 +787,8 @@
     <MESSAGE value="授权认证" />
     <MESSAGE value="上线检查，修复" />
     <MESSAGE value="添加绑定体验者功能" />
-    <option name="LAST_COMMIT_MESSAGE" value="添加绑定体验者功能" />
+    <MESSAGE value="功能稳定" />
+    <option name="LAST_COMMIT_MESSAGE" value="功能稳定" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -785,13 +797,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/amqplib/examples/tutorials/callback_api/worker.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="6" lean-forward="false" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/params.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -838,14 +843,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="173">
           <caret line="124" column="38" lean-forward="true" selection-start-line="124" selection-start-column="38" selection-end-line="124" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2707">
-          <caret line="208" column="12" lean-forward="false" selection-start-line="208" selection-start-column="7" selection-end-line="208" selection-end-column="12" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -934,14 +931,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wxopenapi/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="163">
-          <caret line="13" column="28" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/partials/header.hbs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -1026,14 +1015,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
           <caret line="51" column="4" lean-forward="false" selection-start-line="51" selection-start-column="4" selection-end-line="51" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/components/cache.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="34" column="28" lean-forward="false" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -1142,14 +1123,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mqworks/wx_authorized_workers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="105" column="55" lean-forward="true" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/wx_updateauthorize_workers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="78">
@@ -1166,6 +1139,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/wxopenapi/wxcomponent/3rd.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="123" column="85" lean-forward="false" selection-start-line="123" selection-start-column="65" selection-end-line="123" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wxopenapi/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="22" column="27" lean-forward="false" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mqworks/wx_authorized_workers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="105" column="55" lean-forward="true" selection-start-line="105" selection-start-column="55" selection-end-line="105" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-42">
@@ -1174,10 +1171,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="319">
+          <caret line="28" column="48" lean-forward="true" selection-start-line="28" selection-start-column="48" selection-end-line="28" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/handler/wxhandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="56" column="63" lean-forward="true" selection-start-line="56" selection-start-column="63" selection-end-line="56" selection-end-column="63" />
+        <state relative-caret-position="143">
+          <caret line="291" column="1" lean-forward="true" selection-start-line="291" selection-start-column="1" selection-end-line="291" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/components/cache.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="44" lean-forward="false" selection-start-line="1" selection-start-column="44" selection-end-line="1" selection-end-column="44" />
           <folding />
         </state>
       </provider>

@@ -1,5 +1,5 @@
 // 令牌 db index
-const redis = require('./redis')({dbIndex: 5})
+const redis = require('./redis')({dbIndex: 9})
 const {log} = require('../logger')('cache')
 const {wxOpen} = require('../config')
 
