@@ -78,7 +78,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 			return {ok: false, status: true}
 		})
 	}
-	return Promise.reject({ok: false, status: true})
+	return Promise.resolve({ok: true})
 });
 
 // 延迟创建可复用 worker 连接
