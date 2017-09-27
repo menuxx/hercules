@@ -34,7 +34,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, channel
 			})
 		} else {
 			// 终止循环
-			return { ok : false, status: false }
+			return Promise.reject({ ok : false, status: false })
 		}
 	}
 	return Promise.reject({ ok : false, status: false })
