@@ -34,10 +34,10 @@ export const tokenCache = {
 // authorizer_appid, authorizer_access_token, authorizer_refresh_token
 export const authorizerCache = {
   putAuthorization: function (appId, authorizationInfo) {
-    return putObject(`authorizer_info:${appId}`, authorizationInfo)
+    return putObject(`authorizer_token:${appId}`, authorizationInfo)
   },
   getAuthorization: function (appId) {
-    return getObject(`authorizer_info:${appId}`)
+    return getObject(`authorizer_token:${appId}`)
   }
 }
 

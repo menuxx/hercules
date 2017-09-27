@@ -27,6 +27,7 @@
                             <a href="javascript:void(0);" data-appkey="{{ appKey }}" class="authLink btn btn-link">授权链接</a>
                             {{#if authorizerStatus}}
                                 <a href="https://sso.yingtaohuo.com/shops/{{ shopId }}/tables/list" class="btn btn-link">桌码管理</a>
+                                <a href="javascript:void(0);" data-appid="{{authorizerAppid}}" class="btnTesters btn btn-link">绑定体验者</a>
                                 <a href="javascript:void(0);" data-appid="{{authorizerAppid}}" class="resetAccessToken btn btn-link">重置访问令牌</a>
                             {{/if}}
                         </div>
@@ -187,6 +188,40 @@
         api.get('/api/pre_auth_url/' + appkey).then(function (data) {
         	// 获取 p
         	window.open(data.url, '_blank')
+        })
+    })
+
+    function allOk(data) {
+        return data.filter(function (i) {
+            return i.errcode === 0
+        }).length = data.length
+    }
+
+    function failMsg(data) {
+        return data.map(function (i) {
+        	return i.errmsg
+        }).join(", ")
+    }
+
+    $(".btnTesters").on('click', function () {
+        var appid = $(this).data('appid')
+        api.put('/api/shop_wxlite/' + appid + '/bind_testers').then(function (data) {
+            if ( allOk(data) ) {
+                $.toast({
+                    heading: '完成',
+                    text: '绑定成功',
+                    showHideTransition: 'slide',
+                    icon: 'success'
+                })
+            } else {
+                $.toast({
+                    heading: '失败',
+                    text: '' + failMsg(data),
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    hideAfter: 10000
+                })
+            }
         })
     })
     // 重置访问令牌

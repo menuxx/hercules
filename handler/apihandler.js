@@ -7,11 +7,11 @@ const {shopApi, wxcodeApi} = require('../leancloud');
 const {tokenCache, authorizerCache} = require('../components/cache');
 const wxlite = require('../wxlite');
 const {wx3rdApi} = require('../wxopenapi');
-const {server} = require('../config');
+const {server, plInfo} = require('../config');
 const {toggleVisible} = require('../service');
 const {ROUTING_KEYS} = require('../mqworks');
 const {appPublish, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
-const {isEmpty} = require('lodash');
+const {isEmpty, union} = require('lodash');
 const uuid = require('uuid-v4');
 
 const route = Router();
@@ -167,6 +167,18 @@ route.put('/code_commit', function (req, resp) {
 		})
 	})
 });
+
+route.put('/shop_wxlite/:appid/bind_testers', function (req, resp) {
+	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
+	jsonAutoValid(req, resp).then(function () {
+		let {appid} = req.params;
+		return shopApi.getAuthorizerByAppid(appid).then( shop => {
+			return wxlite.bindTesters(appid, union(plInfo.testers, shop.testers))
+		}).then(function (res) {
+			resp.json(res)
+		}, errorlog)
+	})
+})
 
 route.put('/code_commit/:appid', function (req, resp) {
 	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();

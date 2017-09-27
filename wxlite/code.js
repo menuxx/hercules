@@ -66,8 +66,7 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true, usDebug
 				let {shop} = res;
 				// 绑定所有体验者
 				return Promise.all([
-					wxlite.setDomains(authorizer_appid, shop.domains),
-					wxlite.bindTesters(authorizer_appid, shop.testers)
+					wxlite.setDomains(authorizer_appid, shop.domains)
 				]).then(function () { return res })
 			})
 	}

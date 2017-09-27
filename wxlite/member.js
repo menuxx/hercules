@@ -4,11 +4,12 @@ const {getAuthorizerToken} = require('./util');
 function bindTester({wechatid, accessToken}) {
 	return wxliteApi
 		.wxBindTester({wechatid, accessToken})
-		.then(null, function (err) {
+		.then(function (data) {
 			// 如果该用户已经绑定过，忽略该错误
-			if (err.errcode === 85004) {
-				return Promise.resolve({errcode: 0, errmsg: 'ok'});
+			if (data.errcode === 85004) {
+				return {errcode: 0, errmsg: 'ok'}
 			}
+			return data
 		})
 }
 // 可同时绑定多个体验者
