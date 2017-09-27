@@ -4,12 +4,6 @@
         <form class="form-horizontal diner" data-appid="{{appInfo.authorizerAppid}}">
 
             <div class="form-group form-group-sm">
-                <div class="col-sm-12">
-                    <a class="btn btn-primary resumeAccessToken">恢复 authorizer_access_token</a>
-                </div>
-            </div>
-
-            <div class="form-group form-group-sm">
                 <label class="col-sm-2 control-label">AppInfo</label>
                 <div class="col-sm-8">
                     <textarea type="text" rows="15" class="form-control app-info">{{JSONstringify appInfo 4}}</textarea>
@@ -116,12 +110,6 @@
     });
 
     var appid = $('form.diner').data('appid');
-
-    $('.resumeAccessToken').on('click', function (e) {
-        api.put(`/api/shop_wxlite/${appid}/access_token_resume`).then(function (access) {
-            alert('access_token 恢复完成');
-        })
-    });
 
     $('.saveDinerCode').on('click', saveHandler);
     $('.createDinerCode').on('click', saveHandler);

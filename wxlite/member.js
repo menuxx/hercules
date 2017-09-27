@@ -1,9 +1,9 @@
 const {wxliteApi} = require('../wxopenapi')
 const {getAuthorizerToken} = require('./util');
 
-function bindTester({tester, accessToken}) {
+function bindTester({wechatid, accessToken}) {
 	return wxliteApi
-		.wxBindTester({wechatid: tester, accessToken})
+		.wxBindTester({wechatid, accessToken})
 		.then(null, function (err) {
 			// 如果该用户已经绑定过，忽略该错误
 			if (err.errcode === 85004) {

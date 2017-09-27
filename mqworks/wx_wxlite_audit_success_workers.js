@@ -15,7 +15,7 @@ const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 const {pubuWeixin} = require('../pubuim');
 const {createSimpleWorker, createPublisher, publish2} = require('../components/rabbitmq');
 
-const exchangeName = 'wxlite'
+const exchangeName = 'yth3rd'
 const queueName = 'wx_wxlite_audit_success';
 const routingKey = ROUTING_KEYS.WX_WxliteAuditSuccess;
 

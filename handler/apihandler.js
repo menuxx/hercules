@@ -3,16 +3,20 @@ const {makeError} = require('../lib/error');
 const {log, errorlog} = require('../logger')('apihandler');
 const {getAuthorizerBy} = require('../service');
 const {jsonAutoValid} = require('../lib/params');
-const {dinerApi, wxcodeApi} = require('../leancloud');
+const {shopApi, wxcodeApi} = require('../leancloud');
 const {tokenCache, authorizerCache} = require('../components/cache');
 const wxlite = require('../wxlite');
-const {wx3rdApi} = require('../wxopenapi')
-const {server} = require('../config')
-const {toggleVisible} = require('../service')
+const {wx3rdApi} = require('../wxopenapi');
+const {server} = require('../config');
+const {toggleVisible} = require('../service');
 const {ROUTING_KEYS} = require('../mqworks');
-const {appPublish} = require('../components/rabbitmq');
+const {appPublish, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
+const {isEmpty} = require('lodash');
+const uuid = require('uuid-v4');
 
 const route = Router();
+
+var yth3rdDelayPublisherChannel = null
 
 route.get('/component_token', function (req, resp) {
 	tokenCache.getComponentAccessToken().then(function (accessToken) {
@@ -50,9 +54,39 @@ route.put('/shop_wxlite/:appid', function (req, resp) {
 		let {appid} = req.params;
 		// 不接受对 关键字段的修改
 		delete req.body.authorizerAppid;
-		dinerApi.saveAuthorizer(appid, req.body).then(resp.json.bind(resp));
+		shopApi.saveAuthorizer(appid, req.body).then(resp.json.bind(resp));
 	}, errorlog);
 });
+
+route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
+	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
+	jsonAutoValid(req, resp).then(function () {
+		let {appid} = req.params;
+		let newLoopId = uuid();
+		return wxlite.getAuthorizerInfo(appid).then(function ({authorization_info}) {
+			let {authorizer_refresh_token} = authorization_info
+			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(({authorizer_access_token, expires_in}) => {
+				return Promise.all([
+					authorizerCache.putAuthorization(appid, {
+						authorizer_appid: appid,
+						authorizer_refresh_token,
+						authorizer_access_token,
+						expires_in,
+						loopId: newLoopId
+					}),
+					// 产生新的 loopId ，终端之前的循环
+					publishDelay(yth3rdDelayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken, {
+						loopId: newLoopId,
+						authorizerAppid: appid,
+						authorizerRefreshToken: authorizer_refresh_token
+					})
+				]).then(function () {
+					resp.json({ authorizer_refresh_token, authorizer_access_token, expires_in })
+				}, errorlog)
+			})
+		})
+	}, errorlog);
+})
 
 // 恢复 access_token
 route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
@@ -62,18 +96,18 @@ route.put('/shop_wxlite/:appid/access_token_resume', function (req, resp) {
 		// 获取该店铺的 access_token
 		return wxlite.getAuthorizerInfo(appid).then(function ({authorization_info}) {
 			let {authorizer_refresh_token} = authorization_info
-			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function (aaaa) {
-				var authorizer_access_token = aaaa.authorizer_access_token
-				return authorizerCache.getAuthorizerInfo(appid).then(function (cache_data) {
-					cache_data.authorizer_access_token = authorizer_access_token
+			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(function (accessToken) {
+				let authorizer_access_token = accessToken.authorizer_access_token
+				return authorizerCache.getAuthorization(appid).then(function (cacheData) {
+					cacheData.authorizer_access_token = authorizer_access_token
 					// 存放到 redis 中
-					return authorizerCache.putAuthorizerInfo(appid, cache_data).then(function () {
-						return cache_data
+					return authorizerCache.putAuthorization(appid, cacheData).then(function () {
+						return cacheData
 					})
 				})
 			})
-		}).then(function (cache_data) {
-			resp.json(cache_data)
+		}).then(function (cacheData) {
+			resp.json(cacheData)
 		})
 	}, errorlog);
 })
@@ -84,7 +118,7 @@ route.post('/shop_wxlite', function (req, resp) {
 	req.checkBody('appName', 'body 上的 appName 必须存在').notEmpty();
 	req.checkBody('version', 'body 上的 version 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
-		dinerApi.createAuthorizer(req.body).then(resp.json.bind(resp));
+		shopApi.createAuthorizer(req.body).then(resp.json.bind(resp));
 	});
 });
 
@@ -121,10 +155,10 @@ route.put('/code_commit', function (req, resp) {
 	req.checkQuery('version', 'url 上的 version 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
 		let {version} = req.query;
-		dinerApi.findAutoCommitAuthorizers().then(function (diners) {
-			return Promise.all(diners.map(function (diner) {
+		shopApi.findAutoCommitAuthorizers().then(function (shops) {
+			return Promise.all(shops.map(function (shop) {
 				return appPublish(ROUTING_KEYS.Hercules_WxliteCodeCommit, {
-					authorizerAppid: diner.authorizerAppid,
+					authorizerAppid: shop.authorizerAppid,
 					version
 				})
 			}))
@@ -137,7 +171,7 @@ route.put('/code_commit', function (req, resp) {
 route.put('/code_commit/:appid', function (req, resp) {
 	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
 	function _refResp (res) {
-		return resp.json({ templateType: res.code.templateType, templateId: res.code.templateId, testers: res.diner.testers, version: res.code.version, errcode: res.errcode, errmsg: res.errmsg });
+		return resp.json({ templateType: res.code.templateType, templateId: res.code.templateId, testers: res.shop.testers, version: res.code.version, errcode: res.errcode, errmsg: res.errmsg });
 	}
 	jsonAutoValid(req, resp).then(function () {
 		let {type} = req.query;
@@ -161,7 +195,7 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
 		let {appid} = req.params;
-		dinerApi.getAuthorizerByAppid(appid)
+		shopApi.getAuthorizerByAppid(appid)
 			.then(function ({lastCommitVersion}) {
 				return wxcodeApi.getByVersionNumber(lastCommitVersion)
 			})
@@ -171,7 +205,9 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 					version: code.version
 				})
 			})
-			.then(resp.json.bind(resp))
+			.then(function (res) {
+				resp.json(res)
+			})
 	})
 });
 
@@ -189,7 +225,7 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
  *  "type": "action"
  * }
  */
-route.post('/pubuim/diners/:appid/code', function (req, resp) {
+route.post('/pubuim/shops/:appid/code', function (req, resp) {
 
 	// valid rules
 	req.checkBody('type', 'type required and string in body').notEmpty();
@@ -220,14 +256,14 @@ route.post('/pubuim/diners/:appid/code', function (req, resp) {
 		let {appid} = req.params
 		let {version} = req.query
 
-		getAuthorizerBy({appid}).then(function (diner) {
+		getAuthorizerBy({appid}).then(function (shop) {
 
 			let successReply = function (action) {
 				return function () {
 					resp.json({
-						text: `${diner.shopName} - ${action}成功`,
+						text: `${shop.shopName} - ${action}成功`,
 						icon_url: 'https://file.menuxx.com/image/menuxx-logo-mini.png',
-						username: '菜单加'
+						username: '樱桃火'
 					})
 				}
 			};
@@ -235,13 +271,13 @@ route.post('/pubuim/diners/:appid/code', function (req, resp) {
 			let failReply = function (action) {
 				return function (err) {
 					resp.json({
-						text: `${diner.shopName} - ${action}失败`,
+						text: `${shop.shopName} - ${action}失败`,
 						icon_url: 'https://file.menuxx.com/image/menuxx-logo-mini.png',
 						attachments: [{
 							description: err.message,
 							color: 'error'
 						}],
-						username: '菜单加'
+						username: '樱桃火'
 					})
 				}
 			};
@@ -267,5 +303,13 @@ route.post('/pubuim/diners/:appid/code', function (req, resp) {
 	})
 
 });
+
+// 延迟创建可复用 worker 连接
+setTimeout(function () {
+	// 创建自发channel
+	createDelayPublisher("yth3rd", function (ch) {
+		yth3rdDelayPublisherChannel = ch
+	});
+}, 2000);
 
 module.exports = route;

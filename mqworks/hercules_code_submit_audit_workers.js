@@ -49,39 +49,43 @@ const {log, errorlog} = require('../logger')('code_submit_audit');
 const {createSimpleWorker} = require('../components/rabbitmq');
 const {submitAuditLogApi, wxcodeApi} = require('../leancloud');
 const wxlite = require('../wxlite');
+const {isEmpty} = require("lodash")
 
-const exchangeName = 'wxlite'
+const exchangeName = 'yth3rd'
 const queueName = 'wxlite_submit_audit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteSubmitAudit;
 
 createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 	let {authorizerAppid, version} = msg;
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
-	return Promise.all([
-		wxlite.submitAudit(authorizerAppid),
-		wxcodeApi.getByVersionNumber(version)
-	]).then( (res) => {
-		let {auditid} = res[0];	// submit_audit
-		let code = res[1];	// code
-		/**
-		 * {
+	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
+		return Promise.all([
+			wxlite.submitAudit(authorizerAppid),
+			wxcodeApi.getByVersionNumber(version)
+		]).then( (res) => {
+			let {auditid} = res[0];	// submit_audit
+			let code = res[1];	// code
+			/**
+			 * {
 		 *    auditid         :  5368259,   // 审核 id
 		 *    version         :  '0.1.1',   // 发布版本号
 		 *    authorizerAppid :  'wx833943b167b4012a',  // 账户 appid
 		 *    codeId          :  '5937f6922f301e005884e565',  // 关联的 代码 id
 		 * }
-		 */
-		return submitAuditLogApi.log({
-			auditid,
-			version: code.version,
-			authorizerAppid,
-			codeId: code.id
+			 */
+			return submitAuditLogApi.log({
+				auditid,
+				version: code.version,
+				authorizerAppid,
+				codeId: code.id
+			});
+		}).then( () => {
+			log('a worker done.')
+			return { ok: true }
+		}, (err) => {
+			errorlog(err);
+			return { ok: false, status: false }
 		});
-	}).then( () => {
-		log('a worker done.')
-		return { ok: true }
-	}, (err) => {
-		errorlog(err);
-		return { ok: false, status: false }
-	});
+	}
+	return Promise.reject({ ok: false, status: false })
 });

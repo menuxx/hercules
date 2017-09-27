@@ -25,9 +25,9 @@ var wxAvatarUrl = "https://file.menuxx.com/image/weixin-logo.png?imageView2/0/w/
 /**
  * 代码提交成功完成信息
  */
-export const sendCodeCommitOk = function ({codeVersion, templateType}, appName, appId, qrCodeUrl) {
+export const sendCodeCommitOk = function ({codeVersion, templateType}, shopName, appId, qrCodeUrl) {
   return post({
-    text: `代码提交成功。${appName}[AppId: ${appId}], 扫描下方二维码可以预览\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
+    text: `代码提交成功。${shopName}[AppId: ${appId}], 扫描下方二维码可以预览\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     photoUrl: qrCodeUrl,
     channel: "#微信",
     displayUser: {
@@ -38,7 +38,7 @@ export const sendCodeCommitOk = function ({codeVersion, templateType}, appName, 
       {
         text: '提交微信审核',
         action: 'wxlite_submit_audit',
-        callbackUrl: siteUrl + `/api/pubuim/diners/${appId}/code?version=${codeVersion}`
+        callbackUrl: siteUrl + `/api/pubuim/shops/${appId}/code?version=${codeVersion}`
       }
     ]
   });
@@ -47,9 +47,9 @@ export const sendCodeCommitOk = function ({codeVersion, templateType}, appName, 
 /**
  * 代码发布成功信息
  */
-export const sendCodeReleaseOK = function ({codeVersion, templateType}, appName, appId) {
+export const sendCodeReleaseOK = function ({codeVersion, templateType}, shopName, appId) {
   return post({
-    text: `代码发布成功。${appName}[AppId: ${appId}]，已完成上线\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
+    text: `代码发布成功。${shopName}[AppId: ${appId}]，已完成上线\n\n 代码版本：${codeVersion} \n 小程序模板类型: ${templateType}`,
     channel: "#微信",
     displayUser: {
       name: '微信小程序',
@@ -92,7 +92,7 @@ export const sendCodeAuditSuccess = function ({codeVersion, templateType}, appNa
       {
         text: '上线小程序',
         action: 'wxlite_code_release',
-        callbackUrl: siteUrl + `api/diners/${appId}/code`
+        callbackUrl: siteUrl + `api/shops/${appId}/code`
       }
     ]
   });
@@ -101,9 +101,9 @@ export const sendCodeAuditSuccess = function ({codeVersion, templateType}, appNa
 /**
  * 微信新用户授权完成
  */
-export const sendWXAuthorized = function ({shopName, appId}) {
+export const sendWXAuthorized = function ({appName, appId}) {
   return post({
-    text: `用户绑定完成。商铺${shopName}[AppId: ${appId}]。`,
+    text: `用户绑定完成。商铺${appName}[AppId: ${appId}]。`,
     channel: "#微信",
     displayUser: {
       name: '微信小程序',

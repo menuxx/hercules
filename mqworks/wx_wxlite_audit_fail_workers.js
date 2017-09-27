@@ -15,7 +15,7 @@ const {createSimpleWorker} = require('../components/rabbitmq');
 const {pubuWeixin} = require('../pubuim');
 const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 
-const exchangeName = 'wxlite'
+const exchangeName = 'yth3rd'
 const queueName = 'wx_wxlite_audit_fail_queue'
 const routingKey = ROUTING_KEYS.WX_WxliteAuditFail
 
@@ -26,7 +26,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 		shopApi.getAuthorizerByAppid(authorizerAppid),
 		submitAuditLogApi.getNewest(authorizerAppid)
 	]).then(function (res) {
-		let submit = res[0], shop = res[1]
+		let shop = res[0], submit = res[1]
 		/**
 		 * struct:
 		 * {
@@ -51,7 +51,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 				reason
 			}),
 			// 发送 pubuim 通知
-			// {codeVersion, templateType}, shopName, appId, reason
+			// {codeVersion, templateType}, appName, appId, reason
 			pubuWeixin.sendCodeAuditFail(
 				{ codeVersion: submit.version, templateType: shop.templateType },
 				shop.appName, shop.authorizerAppid, reason

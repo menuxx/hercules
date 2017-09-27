@@ -1,7 +1,7 @@
 const {getAuthorizerUrl} = require('../config').urls
 const rp = require('request-promise')
 const {authorizerCache} = require('../components/cache')
-const {dinerApi} = require('../leancloud')
+const {shopApi} = require('../leancloud')
 
 // mode 1 2 4
 // mode 1: 只获取 detail 从 getAuthorizerUrl
@@ -31,11 +31,11 @@ const fetchAuthorizer = module.exports = function (authorizerAppid, mode=7) {
   };
 
   var _get2 = function() {
-    return authorizerCache.getAuthorizerInfo(authorizerAppid)
+    return authorizerCache.getAuthorization(authorizerAppid)
   };
 
   var _get3 = function() {
-	  return dinerApi.getAuthorizerByAppid(authorizerAppid);
+	  return shopApi.getAuthorizerByAppid(authorizerAppid);
   };
 
   if (mode === 7) {

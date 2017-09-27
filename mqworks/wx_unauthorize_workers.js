@@ -16,15 +16,18 @@
 require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_unauthorize');
+const {tokenCache, authorizerCache} = require('../components/cache');
 const {createSimpleWorker} = require('../components/rabbitmq');
 const wxlite = require('../wxlite');
 const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
 const {putAuthorizerBy, getAuthorizerBy} = require('../service');
-const {dinerApi, authorizeApi, authorizerApi} = require('../leancloud');
+const {shopApi, authorizeApi, authorizerApi} = require('../leancloud');
 const webNotify = require('../components/webhook').start({queue: 'wx_unauthorize'});
+
 const exchangeName = 'wxauthorize'
 const queueName = 'wx_unauthorize'
+
 const routingKey = ROUTING_KEYS.WX_UnAuthorize
 
 const {isEmpty} = require('lodash')
@@ -33,14 +36,17 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channe
 	let { appId, authorizerAppid, createTime } = msg;
 	if ( !isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(createTime) ) {
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
-		// 1. 清除 刷新令牌的 msg id
-		// 使 刷新令牌循环 自动退出
-		return getAuthorizerBy({appid: authorizerAppid}).then( shop => {
+		return Promise.all([
+			// 1. 清除 刷新令牌的 msg id
+			// 使 刷新令牌循环 自动退出
+			authorizerCache.putAuthorization(null),
+			getAuthorizerBy({ appid: authorizerAppid })
+		]).then( shop => {
 			return Promise.all([
 				// 更新授权状态 为 => 取消授权
 				authorizerApi.updateUnauthorize(),
 				// 解除绑定，清除 domains
-				dinerApi.getAuthorizerByAppid(authorizerAppid).then( testers => {
+				shopApi.getAuthorizerByAppid(authorizerAppid).then( testers => {
 					return Promise.all([
 						// 2.1 解除绑定的 tester
 						wxlite.unbindTesters(authorizerAppid, testers),
@@ -67,16 +73,16 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channe
 			]);
 		})
 		// 解除绑定的所有工作，都不需要保证正确性，所以，所有的消息，都通知完成
-			.then(function () {
-				return { ok: true }
-			}, function (err) {
-				if (err.message === 'shop not found') {
-					log('the shop not in app system')
-				} else {
-					errorlog('unauthorize has error: %s, stack -> ', err.message, err.stack);
-				}
-				return { ok: false, status: false }
-			});
+		.then(function () {
+			return { ok: true }
+		}, function (err) {
+			if (err.message === 'shop not found') {
+				log('the shop not in app system')
+			} else {
+				errorlog('unauthorize has error: %s, stack -> ', err.message, err.stack);
+			}
+			return { ok: false, status: false }
+		});
 	}
 	return Promise.reject({ ok: false, status: false })
 });

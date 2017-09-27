@@ -1,16 +1,16 @@
-const {dinerApi, wxcodeApi} = require('../leancloud');
+const {shopApi, wxcodeApi} = require('../leancloud');
 const {wxliteApi} = require('../wxopenapi');
 const wxlite = require('../wxlite');
 const {log, errorlog} = require('../logger')('wxlite_code_api')
 const {getAuthorizerToken} = require('./util');
 
-const makeCommitInfo = function ({code, diner}, usDebug = false) {
+const makeCommitInfo = function ({code, shop}, usDebug = false) {
 	// TODO 参考 https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1489140610_Uavc4&token=&lang=zh_CN
 	// accessToken, templateId, extJson, version, desc
 	let {version, desc, templateId} = code;
-	let _dinerCodeConfig = {
-		extAppid: diner.authorizerAppid,
-		ext: diner.config,
+	let _shopCodeConfig = {
+		extAppid: shop.authorizerAppid,
+		ext: shop.config,
 		networkTimeout: {
 			request: 10000,
 			downloadFile: 10000
@@ -19,7 +19,7 @@ const makeCommitInfo = function ({code, diner}, usDebug = false) {
 	if ( usDebug ) {
 		return {
 			templateId, version, desc,
-			extJson: JSON.stringify(_dinerCodeConfig)
+			extJson: JSON.stringify(_shopCodeConfig)
 		}
 	} else {
 		return {
@@ -27,10 +27,18 @@ const makeCommitInfo = function ({code, diner}, usDebug = false) {
 			extJson: JSON.stringify(Object.assign({
 				debug: true,
 				extEnable: true
-			}, _dinerCodeConfig))
+			}, _shopCodeConfig))
 		}
 	}
 };
+
+// 同步 提交的 代码版本号
+export const syncCommitAppVersion = function (authorizerAppid, code) {
+	return shopApi.getAuthorizerConfig(authorizerAppid).then(function (config) {
+		config.appVersion = code.version
+		return shopApi.putAuthorizerFieldByAppid(authorizerAppid, 'config', config)
+	})
+}
 
 /**
  * 预览代码提交
@@ -40,21 +48,26 @@ const makeCommitInfo = function ({code, diner}, usDebug = false) {
 export const codeCommit = function (authorizer_appid, onlyCommit = true, usDebug = false) {
 	let p = Promise.all([
 			getAuthorizerToken(authorizer_appid),
-			dinerApi.getAuthorizerByAppid(authorizer_appid)
+			shopApi.getAuthorizerByAppid(authorizer_appid)
 	])
 	.then(function (res) {
-			let accessToken = res[0], diner = res[1];
-			return wxcodeApi.firstCodeByType(diner.templateType).then(function (code) { return {code, accessToken, diner} });
+		let accessToken = res[0], shop = res[1];
+		return wxcodeApi.firstCodeByType(shop.templateType)
+			.then(function (code) {
+				return syncCommitAppVersion(authorizer_appid, code).then(function () {
+					return {code, accessToken, shop}
+				})
+			});
 	});
 	if (!onlyCommit) {
 		// 覆盖 domains
 		p
 			.then(function (res) {
-				let {diner} = res;
+				let {shop} = res;
 				// 绑定所有体验者
 				return Promise.all([
-					wxlite.setDomains(authorizer_appid, diner.domains),
-					wxlite.bindTesters(authorizer_appid, diner.testers)
+					wxlite.setDomains(authorizer_appid, shop.domains),
+					wxlite.bindTesters(authorizer_appid, shop.testers)
 				]).then(function () { return res })
 			})
 	}
@@ -63,7 +76,7 @@ export const codeCommit = function (authorizer_appid, onlyCommit = true, usDebug
 			let data = { accessToken: res.accessToken, ...makeCommitInfo(res, usDebug) }
 			return wxliteApi.wxCommit(data)
 				.then(function (res0) {
-					dinerApi.putAuthorizerFieldByAppid(authorizer_appid, 'lastCommitVersion', res.code.version);
+					shopApi.putAuthorizerFieldByAppid(authorizer_appid, 'lastCommitVersion', res.code.version);
 					return Object.assign(res0, res)
 				});
 		});
@@ -78,10 +91,10 @@ export const codeRelease = function (authorizer_appid) {
 export const submitAudit = function (authorizer_appid) {
 	return Promise.all([
 		getAuthorizerToken(authorizer_appid),
-		dinerApi.getAuthorizerByAppid(authorizer_appid)
+		shopApi.getAuthorizerByAppid(authorizer_appid)
 	]).then(function (res) {
-		let accessToken = res[0], diner = res[1];
-		return wxliteApi.wxSubmitAudit({accessToken, itemList: diner.itemList})
+		let accessToken = res[0], shop = res[1];
+		return wxliteApi.wxSubmitAudit({accessToken, itemList: shop.itemList})
 	}, function (err) {
 		errorlog('appid : '+ authorizer_appid +', code SubmitAudit result : ' + JSON.stringify(err))
 		return err

@@ -22,9 +22,13 @@
                             </h4>
                             <hr>
                             {{#if authorizerStatus}}
-                            <a class="btn btn-link" href="{{siteUrl}}/shops/{{appKey}}">> 详情</a>
+                                <a class="btn btn-link" href="{{siteUrl}}/shops/{{appKey}}">> 详情</a>
                             {{/if}}
                             <a href="javascript:void(0);" data-appkey="{{ appKey }}" class="authLink btn btn-link">授权链接</a>
+                            {{#if authorizerStatus}}
+                                <a href="https://sso.yingtaohuo.com/shops/{{ shopId }}/tables/list" class="btn btn-link">桌码管理</a>
+                                <a href="javascript:void(0);" data-appid="{{authorizerAppid}}" class="resetAccessToken btn btn-link">重置访问令牌</a>
+                            {{/if}}
                         </div>
                         <div id="collapseOne_{{@index}}" class="panel-collapse collapse in" role="tabpanel"
                              aria-labelledby="headingOne">
@@ -123,6 +127,23 @@
         </div>
     </div>
 </div>
+<div id="accessTokenDialog" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">令牌组</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">每次都会生成新的token旧的token将失效</div>
+                <span>authorizer_access_token</span>
+                <p class="well access-token" style="word-break: break-all;"></p>
+                <span>authorizer_refresh_token</span>
+                <p class="well refresh-token" style="word-break: break-all;"></p>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var siteUrl = '{{siteUrl}}';
     var api = {};
@@ -186,6 +207,19 @@
         api.get('/api/pre_auth_url/' + appkey).then(function (data) {
         	// 获取 p
         	window.open(data.url, '_blank')
+        })
+    })
+    // 重置访问令牌
+    $(".resetAccessToken").on('click', function () {
+        var appid = $(this).data('appid')
+        api.post('/api/shop_wxlite/' + appid + '/access_token_reset').then(function (data) {
+            $("#accessTokenDialog").find(".access-token").html(data.authorizer_access_token)
+            $("#accessTokenDialog").find(".refresh-token").html(data.authorizer_refresh_token)
+            $("#accessTokenDialog").modal({
+                backdrop: 'static',
+                show: true,
+                keyboard: false
+            })
         })
     })
 </script>

@@ -107,6 +107,13 @@ export const putAuthorizerFieldByAppid = function (appid, field, data) {
 	})
 };
 
+export const getAuthorizerConfig = function (appid) {
+	query.equalTo('authorizerAppid', appid);
+	return query.first().then(function (shop) {
+		return shop.get('config')
+	})
+}
+
 export const saveAuthorizer = function (appid, data) {
 	query.equalTo('authorizerAppid', appid);
 	return query.first().then(function (diner) {

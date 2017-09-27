@@ -9,40 +9,39 @@
 require('babel-register');
 const {ROUTING_KEYS} = require('./')
 const {log, errorlog} = require('../logger')('refresh_access_toke')
-const {authorizerApi} = require('../leancloud')
 const {wx3rdApi} = require('../wxopenapi')
 const {tokenCache, authorizerCache} = require('../components/cache')
 const {createSimpleWorker, createDelayPublisher, publishDelay} = require('../components/rabbitmq')
 const {isEmpty} = require('lodash')
 
-const exchangeName = 'wxlite'
-const queueName = 'hercules_refresh_access_token_queue';
-const routingKey = ROUTING_KEYS.Hercules_RefershAccessToken;
-var delayPublisherChannel = null;
+const exchangeName = 'yth3rd'
+const queueName = 'hercules_refresh_access_token_queue'
+const routingKey = ROUTING_KEYS.Hercules_RefershAccessToken
+var delayPublisherChannel = null
 
 createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, channel) {
 	// 循环的开始将检测 msg_id 与缓存中的 msg_id 是否一致。不一致，就丢弃消息，一致的话，就执行
-	let {authorizerAppid, authorizerRefreshToken} = msg;
+	let {authorizerAppid, authorizerRefreshToken, loopId} = msg;
 	if ( !isEmpty(authorizerAppid) && !isEmpty(authorizerRefreshToken) ) {
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
-		return authorizerApi.getByAppId(authorizerAppid).then((authorizer) => {
-			// 未授权就停止令牌刷新循环
-			if ( authorizer.authorized && authorizerRefreshToken === authorizer.refreshToken) {
-				return doRefresh({
-					authorizerAppid,
-					authorizerRefreshToken: authorizer.refreshToken // 使用新的刷新令牌
-				})
-			} else {
-				// 终止循环
-				return { ok : false, status: false }
-			}
-		})
+		let authorization = authorizerCache.getAuthorization(authorizerAppid)
+		// 未授权就停止令牌刷新循环
+		if ( !isEmpty(authorization) && authorization.loopId === loopId) {
+			return doRefresh({
+				authorizerAppid,
+				authorizerRefreshToken, // 使用新的刷新令牌
+				loopId
+			})
+		} else {
+			// 终止循环
+			return { ok : false, status: false }
+		}
 	}
 	return Promise.reject({ ok : false, status: false })
 });
 
 // 执行刷新
-function doRefresh({authorizerAppid, authorizerRefreshToken, reLoop}) {
+function doRefresh({authorizerAppid, authorizerRefreshToken, loopId}) {
 	return tokenCache.getComponentAccessToken().then( componentAccessToken => {
 		/**
 		 *  // wxRefreshApiAuthorizerToken 返回值
@@ -63,9 +62,10 @@ function doRefresh({authorizerAppid, authorizerRefreshToken, reLoop}) {
 	.then( authorization => {
 		let {authorizer_refresh_token, expires_in} = authorization
 		return Promise.all([
-			publishDelay(delayPublisherChannel, (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken,
+			publishDelay(delayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken,
 			// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
 			{
+				loopId,
 				authorizerAppid,
 				authorizerRefreshToken: authorizer_refresh_token
 			}),

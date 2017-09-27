@@ -23,6 +23,6 @@ const get = function (uri) {
 	})
 };
 
-export const getDiners = function () {
+export const getShops = function () {
 	return get('/authorizers')
 };

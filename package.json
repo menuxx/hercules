@@ -9,7 +9,12 @@
   "scripts": {
     "start": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js app.js",
     "code-new": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/code_test.js",
-    "dumpuser": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/dump_user_to_leancloud.js"
+    "dumpuser": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js test/dump_user_to_leancloud.js",
+    "submit_audit": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/hercules_code_submit_audit_workers.js",
+    "authorized": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/wx_authorized_workers.js",
+    "unauthorize": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/wx_unauthorize_workers.js",
+    "updateauthorize": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/wx_updateauthorize_workers.js",
+    "authorizer_access_token": "source ./env.sh && ./node_modules/babel-cli/bin/babel-node.js mqworks/hercules_refresh_authorizer_access_token_workers.js"
   },
   "dependencies": {
     "amqplib": "^0.5.1",
@@ -42,7 +47,8 @@
     "wechat": "^2.1.0",
     "wechat-api": "^1.32.1",
     "wechat-crypto": "^0.0.2",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

@@ -22,6 +22,7 @@ const {plInfo} = require('../config');
 const sms = require('../components/ronglian');
 const {getAuthorizerBy} = require('../service');
 const {isEmpty} = require('lodash')
+const uuid = require('uuid-v4');
 
 let delayPublisherChannel = null;
 
@@ -32,41 +33,49 @@ const queueName = 'wx_updateauthorize';
 createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	let {appId, authorizerAppid, authorizationCode} = msg;
 	if (!isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(authorizationCode)) {
-		return tokenCache.getComponentAccessToken().then((componentAccessToken) => {
+		let newLoopId = uuid()
+		return tokenCache.getComponentAccessToken().then( componentAccessToken => {
 			// 此处 appId 可以 当做 componentAppid 使用
 			return Promise.all([
 				authorizerApi.getByAppId(authorizerAppid),
 				wx3rdApi.wxQueryAuth({accessToken: componentAccessToken, authCode: authorizationCode})
 			])
-				.then((res) => {
-					let authorizer = res[0], authorization_info = res[1]
-					let {authorizer_refresh_token, expires_in = 600} = authorization_info
-					// 如果更新授权后的 令牌不一致 就更新系统中的刷新令牌
-					if (authorizer.refreshToken !== authorizer_refresh_token) {
-						authorizerApi.updateRefreshToken(authorizerAppid, authorizer.refreshToken)
-						// 并发起新的刷新循环
-						publishDelay(delayPublisherChannel, 1000 * (expires_in - 1000), ROUTING_KEYS.Hercules_RefershAccessToken, {
+			.then((res) => {
+				let authorizer = res[0], authorization_info = res[1]
+				let {authorizer_refresh_token, expires_in = 600} = authorization_info
+				// 如果更新授权后的 令牌不一致 就更新系统中的刷新令牌
+				if (authorizer.refreshToken !== authorizer_refresh_token) {
+					// 并发起新的刷新循环
+					return Promise.all([
+						authorizerApi.updateRefreshToken(authorizerAppid, authorizer.refreshToken),
+						// 启动新的刷新循环
+						publishDelay(delayPublisherChannel, "yth3rd", 1000 * (expires_in - 1000), ROUTING_KEYS.Hercules_RefershAccessToken, {
+							loopId: newLoopId,
 							authorizerAppid,
 							authorizerRefreshToken: authorizer_refresh_token
+						}),
+						// 刷新缓存
+						authorizerCache.putAuthorization(authorizerAppid, {
+							...authorization_info,
+							loopId: newLoopId,
+							authorizer_appid: authorizerAppid
+						}).then(() => {
+							return authorization_info
 						})
-					}
-					return authorization_info
+					])
+				}
+				return authorization_info
+			})
+			.then(authorization_info => {
+				return getAuthorizerBy({appid: authorizerAppid}).then(function (shop) {
+					// 3. 短信通知 用户 成功授权
+					return sms.sendUpdateauthorizedSMS(shop.masterPhone, [shop.masterName, shop.shopName, plInfo.contactPhone])
 				})
-				// 先完成重要任务，然后再通知
-				.then(authorization_info => {
-					authorizerCache.putAuthorization(authorizerAppid, authorization_info).then(() => {
-						return authorization_info
-					})
-					getAuthorizerBy({appid: authorizerAppid}).then(function (shop) {
-						// 3. 短信通知 用户 成功授权
-						return sms.sendUpdateauthorizedSMS(shop.masterPhone, [shop.masterName, shop.shopName, plInfo.contactPhone])
-					});
-				})
-				.then(() => {
-					return {ok: true}
-				}, () => {
-					return {ok: false, status: true}
-				})
+			})
+		}).then(() => {
+			return {ok: true}
+		}, () => {
+			return {ok: false, status: true}
 		})
 	}
 	return Promise.reject({ok: false, status: true})
@@ -75,7 +84,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createDelayPublisher(exchangeName, function (ch) {
+	createDelayPublisher("yth3rd", function (ch) {
 		delayPublisherChannel = ch
 	});
 }, 2000);

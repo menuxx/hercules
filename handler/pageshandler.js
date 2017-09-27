@@ -54,9 +54,10 @@ route.get('/shops/:appkey', passport.authenticate('basic', {session: false}),
 						fetchAuthorizer(authorizerAppid, 7),
 						wxlite.getAuthorizerInfo(authorizerAppid)
 					])
-			})
-				.then(function (res) {
+			}).then(function (res) {
 				resp.render('authorizer', { categoryList: res[0].category_list, pageList: res[1].page_list, ...res[2], authorizerInfo: res[3] });
+			}, function (err) {
+				console.log(err)
 			})
 		});
 });
@@ -82,7 +83,7 @@ route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), fu
 });
 
 route.get('/shops', passport.authenticate('basic', {session: false}), function (req, resp) {
-	menuxx.getDiners()
+	menux.getShops()
 	.then(function (authorizers) {
 		resp.render('shops', {authorizers, title: '可授权店铺列表'})
 	}, errorlog)
@@ -91,7 +92,7 @@ route.get('/shops', passport.authenticate('basic', {session: false}), function (
 route.get('/wx3rd/authorize/:appkey', function (req, resp) {
 	req.checkQuery('auth_code', 'url 上的 auth_code 必须存在').notEmpty(); // 安全授权码.. 这里暂时没用
 	req.checkParams('appkey', 'url 上的 appkey 必须存在').notEmpty();
-	autoValid(req, resp).then(function () {
+	autoValid(req, resp).then(() => {
 		let {auth_code} = req.query; // 安全授权码
 		let {appkey} = req.params;
 		Promise.all([
@@ -103,14 +104,14 @@ route.get('/wx3rd/authorize/:appkey', function (req, resp) {
 				let {authorizer_appid} = authorization_info
 				return wx3rdApi.wxGetAuthorizerInfo({componentAccessToken, authorizerAppid: authorizer_appid}).then(({authorizer_info}) => {
 					// 更新订单，绑定 appkey 与 appid 之间的关系
-					return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid}).then(()=>{return { shop, authorizer_info }})
+					return putAuthorizerBy(webNotify, {appkey}, {authorizerAppid: authorizer_appid}).then(()=>{return { shop, authorizer_info }})
 				})
 			})
-		}).then(({shop, authorizer_info}) => {
-			return resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})
-		}, (err) => {
+		}).then(function ({shop, authorizer_info}) {
+			resp.render('authorize_success', {title: '授权成功', info: authorizer_info, shop})
+		}, function (err) {
 			errorlog(err);
-			return errorPage(resp, '授权的店铺不存在');
+			errorPage(resp, '授权的店铺不存在');
 		})
 	});
 

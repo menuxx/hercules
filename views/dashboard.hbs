@@ -19,8 +19,9 @@
                 如果三个属性都是 `true` 将进入无人值守，全自动状态。
             </div>
             <div class="btn-group btn-group" role="group">
-                <a class="btn btn-success diner-single">单店版本代码提交</a>
-                <a class="btn btn-success diner-platform">平台版本代码提交</a>
+                <a class="btn btn-success shop-large-single">单店版本代码提交</a>
+                <a class="btn btn-success shop-single">大店版本代码提交</a>
+                <a class="btn btn-success shop-platform">平台版本代码提交</a>
             </div>
         </div>
     </div>
@@ -58,16 +59,20 @@
             })
         }
     });
-    $('.diner-single').on('click', codeCommitHandler)
-    $('.diner-platform').on('click', codeCommitHandler)
+    $('.shop-single').on('click', codeCommitHandler)
+    $('.shop-platform').on('click', codeCommitHandler)
+    $('.shop-large-single').on('click', codeCommitHandler)
     function codeCommitHandler () {
-        var isSingle = $(this).hasClass('diner-single')
-        var isPlatform = $(this).hasClass('diner-platform')
+        var isLargeSingle = $(this).hasClass('shop-large-single')
+        var isSingle = $(this).hasClass('shop-single')
+        var isPlatform = $(this).hasClass('shop-platform')
         var templateType  = 1;
         if (isPlatform) {
             templateType = 2;
         } else if (isSingle) {
             templateType = 1;
+        } else if (isLargeSingle) {
+            templateType = 3;
         }
         api.get(`/api/code?template_type=${templateType}`).then(function (latestCode) {
             return api.put(`/api/code_commit?version=${latestCode.version}`)

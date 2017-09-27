@@ -4,6 +4,6 @@ const {authorizerCache} = require('../components/cache')
  */
 export const getAuthorizerToken = function (appid) {
 	return authorizerCache.getAuthorization(appid).then(function ({authorizer_access_token}) {
-		return authorizer_access_token;
+		return authorizer_access_token
 	});
 }

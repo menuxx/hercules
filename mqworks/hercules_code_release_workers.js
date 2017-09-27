@@ -15,7 +15,7 @@ const {dinerApi, wxcodeApi} = require('../leancloud');
 
 const {createSimpleWorker} = require('../components/rabbitmq');
 
-const exchangeName = 'wxlite'
+const exchangeName = 'yth3rd'
 const queueName = 'wxlite_code_release';
 const routingKey = ROUTING_KEYS.Hercules_WxliteCodeRelease;
 
