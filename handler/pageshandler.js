@@ -83,7 +83,7 @@ route.get('/wxauthorizers', passport.authenticate('basic', {session: false}), fu
 });
 
 route.get('/shops', passport.authenticate('basic', {session: false}), function (req, resp) {
-	menux.getShops()
+	menuxx.getShops()
 	.then(function (authorizers) {
 		resp.render('shops', {authorizers, title: '可授权店铺列表'})
 	}, errorlog)
