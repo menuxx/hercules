@@ -291,7 +291,8 @@ const handleWeappAuditFail = function ({AppId, Reason, CreateTime, FailTime}, re
 	})
 }
 // 公众号消息与事件接收URL
-route.post('/3rd/:appid/callback', wechat(wxconfig, function (req, resp) {
+route.post('/:appid/callback', wechat(wxconfig, function (req, resp) {
+
 	let {appid} = req.params;
 	let msg = req.weixin;
 

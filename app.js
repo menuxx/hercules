@@ -28,7 +28,7 @@ const apihandler = require('./handler/apihandler')
 const pageshandler = require('./handler/pageshandler')
 const wxhandler = require('./handler/wxhandler')
 
-app.use('/wx', wxhandler)
+app.use('/wx3rd', wxhandler)
 
 app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({ extended: false }))
