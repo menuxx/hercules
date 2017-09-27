@@ -34,19 +34,14 @@ const {isEmpty} = require('lodash')
 
 createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channel ) {
 	let { appId, authorizerAppid, createTime } = msg;
-	if ( !isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(createTime) ) {
+	if ( !isEmpty(appId) && !isEmpty(authorizerAppid) ) {
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
-		return Promise.all([
-			// 1. 清除 刷新令牌的 msg id
-			// 使 刷新令牌循环 自动退出
-			authorizerCache.putAuthorization(null),
-			getAuthorizerBy({ appid: authorizerAppid })
-		]).then( shop => {
+		return getAuthorizerBy({ appid: authorizerAppid }).then( shop => {
 			return Promise.all([
 				// 更新授权状态 为 => 取消授权
-				authorizerApi.updateUnauthorize(),
+				authorizerApi.updateUnauthorize(authorizerAppid),
 				// 解除绑定，清除 domains
-				shopApi.getAuthorizerByAppid(authorizerAppid).then( testers => {
+				shopApi.getAuthorizerByAppid(authorizerAppid).then( ({testers}) => {
 					return Promise.all([
 						// 2.1 解除绑定的 tester
 						wxlite.unbindTesters(authorizerAppid, testers),
@@ -56,13 +51,6 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channe
 				}, function (err) {
 					errorlog('unbind tester or clean domain failed ... %o', err);
 				}),
-				// 发送通知
-				Promise.all([
-					// 3. 给用户发送短信通知
-					sms.sendUnauthorizedSMS(shop.masterPhone, [shop.masterName, shop.appName, shop.masterPhone]),
-					// 4. 给平台发送通知
-					pubuWeixin.sendWXUnAuthorized({appId: authorizerAppid, ...shop})
-				]),
 				// 5. 通知服务器，更改状态
 				putAuthorizerBy(webNotify, { appid: authorizerAppid }, { authorizerStatus: 0 }),
 				// 6. 写入日志
@@ -70,7 +58,19 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channe
 					authorizerAppid,
 					componentAppid: appId
 				})
-			]);
+			])
+			.then(function () {
+				// 4. 给平台发送通知
+				pubuWeixin.sendWXUnAuthorized({appId: authorizerAppid, ...shop})
+				return Promise.all([
+					// 清除 刷新令牌的 msg id
+					// 使 刷新令牌循环 自动退出
+					// 发送通知
+					authorizerCache.putAuthorization(authorizerAppid, null),
+					// 3. 给用户发送短信通知
+					sms.sendUnauthorizedSMS(shop.masterPhone, [shop.masterName, shop.shopName, shop.masterPhone])
+				])
+			})
 		})
 		// 解除绑定的所有工作，都不需要保证正确性，所以，所有的消息，都通知完成
 		.then(function () {

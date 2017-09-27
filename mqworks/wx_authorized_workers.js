@@ -20,7 +20,7 @@
 require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_authorized');
-const {tokenCache} = require('../components/cache');
+const {tokenCache, authorizerCache} = require('../components/cache');
 const {createSimpleWorker, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
 const {plInfo} = require('../config');
 const wxlite = require('../wxlite');
@@ -48,6 +48,8 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 
 	if (!isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(authorizationCode)) {
 
+		console.log(appId, authorizerAppid, authorizationCode)
+
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 
 		return tokenCache.getComponentAccessToken().then((componentAccessToken) => {
@@ -69,23 +71,27 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 					qrcodeUrl: authorizer_info.qrcode_url,
 					refreshToken: authorization_info.authorizer_refresh_token,
 					authorized: true
+				}).then(function (authorizer) {
+					return {authorizer, authorization_info}
 				})
 			})
-			.then((authorizer) => {
+			.then(({ authorizer, authorization_info }) => {
 				let {refreshToken} = authorizer
 				// 1. 发送自循环启动通知
-				let testers = union(plInfo.testers, [])
 				let expires_in = 7200
+				let newLoopId = uuid()
 				return Promise.all([
+					authorizerCache.putAuthorization(authorizerAppid, {
+						loopId: newLoopId,
+						...authorization_info
+					}),
 					publishDelay(delayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken,
 						// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
 						{
-							loopId: uuid(),
+							loopId: newLoopId,
 							authorizerAppid,
 							authorizerRefreshToken: refreshToken
 						}),
-					// 2. 绑定 tester, 忽略已绑定错误
-					wxlite.bindTesters(authorizerAppid, testers, true),
 					// 5. webhook 通知服务器，更改状态
 					putAuthorizerBy(webNotify, {appid: authorizerAppid}, {authorizerStatus: 1})
 				]).then(() => authorizer)
@@ -97,16 +103,19 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 				})
 			})
 			.then(({authorizer, shop}) => {
+				let testers = union(plInfo.testers, [])
+				// 4. 短信通知 用户 成功授权
+				pubuWeixin.sendWXAuthorized({appId: authorizerAppid, appName: shop.shopName})
 				return Promise.all([
+					// 2. 绑定 tester, 忽略已绑定错误
+					wxlite.bindTesters(authorizerAppid, testers, true),
 					authorizeApi.logAuthorized({
 						primaryName: authorizer.primaryName,
 						authorizerAppid,
 						authorizationCode
 					}),
 					// 3. 短信通知 用户 成功授权
-					sms.sendAuthorizedSMS(shop.masterPhone, [shop.masterName, shop.shopName]),
-					// 4. 短信通知 用户 成功授权
-					pubuWeixin.sendWXAuthorized({appId: authorizerAppid, appName: shop.shopName})
+					sms.sendAuthorizedSMS(shop.masterPhone, [shop.masterName, shop.shopName])
 				]);
 			})
 		})

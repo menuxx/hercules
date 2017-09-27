@@ -51,7 +51,7 @@ const verifyMsgApi = function (msg, resp) {
 	let queryAuthCode = Content.replace('QUERY_AUTH_CODE:', '');
 	return tokenCache.getComponentAccessToken()
 		.then( componentAccessToken => {
-			return wx3rdApi.wxQueryAuth({accessToken: componentAccessToken, authCode: queryAuthCode})
+			return wx3rdApi.wxQueryAuth({componentAccessToken, authCode: queryAuthCode})
 		})
 		.then(function ({authorization_info}) {
 			let {authorizer_access_token} = authorization_info;

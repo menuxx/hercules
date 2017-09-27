@@ -35,7 +35,6 @@ export const save = function ({ appId, logoUrl, primaryName, businessName, qrcod
 			authorizerObj.set('authorized', authorized)
 			return authorizerObj.save().then(reflectObject)
 		} else {
-			console.log('=============')
 			let authorizerObj = AV.Object.createWithoutData('WXAuthorizer', authorizer.id);
 			authorizerObj.set('appId', appId)
 			authorizerObj.set('logoUrl', logoUrl)

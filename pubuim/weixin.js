@@ -115,9 +115,10 @@ export const sendWXAuthorized = function ({appName, appId}) {
 /**
  * 微信新用户授权完成
  */
-export const sendWXUnAuthorized = function ({masterName, masterPhone, appName, appId}) {
+export const sendWXUnAuthorized = function (aaa) {
+	var {masterName, masterPhone, shopName, appId} = aaa
 	return post({
-		text: `用户${masterName}解除绑定。${appName}[AppId: ${appId}]。用户联系电话:${masterPhone}`,
+		text: `用户${masterName}解除绑定。${shopName}[AppId: ${appId}]。用户联系电话:${masterPhone}`,
 		channel: "#微信",
 		displayUser: {
 			name: '微信小程序',
