@@ -24,18 +24,19 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, channel
 	let {authorizerAppid, authorizerRefreshToken, loopId} = msg;
 	if ( !isEmpty(authorizerAppid) && !isEmpty(authorizerRefreshToken) ) {
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
-		let authorization = authorizerCache.getAuthorization(authorizerAppid)
-		// 未授权就停止令牌刷新循环
-		if ( !isEmpty(authorization) && authorization.loopId === loopId) {
-			return doRefresh({
-				authorizerAppid,
-				authorizerRefreshToken, // 使用新的刷新令牌
-				loopId
-			})
-		} else {
-			// 终止循环
-			return Promise.reject({ ok : false, status: false })
-		}
+		return authorizerCache.getAuthorization(authorizerAppid).then((authorization) => {
+			// 未授权就停止令牌刷新循环
+			if ( !isEmpty(authorization) && authorization.loopId === loopId) {
+				return doRefresh({
+					authorizerAppid,
+					authorizerRefreshToken, // 使用新的刷新令牌
+					loopId
+				})
+			} else {
+				// 终止循环
+				return { ok : false, status: false }
+			}
+		})
 	}
 	return Promise.reject({ ok : false, status: false })
 });
