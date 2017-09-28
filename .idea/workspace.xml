@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="665266b0-7705-407d-960b-b32e8068f268" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js" afterPath="$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/handler/apihandler.js" afterPath="$PROJECT_DIR$/handler/apihandler.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -18,21 +18,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="apihandler.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="apihandler.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="373">
-              <caret line="79" column="47" lean-forward="true" selection-start-line="79" selection-start-column="47" selection-end-line="79" selection-end-column="47" />
+            <state relative-caret-position="257">
+              <caret line="68" column="46" lean-forward="true" selection-start-line="68" selection-start-column="46" selection-end-line="68" selection-end-column="46" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="hercules_refresh_authorizer_access_token_workers.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="hercules_refresh_authorizer_access_token_workers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-521">
-              <caret line="28" column="78" lean-forward="true" selection-start-line="28" selection-start-column="78" selection-end-line="28" selection-end-column="78" />
+            <state relative-caret-position="337">
+              <caret line="76" column="28" lean-forward="true" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
               <folding />
             </state>
           </provider>
@@ -155,7 +155,6 @@
         <option value="$PROJECT_DIR$/views/partials/styles.hbs" />
         <option value="$PROJECT_DIR$/views/partials/scripts.hbs" />
         <option value="$PROJECT_DIR$/env.sh" />
-        <option value="$PROJECT_DIR$/handler/apihandler.js" />
         <option value="$PROJECT_DIR$/wxlite/member.js" />
         <option value="$PROJECT_DIR$/views/shops.hbs" />
         <option value="$PROJECT_DIR$/handler/pageshandler.js" />
@@ -168,6 +167,7 @@
         <option value="$PROJECT_DIR$/components/cache.js" />
         <option value="$PROJECT_DIR$/mqworks/wx_updateauthorize_workers.js" />
         <option value="$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js" />
+        <option value="$PROJECT_DIR$/handler/apihandler.js" />
       </list>
     </option>
   </component>
@@ -183,8 +183,8 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="37" />
-    <option name="y" value="76" />
+    <option name="x" value="17" />
+    <option name="y" value="23" />
     <option name="width" value="1276" />
     <option name="height" value="777" />
   </component>
@@ -522,7 +522,7 @@
       <workItem from="1499322376581" duration="322000" />
       <workItem from="1506266983972" duration="69040000" />
       <workItem from="1506486479577" duration="21464000" />
-      <workItem from="1506570524091" duration="288000" />
+      <workItem from="1506570524091" duration="618000" />
     </task>
     <task id="LOCAL-00001" summary="appkey =&gt; appKey">
       <created>1506384841996</created>
@@ -678,14 +678,21 @@
       <option name="project" value="LOCAL" />
       <updated>1506537771627</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="修复 刷新令牌问题 更新">
+      <created>1506570835157</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1506570835157</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="274273000" />
+    <option name="totallyTimeSpent" value="274603000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="37" y="76" width="1276" height="777" extended-state="0" />
+    <frame x="17" y="23" width="1276" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24223107" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -753,7 +760,8 @@
     <MESSAGE value="redis db =&gt; 9" />
     <MESSAGE value="刷新token修复" />
     <MESSAGE value="修复 授权 更新" />
-    <option name="LAST_COMMIT_MESSAGE" value="修复 授权 更新" />
+    <MESSAGE value="修复 刷新令牌问题 更新" />
+    <option name="LAST_COMMIT_MESSAGE" value="修复 刷新令牌问题 更新" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1113,18 +1121,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
+    <entry file="file://$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="373">
-          <caret line="79" column="47" lean-forward="true" selection-start-line="79" selection-start-column="47" selection-end-line="79" selection-end-column="47" />
+        <state relative-caret-position="337">
+          <caret line="76" column="28" lean-forward="true" selection-start-line="76" selection-start-column="28" selection-end-line="76" selection-end-column="28" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/mqworks/hercules_refresh_authorizer_access_token_workers.js">
+    <entry file="file://$PROJECT_DIR$/handler/apihandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-521">
-          <caret line="28" column="78" lean-forward="true" selection-start-line="28" selection-start-column="78" selection-end-line="28" selection-end-column="78" />
+        <state relative-caret-position="257">
+          <caret line="68" column="46" lean-forward="true" selection-start-line="68" selection-start-column="46" selection-end-line="68" selection-end-column="46" />
           <folding />
         </state>
       </provider>

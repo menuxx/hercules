@@ -66,6 +66,7 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 		return wxlite.getAuthorizerInfo(appid).then(function ({authorization_info}) {
 			let {authorizer_refresh_token} = authorization_info
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(({authorizer_access_token, expires_in}) => {
+				expires_in = expires_in - 7190
 				return Promise.all([
 					authorizerCache.putAuthorization(appid, {
 						authorizer_appid: appid,
