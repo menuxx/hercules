@@ -66,7 +66,9 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 		return wxlite.getAuthorizerInfo(appid).then(function ({authorization_info}) {
 			let {authorizer_refresh_token} = authorization_info
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(({authorizer_access_token, expires_in}) => {
-				expires_in = expires_in - 7190
+				// 10 秒刷新
+				// expires_in = (expires_in - 1000)
+				expires_in = 10
 				return Promise.all([
 					authorizerCache.putAuthorization(appid, {
 						authorizer_appid: appid,
@@ -76,7 +78,7 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 						loopId: newLoopId
 					}),
 					// 产生新的 loopId ，终端之前的循环
-					publishDelay(yth3rdDelayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken, {
+					publishDelay(yth3rdDelayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken, {
 						loopId: newLoopId,
 						authorizerAppid: appid,
 						authorizerRefreshToken: authorizer_refresh_token

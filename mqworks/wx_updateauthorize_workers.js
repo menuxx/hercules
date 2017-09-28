@@ -42,14 +42,16 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 			])
 			.then((res) => {
 				let authorizer = res[0], authorization_info = res[1]
-				let {authorizer_refresh_token, expires_in = 600} = authorization_info
+				let {authorizer_refresh_token, expires_in = 6000} = authorization_info
+				// 减去 100 的延迟
+				expires_in = expires_in >= 1000 ? expires_in -= 100 : expires_in
 				// 如果更新授权后的 令牌不一致 就更新系统中的刷新令牌
 				if (authorizer.refreshToken !== authorizer_refresh_token) {
 					// 并发起新的刷新循环
 					return Promise.all([
 						authorizerApi.updateRefreshToken(authorizerAppid, authorizer.refreshToken),
 						// 启动新的刷新循环
-						publishDelay(delayPublisherChannel, "yth3rd", 1000 * (expires_in - 1000), ROUTING_KEYS.Hercules_RefershAccessToken, {
+						publishDelay(delayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken, {
 							loopId: newLoopId,
 							authorizerAppid,
 							authorizerRefreshToken: authorizer_refresh_token

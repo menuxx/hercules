@@ -63,7 +63,7 @@ function doRefresh({authorizerAppid, authorizerRefreshToken, loopId}) {
 	.then( authorization => {
 		let {authorizer_refresh_token, expires_in} = authorization
 		return Promise.all([
-			publishDelay(delayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken,
+			publishDelay(delayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken,
 			// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
 			{
 				loopId,

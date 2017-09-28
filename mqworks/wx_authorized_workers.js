@@ -78,14 +78,14 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 			.then(({ authorizer, authorization_info }) => {
 				let {refreshToken} = authorizer
 				// 1. 发送自循环启动通知
-				let expires_in = 7200
+				let expires_in = 7200 - 100
 				let newLoopId = uuid()
 				return Promise.all([
 					authorizerCache.putAuthorization(authorizerAppid, {
 						loopId: newLoopId,
 						...authorization_info
 					}),
-					publishDelay(delayPublisherChannel, "yth3rd", (1000 * (expires_in - 1000)), ROUTING_KEYS.Hercules_RefershAccessToken,
+					publishDelay(delayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken,
 						// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
 						{
 							loopId: newLoopId,
