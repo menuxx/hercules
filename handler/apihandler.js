@@ -70,8 +70,7 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 			let {authorizer_refresh_token} = authorization_info
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(({authorizer_access_token, expires_in}) => {
 				// 10 秒刷新
-				expires_in = (expires_in - 1000)
-				expires_in = 5
+				expires_in = (expires_in - 100)
 				return Promise.all([
 					authorizerCache.putAuthorization(appid, {
 						authorizer_appid: appid,

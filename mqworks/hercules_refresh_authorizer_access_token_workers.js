@@ -63,7 +63,6 @@ function doRefresh({authorizerAppid, authorizerRefreshToken, loopId}) {
 	// 获得新的 token 组
 	.then( authorization => {
 		let {authorizer_refresh_token, expires_in} = authorization
-		expires_in = 3
 		return Promise.all([
 			rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_RefershAccessToken,
 			// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
@@ -71,7 +70,7 @@ function doRefresh({authorizerAppid, authorizerRefreshToken, loopId}) {
 				loopId,
 				authorizerAppid,
 				authorizerRefreshToken: authorizer_refresh_token
-			}, expires_in),
+			}, expires_in - 100),
 
 			authorizerCache.putAuthorization(authorizerAppid, {
 				loopId,
