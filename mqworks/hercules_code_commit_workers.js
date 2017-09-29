@@ -13,13 +13,16 @@ const {log, errorlog} = require('../logger')('code_commit');
 const wxlite = require('../wxlite')
 const {pubuWeixin} = require('../pubuim')
 const {isEmpty} = require('lodash')
-const {createSimpleWorker, appPublish} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 
-const exchangeName = 'yth3rd'
+const exchangeName = 'yth.rd3'
+const delayExchangeName = 'yth.rd3.delay'
 const queueName = 'wxlite_code_commit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteCodeCommit;
 
-createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
+var publisherChannel = null
+
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid, version} = msg;
 	// 忽略错误数据
 	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
@@ -30,7 +33,7 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 			// 是否支持自动提交审核
 			if (shop.autoSubmitAudit) {
 				// 自动提交审核
-				return appPublish(ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
+				return rabbitmq.publish2(publisherChannel, exchangeName, ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid,
 					version: code.version
 				});
@@ -54,3 +57,11 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	}
 	return Promise.reject({ ok : false, status: false })
 });
+
+rabbitmq.start()
+
+setTimeout(function () {
+	rabbitmq.createPublisher(function (ch) {
+		publisherChannel = ch
+	})
+}, 5000)

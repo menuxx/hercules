@@ -17,7 +17,7 @@ require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_unauthorize');
 const {tokenCache, authorizerCache} = require('../components/cache');
-const {createSimpleWorker} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 const wxlite = require('../wxlite');
 const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
@@ -32,7 +32,7 @@ const routingKey = ROUTING_KEYS.WX_UnAuthorize
 
 const {isEmpty} = require('lodash')
 
-createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channel ) {
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName], queueName, routingKey}, function ( msg, channel ) {
 	let { appId, authorizerAppid, createTime } = msg;
 	if ( !isEmpty(appId) && !isEmpty(authorizerAppid) ) {
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
@@ -86,3 +86,5 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function ( msg, channe
 	}
 	return Promise.reject({ ok: false, status: false })
 });
+
+rabbitmq.start()

@@ -46,35 +46,57 @@
 require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('code_submit_audit');
-const {createSimpleWorker} = require('../components/rabbitmq');
-const {submitAuditLogApi, wxcodeApi} = require('../leancloud');
-const wxlite = require('../wxlite');
+const rabbitmq = require('../components/rabbitmq')();
+const {shopApi, submitAuditLogApi, wxcodeApi} = require('../leancloud');
+const wxlite = require('../wxlite')
+const {pubuWeixin} = require('../pubuim')
 const {isEmpty} = require("lodash")
 
-const exchangeName = 'yth3rd'
+const exchangeName = 'yth.rd3'
+const delayExchangeName = 'yth.rd3.delay'
 const queueName = 'wxlite_submit_audit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteSubmitAudit;
 
-createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
-	let {authorizerAppid, version} = msg;
+var delayPublisherChannel = null
+
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], queueName, routingKey}, function (msg) {
+	let {authorizerAppid, version, times} = msg;
+	times = isEmpty(times) ? 1 : times
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
 		return Promise.all([
 			wxlite.submitAudit(authorizerAppid),
-			wxcodeApi.getByVersionNumber(version)
+			wxcodeApi.getByVersionNumber(version),
+			shopApi.getAuthorizerByAppid(authorizerAppid)
 		]).then( (res) => {
-			let {auditid} = res[0];	// submit_audit
+			let audit = res[0];	// submit_audit
 			let code = res[1];	// code
+			let shop = res[2]
+			// 没有产生 审核 id, 超过3次，丢弃该请求
+			if (isEmpty(audit.auditid)) {
+				if ( times > 3 ) {
+					pubuWeixin.sendCodeSubmitAuditFail(shop.appName, authorizerAppid, audit.errmsg)
+					return Promise.reject({ ok : false, status: false });
+				} else {
+					// 10 秒后重试
+					rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
+						authorizerAppid,
+						times
+					}, 60 * times)
+					// 丢弃当前消息
+					return Promise.reject({ ok : false, status: false });
+				}
+			}
 			/**
 			 * {
-		 *    auditid         :  5368259,   // 审核 id
-		 *    version         :  '0.1.1',   // 发布版本号
-		 *    authorizerAppid :  'wx833943b167b4012a',  // 账户 appid
-		 *    codeId          :  '5937f6922f301e005884e565',  // 关联的 代码 id
-		 * }
+			 *    auditid         :  5368259,   // 审核 id
+			 *    version         :  '0.1.1',   // 发布版本号
+			 *    authorizerAppid :  'wx833943b167b4012a',  // 账户 appid
+			 *    codeId          :  '5937f6922f301e005884e565',  // 关联的 代码 id
+			 * }
 			 */
 			return submitAuditLogApi.log({
-				auditid,
+				auditid: audit.auditid,
 				version: code.version,
 				authorizerAppid,
 				codeId: code.id
@@ -89,3 +111,11 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 	}
 	return Promise.reject({ ok: false, status: false })
 });
+
+rabbitmq.start()
+
+// 延迟创建可复用 worker 连接
+setTimeout(function () {
+	// 创建自发channel
+	rabbitmq.createDelayPublisher(delayExchangeName, function (ch) { delayPublisherChannel = ch });
+}, 5000);

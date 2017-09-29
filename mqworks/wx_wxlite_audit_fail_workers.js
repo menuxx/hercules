@@ -11,22 +11,23 @@ require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');
 const {wxtime} = require('../lib/date');
-const {createSimpleWorker} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 const {pubuWeixin} = require('../pubuim');
 const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 
-const exchangeName = 'yth3rd'
+const exchangeName = 'yth.rd3'
 const queueName = 'wx_wxlite_audit_fail_queue'
 const routingKey = ROUTING_KEYS.WX_WxliteAuditFail
 
-createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName], queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid, reason, failTime, createTime} = msg;
-	log('a worker begin... authorizerAppid:' + authorizerAppid);
+	log('a worker begin... authorizerAppid:' + authorizerAppid + ' reason: ' + reason);
 	return Promise.all([
 		shopApi.getAuthorizerByAppid(authorizerAppid),
 		submitAuditLogApi.getNewest(authorizerAppid)
 	]).then(function (res) {
 		let shop = res[0], submit = res[1]
+		log(shop, submit)
 		/**
 		 * struct:
 		 * {
@@ -68,3 +69,5 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 		return { ok: false, status: false };
 	});
 });
+
+rabbitmq.start()

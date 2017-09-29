@@ -21,38 +21,37 @@ require('babel-register');
 const {ROUTING_KEYS} = require('./');
 const {log, errorlog} = require('../logger')('wx_authorized');
 const {tokenCache, authorizerCache} = require('../components/cache');
-const {createSimpleWorker, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 const {plInfo} = require('../config');
 const wxlite = require('../wxlite');
 const sms = require('../components/ronglian');
 const {pubuWeixin} = require('../pubuim');
 const {putAuthorizerBy, getAuthorizerBy} = require('../service');
 const {wx3rdApi} = require('../wxopenapi');
-const {authorizeApi, authorizerApi} = require('../leancloud')
+const {authorizeApi, authorizerApi} = require('../leancloud');
 const webNotify = require('../components/webhook').start({queue: 'wx_authorized'});
 
 const uuid = require('uuid-v4');
 
-const exchangeName = 'wxauthorize'
+const delayExchangeName = 'yth.rd3.delay';
+const exchangeName = 'wxauthorize';
 const queueName = 'wx_authorized';
-const routingKey = ROUTING_KEYS.WX_Authorized
+const routingKey = ROUTING_KEYS.WX_Authorized;
 
 const {union, isEmpty} = require('lodash');
 
 let delayPublisherChannel = null;
 
 // 如果扫描的系统在当前系统中不存在，就忽略该用户
-createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName], queueName, routingKey}, function (msg) {
 
 	let {appId, authorizerAppid, authorizationCode} = msg;
 
 	if (!isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(authorizationCode)) {
 
-		console.log(appId, authorizerAppid, authorizationCode)
-
 		log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 
-		return tokenCache.getComponentAccessToken().then((componentAccessToken) => {
+		return tokenCache.getComponentAccessToken().then(componentAccessToken => {
 
 			return Promise.all([
 				wx3rdApi.wxQueryAuth({componentAccessToken, authCode: authorizationCode}),
@@ -85,13 +84,13 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 						loopId: newLoopId,
 						...authorization_info
 					}),
-					publishDelay(delayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken,
-						// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
-						{
-							loopId: newLoopId,
-							authorizerAppid,
-							authorizerRefreshToken: refreshToken
-						}),
+					rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_RefershAccessToken,
+					// publishDelay(delayPublisherChannel, 2000, ROUTING_KEYS.Hercules_RefershAccessToken,
+					{
+						loopId: newLoopId,
+						authorizerAppid,
+						authorizerRefreshToken: refreshToken
+					}, expires_in),
 					// 5. webhook 通知服务器，更改状态
 					putAuthorizerBy(webNotify, {appid: authorizerAppid}, {authorizerStatus: 1})
 				]).then(() => authorizer)
@@ -133,14 +132,13 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg) {
 		});
 
 	}
-	return Promise.reject({ok: false, status: false});
-
+	return Promise.reject({ ok: false, status: false });
 });
+
+rabbitmq.start()
 
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createDelayPublisher("yth3rd", function (ch) {
-		delayPublisherChannel = ch
-	});
-}, 2000);
+	rabbitmq.createDelayPublisher(delayExchangeName, function (ch) { delayPublisherChannel = ch });
+}, 5000);

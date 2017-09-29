@@ -13,15 +13,15 @@ const {wxtime} = require('../lib/date');
 const {log, errorlog} = require('../logger')('wx_wxlite_audit_fail');
 const {shopApi, submitAuditLogApi, auditLogApi} = require('../leancloud');
 const {pubuWeixin} = require('../pubuim');
-const {createSimpleWorker, createPublisher, publish2} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 
-const exchangeName = 'yth3rd'
+const exchangeName = 'yth.rd3'
 const queueName = 'wx_wxlite_audit_success';
 const routingKey = ROUTING_KEYS.WX_WxliteAuditSuccess;
 
 let publisherChannel = null;
 
-createSimpleWorker({ exchangeName, queueName, routingKey }, function (msg, ch) {
+rabbitmq.createSimpleWorker({ exchangeNames: [exchangeName], queueName, routingKey }, function (msg, ch) {
 	log('a worker begin...');
 	let {authorizerAppid, successTime, createTime} = msg;
 	log('a worker begin... authorizerAppid:' + authorizerAppid);
@@ -29,7 +29,9 @@ createSimpleWorker({ exchangeName, queueName, routingKey }, function (msg, ch) {
 	return shopApi.getAuthorizerByAppid(authorizerAppid).then(function (shop) {
 		// 如果支持 autoRelease ，就自动发布，否则 中断 将发布权限交给 pubuim
 		if (shop.autoRelease) {
-			return publish2(publisherChannel, ROUTING_KEYS.Hercules_WxliteCodeRelease, { authorizerAppid });
+			return rabbitmq.publish2(publisherChannel, exchangeName, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
+				authorizerAppid
+			});
 		} else {
 			// 获取最近一次代码提交审核记录
 			// {codeVersion, templateId}, shopName, appId
@@ -70,8 +72,10 @@ createSimpleWorker({ exchangeName, queueName, routingKey }, function (msg, ch) {
 	})
 });
 
+rabbitmq.start()
+
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createPublisher(exchangeName, function (ch) { publisherChannel = ch });
-}, 2000);
+	rabbitmq.createPublisher(exchangeName, function (ch) { publisherChannel = ch });
+}, 5000);

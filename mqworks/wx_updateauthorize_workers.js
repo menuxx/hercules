@@ -14,7 +14,7 @@
  **/
 require('babel-register');
 const {ROUTING_KEYS} = require('./');
-const {createSimpleWorker, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 const {tokenCache, authorizerCache} = require('../components/cache');
 const {wx3rdApi} = require('../wxopenapi');
 const {authorizerApi} = require('../leancloud')
@@ -27,10 +27,12 @@ const uuid = require('uuid-v4');
 let delayPublisherChannel = null;
 
 const routingKey = ROUTING_KEYS.WX_UpdateAuthorize;
+
+const delayExchangeName = 'yth.rd3.delay';
 const exchangeName = 'wxauthorize';
 const queueName = 'wx_updateauthorize';
 
-createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName], queueName, routingKey}, function (msg, ch) {
 	let {appId, authorizerAppid, authorizationCode} = msg;
 	if (!isEmpty(appId) && !isEmpty(authorizerAppid) && !isEmpty(authorizationCode)) {
 		let newLoopId = uuid()
@@ -51,11 +53,11 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 					return Promise.all([
 						authorizerApi.updateRefreshToken(authorizerAppid, authorizer.refreshToken),
 						// 启动新的刷新循环
-						publishDelay(delayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken, {
+						rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_RefershAccessToken, {
 							loopId: newLoopId,
 							authorizerAppid,
 							authorizerRefreshToken: authorizer_refresh_token
-						}),
+						}, expires_in),
 						// 刷新缓存
 						authorizerCache.putAuthorization(authorizerAppid, {
 							...authorization_info,
@@ -83,10 +85,12 @@ createSimpleWorker({exchangeName, queueName, routingKey}, function (msg, ch) {
 	return Promise.resolve({ok: true})
 });
 
+rabbitmq.start()
+
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createDelayPublisher("yth3rd", function (ch) {
+	rabbitmq.createDelayPublisher(delayExchangeName, function (ch) {
 		delayPublisherChannel = ch
 	});
 }, 2000);

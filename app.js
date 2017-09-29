@@ -53,7 +53,6 @@ function haltOnTimedout (req, res, next) {
 }
 
 // 初始化消息队列发布器
-require('./components/rabbitmq').appPublisher();
 require('./components/webhook').start({ queue: 'app_webhooks' });
 
 server.listen(port, function() {

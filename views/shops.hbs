@@ -179,8 +179,23 @@
     });
     $(".code-audit").on('click', function () {
         var appid = $(this).parents('form.diner-form').data('appid');
-        api.put(`/api/code_submitaudit/${appid}`).then(function () {
-            alert('已经提交审核')
+        api.put(`/api/code_submitaudit/${appid}`).then(function (err) {
+            if ( err.errcode === 0 ) {
+                $.toast({
+                    heading: '完成',
+                    text: '已提交审核',
+                    showHideTransition: 'slide',
+                    icon: 'success'
+                })
+            } else {
+                $.toast({
+                    heading: '提交审核失败',
+                    text: '' + err.errmsg,
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    hideAfter: 2000
+                })
+            }
         })
     });
     $(".authLink").on('click', function () {

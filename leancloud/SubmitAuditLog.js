@@ -33,8 +33,8 @@ function reflectWXLiteCodeObject(object) {
 }
 
 // 最近的一次审核提交
-export const getNewest = function (authorizer_appid) {
-	query.query('authorizerAppid', authorizer_appid);
+export const getNewest = function (authorizerAppid) {
+	query.equalTo('authorizerAppid', authorizerAppid);
 	query.addDescending('createdAt');
 	return query.first().then(reflectWXLiteCodeObject);
 };

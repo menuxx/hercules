@@ -32,10 +32,10 @@ wxcodeApi.saveCode({
 	gitBranch: 'tpl_single_01',
 	gitTag: 'tpl_single_0_2',
 	gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
-	version: 'v0.2.6s',
-	templateId: 56,
+	version: 'v0.2.7s',
+	templateId: 57,
 	templateType: 1,
-	desc: '1. 添加会员卡功能',
+	desc: '为部分店家隐藏 我要充值版本',
 	_config: {
 		apiBaseurl: 'https://dev.api.menuxx.com/',
 		cdnBaseurl: 'https://file.menuxx.com',

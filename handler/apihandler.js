@@ -10,13 +10,14 @@ const {wx3rdApi} = require('../wxopenapi');
 const {server, plInfo} = require('../config');
 const {toggleVisible} = require('../service');
 const {ROUTING_KEYS} = require('../mqworks');
-const {appPublish, createDelayPublisher, publishDelay} = require('../components/rabbitmq');
+const rabbitmq = require('../components/rabbitmq')();
 const {isEmpty, union} = require('lodash');
 const uuid = require('uuid-v4');
 
 const route = Router();
 
-var yth3rdDelayPublisherChannel = null
+var delayPublisherChannel = null
+var publisherChannel = null
 
 route.get('/component_token', function (req, resp) {
 	tokenCache.getComponentAccessToken().then(function (accessToken) {
@@ -58,6 +59,8 @@ route.put('/shop_wxlite/:appid', function (req, resp) {
 	}, errorlog);
 });
 
+// channel, exchangeName, routingKey, content, delayS
+
 route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 	req.checkParams('appid', 'url 上的 appid 必须存在').notEmpty();
 	jsonAutoValid(req, resp).then(function () {
@@ -67,8 +70,7 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 			let {authorizer_refresh_token} = authorization_info
 			return wxlite.getAuthorizerAccessToken(appid, authorizer_refresh_token).then(({authorizer_access_token, expires_in}) => {
 				// 10 秒刷新
-				// expires_in = (expires_in - 1000)
-				expires_in = 10
+				expires_in = (expires_in - 1000)
 				return Promise.all([
 					authorizerCache.putAuthorization(appid, {
 						authorizer_appid: appid,
@@ -78,14 +80,17 @@ route.post('/shop_wxlite/:appid/access_token_reset', function (req, resp) {
 						loopId: newLoopId
 					}),
 					// 产生新的 loopId ，终端之前的循环
-					publishDelay(yth3rdDelayPublisherChannel, "yth3rd", (1000 * expires_in), ROUTING_KEYS.Hercules_RefershAccessToken, {
+					rabbitmq.publishDelay(delayPublisherChannel, "yth.rd3.delay", ROUTING_KEYS.Hercules_RefershAccessToken, {
 						loopId: newLoopId,
 						authorizerAppid: appid,
 						authorizerRefreshToken: authorizer_refresh_token
-					})
+					}, expires_in)
 				]).then(function () {
 					resp.json({ authorizer_refresh_token, authorizer_access_token, expires_in })
-				}, errorlog)
+				}, function (err) {
+					console.log(err)
+					resp.status(502).json(err)
+				})
 			})
 		})
 	}, errorlog);
@@ -160,7 +165,7 @@ route.put('/code_commit', function (req, resp) {
 		let {version} = req.query;
 		shopApi.findAutoCommitAuthorizers().then(function (shops) {
 			return Promise.all(shops.map(function (shop) {
-				return appPublish(ROUTING_KEYS.Hercules_WxliteCodeCommit, {
+				return rabbitmq.publish2(ROUTING_KEYS.Hercules_WxliteCodeCommit, {
 					authorizerAppid: shop.authorizerAppid,
 					version
 				})
@@ -215,13 +220,15 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 				return wxcodeApi.getByVersionNumber(lastCommitVersion)
 			})
 			.then(function (code) {
-				return appPublish(ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
+				return rabbitmq.publish2(publisherChannel, "yth.rd3", ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid: appid,
 					version: code.version
 				})
 			})
-			.then(function (res) {
-				resp.json(res)
+			.then(function () {
+				resp.json({ errcode: 0 })
+			}, function (err) {
+				resp.json({ errcode: -1, errmsg: err.message })
 			})
 	})
 });
@@ -297,11 +304,13 @@ route.post('/pubuim/shops/:appid/code', function (req, resp) {
 				}
 			};
 
+			// channel, exchangeName, routingKey, content
+
 			if (type === 'action') {
 				// 提交审核
 				if (action === 'wxlite_submit_audit') {
 					let actionText = '审核提交'
-					appPublish(ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
+					rabbitmq.publish2(publisherChannel, "yth.rd3", ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 						authorizerAppid: appid,
 						version
 					}).then(successReply(actionText), failReply(actionText))
@@ -309,7 +318,7 @@ route.post('/pubuim/shops/:appid/code', function (req, resp) {
 				// 代码发布
 				if (action === 'wxlite_code_release') {
 					let actionText = '代码上线'
-					appPublish(ROUTING_KEYS.Hercules_WxliteCodeRelease, {
+					rabbitmq.publish2(publisherChannel, "yth.rd3", ROUTING_KEYS.Hercules_WxliteCodeRelease, {
 						authorizerAppid: appid
 					}).then(successReply(actionText), failReply(actionText))
 				}
@@ -319,12 +328,18 @@ route.post('/pubuim/shops/:appid/code', function (req, resp) {
 
 });
 
+rabbitmq.start()
+
 // 延迟创建可复用 worker 连接
 setTimeout(function () {
 	// 创建自发channel
-	createDelayPublisher("yth3rd", function (ch) {
-		yth3rdDelayPublisherChannel = ch
-	});
-}, 2000);
+	rabbitmq.createPublisher("yth.rd3", ch => { publisherChannel = ch; });
+}, 5000);
+
+// 延迟创建可复用 worker 连接
+setTimeout(function () {
+	// 创建自发channel
+	rabbitmq.createDelayPublisher("yth.rd3.delay", ch => { delayPublisherChannel = ch; });
+}, 5000);
 
 module.exports = route;

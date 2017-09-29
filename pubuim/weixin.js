@@ -59,6 +59,25 @@ export const sendCodeReleaseOK = function ({codeVersion, templateType}, shopName
 };
 
 /**
+ * 代码提交审核失败信息
+ */
+export const sendCodeSubmitAuditFail = function (appName, appId, errmsg) {
+	return post({
+		text: `代码提交审核失败。${appName}[AppId: ${appId}], 具体原因见详情：`,
+		channel: "#微信",
+		attachments: [{
+			"title": "代码提交审核失败",
+			"description": errmsg,
+			"color": "error"
+		}],
+		displayUser: {
+			name: '微信小程序',
+			avatarUrl: wxAvatarUrl
+		}
+	});
+};
+
+/**
  * 代码审核失败信息
  */
 export const sendCodeAuditFail = function ({codeVersion, templateType}, appName, appId, reason) {
