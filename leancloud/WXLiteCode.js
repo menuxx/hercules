@@ -33,6 +33,8 @@ function reflectWXLiteCodeObject(object) {
 		return null;
 	}
 	return {
+		createdAt: object.createdAt,
+		updatedAt: object.updatedAt,
 		gitBranch: object.get('gitBranch'),
 		gitTag: object.get('gitTag'),
 		gitUrl: object.get('gitUrl'),
@@ -51,6 +53,16 @@ export const firstCodeByType = function (templateType) {
 	query.equalTo('templateType', templateType);
 	query.addDescending('createdAt');
 	return query.first().then(reflectWXLiteCodeObject);
+};
+
+export const findCodeByType = function (templateType, limit) {
+	var query = new AV.Query('WXLiteCode');
+	query.equalTo('templateType', templateType);
+	query.addDescending('createdAt');
+	query.limit(limit);
+	return query.find().then(function (codes) {
+		return codes.map(reflectWXLiteCodeObject)
+	});
 };
 
 export const getByVersionNumber = function (version) {

@@ -78,6 +78,20 @@ export const sendCodeSubmitAuditFail = function (appName, appId, errmsg) {
 };
 
 /**
+ * 代码提交审核失败信息
+ */
+export const sendCodeSubmitAuditSuccess = function (appName, appId, auditid) {
+	return post({
+		text: `代码提交审核成功。${appName}[AppId: ${appId}], 审核ID：${auditid}`,
+		channel: "#微信",
+		displayUser: {
+			name: '微信小程序',
+			avatarUrl: wxAvatarUrl
+		}
+	});
+};
+
+/**
  * 代码审核失败信息
  */
 export const sendCodeAuditFail = function ({codeVersion, templateType}, appName, appId, reason) {

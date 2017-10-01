@@ -222,7 +222,8 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 			.then(function (code) {
 				return rabbitmq.publish2(publisherChannel, "yth.rd3", ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid: appid,
-					version: code.version
+					version: code.version,
+					pipline: false
 				})
 			})
 			.then(function () {

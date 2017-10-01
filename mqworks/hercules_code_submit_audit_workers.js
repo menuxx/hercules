@@ -60,7 +60,7 @@ const routingKey = ROUTING_KEYS.Hercules_WxliteSubmitAudit;
 var delayPublisherChannel = null
 
 rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], queueName, routingKey}, function (msg) {
-	let {authorizerAppid, version, times} = msg;
+	let {authorizerAppid, version, times, pipline} = msg;
 	times = isEmpty(times) ? 1 : times
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
@@ -79,13 +79,17 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 					return Promise.reject({ ok : false, status: false });
 				} else {
 					// 10 秒后重试
-					rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
+					rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 						authorizerAppid,
-						times
+						times: times++
 					}, 60 * times)
 					// 丢弃当前消息
 					return Promise.reject({ ok : false, status: false });
 				}
+			}
+			// 如果不是流水线，发送通知
+			if ( !pipline ) {
+				pubuWeixin.sendCodeSubmitAuditSuccess(shop.appName, authorizerAppid, audit.id)
 			}
 			/**
 			 * {

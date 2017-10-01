@@ -11,6 +11,7 @@ const {tokenCache, authorizerCache} = require('../components/cache');
 const {errorPage} = require('../lib/error');
 const {autoValid} = require('../lib/params');
 const wxlite = require('../wxlite');
+const {wxcodeApi} = require('../leancloud')
 const util = require('util');
 const {siteUrl} = require('../config').server;
 
@@ -40,6 +41,25 @@ route.get('/submit_audit_fail', function (req, resp) {
 
 	resp.render('submit_audit_fail', {title: '代码审核失败'})
 });
+
+route.get('/wx3rd/codes', passport.authenticate('basic', {session: false}),
+	function (req, resp) {
+		autoValid(req, resp).then(()=>{
+			Promise.all([1, 2, 3].map((type) => wxcodeApi.findCodeByType(type, 6))).then(function (codeGroup) {
+				let codesTypeOfSingle = codeGroup[0]
+				let codesTypeOfSingleLarge = codeGroup[1]
+				let codesTypeOfPlatform = codeGroup[2]
+				resp.render("codes", {
+					codesTypeOfSingle,
+					codesTypeOfSingleLarge,
+					codesTypeOfPlatform
+				})
+			}, function (err) {
+				errorlog(err)
+				resp.json(err)
+			})
+		});
+})
 
 route.get('/shops/:appkey', passport.authenticate('basic', {session: false}),
 	function (req, resp) {
