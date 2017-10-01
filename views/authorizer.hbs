@@ -91,12 +91,10 @@
     var api = {};
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
-            return fetch(api, {
-                method: method.toUpperCase(),
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+            return $.ajax(api, {
+                type: method.toUpperCase(),
+                contentType: 'application/json',
+                data: JSON.stringify(data)
             }).then(function (res) {
                 if (res.ok) {
                     alert('操作完成');
