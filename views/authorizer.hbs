@@ -95,14 +95,6 @@
                 type: method.toUpperCase(),
                 contentType: 'application/json',
                 data: JSON.stringify(data)
-            }).then(function (res) {
-                if (res.ok) {
-                    alert('操作完成');
-                }
-                return res;
-            }, function (err) {
-                console.error(err.stack);
-                alert('发生错误:' + err.message);
             })
         }
     });
@@ -123,12 +115,41 @@
                 return alert('数据不能为空')
             }
             if (isSaveDinerCode) {
-                api.put(`/api/shop_wxlite/${appid}`, data)
+                api.put(`/api/shop_wxlite/${appid}`, data).success(function () {
+                   $.toast({
+                        heading: '店铺信息保存完成',
+                        text: '保存完成',
+                        showHideTransition: 'slide',
+                        icon: 'success'
+                    })
+                }).fail(function (err) {
+                    $.toast({
+                        heading: '店铺信息保存失败',
+                        text: JSON.stringify(err),
+                        showHideTransition: 'fade',
+                        icon: 'error',
+                        hideAfter: 10000
+                    })
+                })
             }
             if (isCreateDinerCode) {
-                api.post(`/api/shop_wxlite`, data).then(function () {
+                api.post(`/api/shop_wxlite`, data).success(() {
+                   $.toast({
+                        heading: '店铺信息创建完成',
+                        text: '创建完成',
+                        showHideTransition: 'slide',
+                        icon: 'success'
+                    })
                     $('.saveDinerCode').show();
                     $('.createDinerCode').hide();
+                }).fail(function () {
+                    $.toast({
+                        heading: '店铺信息创建失败',
+                        text: JSON.stringify(err),
+                        showHideTransition: 'fade',
+                        icon: 'error',
+                        hideAfter: 10000
+                    })
                 })
             }
         } catch (e) {
@@ -138,12 +159,26 @@
     }
     $(".change-visit").on('click', function () {
         var appid = $(this).parents('form.diner').data('appid');
-        api.put(`/api/change_visit/${appid}`).then(function (res) {
+        api.put(`/api/change_visit/${appid}`).success(function (res) {
             if (res.visible) {
                 $(".btn.change-visit").addClass('btn-primary').removeClass('btn-warning').html("修改可是状态-可见")
             } else {
                 $(".btn.change-visit").addClass('btn-warning').removeClass('btn-primary').html("修改可是状态-不可见")
             }
+            $.toast({
+                heading: '店铺状态变更成功',
+                text: '完成',
+                showHideTransition: 'slide',
+                icon: 'success'
+            })
+        }).fail(function (err) {
+            $.toast({
+                heading: '店铺状态变更失败',
+                text: JSON.stringify(err),
+                showHideTransition: 'fade',
+                icon: 'error',
+                hideAfter: 10000
+            })
         })
     });
 </script>

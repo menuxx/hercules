@@ -19,7 +19,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">单店版-代码列表(最新6条)</div>
                 <div class="panel-body">
-                    <ul class="list-group">
+                    <ul class="list-group list-single">
                         {{#each codesTypeOfSingle}}
                             <li class="list-group-item">
                                 <h5 class="list-group-item-heading">
@@ -39,7 +39,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">大店版-代码列表(最新6条)</div>
                 <div class="panel-body">
-                    <ul class="list-group">
+                    <ul class="list-group list-single-large">
                         {{#each codesTypeOfSingleLarge}}
                             <li class="list-group-item">
                                 <h5 class="list-group-item-heading">
@@ -59,7 +59,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">多店版-代码列表(最新6条)</div>
                 <div class="panel-body">
-                    <ul class="list-group">
+                    <ul class="list-group list-platform">
                         {{#each codesTypeOfPlatform}}
                             <li class="list-group-item">
                                 <h5 class="list-group-item-heading">
@@ -119,13 +119,57 @@
 </div>
 
 <script>
+    function getDatetime(date) {
+        return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" +date.getDate() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds()
+    }
     $("#codeSubmit").on("submit", function (e) {
     	e.preventDefault()
         var obj = {}
         $(this).serializeArray().forEach(function (item) {
         	obj[item.name] = item.value
         })
-        console.log(obj)
+        obj.templateId = parseInt(obj.templateId, 10)
+        obj.templateType = parseInt(obj.templateType, 10)
+        $.ajax('/api/code_new', {
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(obj)
+        }).success(function success(ok) {
+            var newCode = $('<li class="list-group-item">' + 
+                                '<h5 class="list-group-item-heading">' + 
+                                    ok.templateId + ' | 版本号：' + ok.version + 
+                                '</h5>' + 
+                                '<p class="list-group-item-text">' + 
+                                    '描述：' + ok.desc + 
+                                    '<span class="small-text">' + getDatetime(new Date(ok.createdAt)) + '</span>' +
+                                '</p>' + 
+                            '</li>');
+            switch (ok.templateType) {
+                case 1:
+                    $('.list-single').prepend(newCode)
+                    break;
+                case 2:
+                    $('.list-single-large').prepend(newCode)
+                    break;
+                case 3:
+                    $('.list-platform').prepend(newCode)
+                    break;
+            }
+            $.toast({
+                heading: '完成',
+                text: '代码创建完成',
+                showHideTransition: 'slide',
+                icon: 'success'
+            })
+        }).fail(function fail(err) {
+            $.toast({
+                heading: '失败',
+                text: '代码创建失败',
+                showHideTransition: 'fade',
+                icon: 'error',
+                hideAfter: 2000
+            })
+        })
     })
 </script>
 {{> footer}}

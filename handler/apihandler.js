@@ -234,6 +234,61 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 	})
 });
 
+route.post('/code_new', function (req, resp) {
+	req.checkBody('templateType', 'body 中的 templateType 必须存在')
+	req.checkBody('templateId', 'body 中的 templateId 必须存在')
+	req.checkBody('desc', 'body 中的 desc 必须存在')
+	req.checkBody('version', 'body 中的 version 必须存在')
+	jsonAutoValid(req, resp).then(function () {
+		let {templateType, templateId, desc, version} = req.body;
+		let branch = {}
+		switch(templateType) {
+			case 1:
+				branch = {
+					gitBranch: 'tpl_single_01',
+					gitTag: 'tpl_single_0_2'
+				}
+				break;
+			case 2:
+				branch = {
+					gitBranch: 'tpl_platform_02',
+					gitTag: 'tpl_platform_0_2_2'
+				}
+				break;
+			case 3:
+				branch = {
+					gitBranch: 'tpl_large_single_02',
+					gitTag: 'tpl_large_single_0_2'
+				}
+				break;
+		}
+		
+		wxcodeApi.saveCode(Object.assign({}, branch, {
+			gitUrl: 'https://git.coding.net/yin80871901/menuxx-wxlite.git',
+			version,
+			templateId,
+			templateType,
+			desc,
+			_config: {
+				apiBaseurl: 'https://dev.api.menuxx.com/',
+				cdnBaseurl: 'https://file.menuxx.com',
+				fundebugApikey: '337b61f714201cbc40911fcb17a19a16e54399e26d68497f0a8681a999c66909'
+			},
+			_domains: {
+				requestDomains: ['https://dev.api.menuxx.com', 'https://api.menuxx.com', 'https://menuxx-xcx-log.wilddogio.com', 'https://fundebug.com'],
+				wsRequestDomains: ['wss://dev.message.menuxx.com', 'wss://message.menuxx.com'],
+				uploadDomains: ['https://file.menuxx.com'],
+				downloadDomains: ['https://file.menuxx.com']
+			}
+		})).then(function (res) {
+			resp.json(res)
+		}, function (err) {
+			errorlog(err)
+			resp.json(err)
+		})
+	})
+})
+
 /**
  * doc : https://booteam.pubu.im/apps/integrations/59283d44a059285529eadc00
  * 触发带有callbackUrl的按钮时，将会以POST的形式将以下数据发送到callbackUrl：

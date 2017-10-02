@@ -50,7 +50,7 @@ const rabbitmq = require('../components/rabbitmq')();
 const {shopApi, submitAuditLogApi, wxcodeApi} = require('../leancloud');
 const wxlite = require('../wxlite')
 const {pubuWeixin} = require('../pubuim')
-const {isEmpty} = require("lodash")
+const {isEmpty, isNull, isUndefined} = require("lodash")
 
 const exchangeName = 'yth.rd3'
 const delayExchangeName = 'yth.rd3.delay'
@@ -61,7 +61,7 @@ var delayPublisherChannel = null
 
 rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], queueName, routingKey}, function (msg) {
 	let {authorizerAppid, version, times, pipline} = msg;
-	times = isEmpty(times) ? 1 : times
+	times = isUndefined(times) || isNull(times) ? 1 : times
 	log('a worker begin..., authorizerAppid: %s', authorizerAppid);
 	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
 		return Promise.all([
@@ -73,7 +73,7 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 			let code = res[1];	// code
 			let shop = res[2]
 			// 没有产生 审核 id, 超过3次，丢弃该请求
-			if (isEmpty(audit.auditid)) {
+			if (isUndefined(audit.auditid)) {
 				if ( times > 3 ) {
 					pubuWeixin.sendCodeSubmitAuditFail(shop.appName, authorizerAppid, audit.errmsg)
 					return Promise.reject({ ok : false, status: false });
@@ -89,7 +89,7 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 			}
 			// 如果不是流水线，发送通知
 			if ( !pipline ) {
-				pubuWeixin.sendCodeSubmitAuditSuccess(shop.appName, authorizerAppid, audit.id)
+				pubuWeixin.sendCodeSubmitAuditSuccess(shop.appName, authorizerAppid, audit.auditid)
 			}
 			/**
 			 * {

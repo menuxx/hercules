@@ -35,7 +35,8 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 				// 自动提交审核
 				return rabbitmq.publish2(publisherChannel, exchangeName, ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid,
-					version: code.version
+					version: code.version,
+					pipline: true
 				});
 			} else {
 				// 发送 pubuim 通知, 手动提交审核
