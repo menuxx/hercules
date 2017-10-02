@@ -133,7 +133,7 @@
                 })
             }
             if (isCreateDinerCode) {
-                api.post(`/api/shop_wxlite`, data).success(() {
+                api.post(`/api/shop_wxlite`, data).success(function () {
                    $.toast({
                         heading: '店铺信息创建完成',
                         text: '创建完成',
