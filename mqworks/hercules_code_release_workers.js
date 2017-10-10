@@ -39,7 +39,7 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 				if ( release.errcode === 0 ) {
 					// 获取 商户 和商户 代码发布相关的信息
 					return shopApi.getAuthorizerByAppid(authorizerAppid).then(function (shop) {
-						return wxcodeApi.firstCodeType(diner.templateType)
+						return wxcodeApi.firstCodeType(shop.templateType)
 							.then(function (code) {
 								return {shop, code}
 							});
