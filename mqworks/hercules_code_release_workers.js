@@ -31,7 +31,7 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 		.then(function (release) {
 			// 超过3次，丢弃该请求
 			if ( times > 3 ) {
-				return { ok : false, status: false };
+				return Promise.reject({ ok : false, status: false });
 			}
 			// 审核失败的时候, 直接丢弃该请求
 			if ( release.status !== 0 ) {
@@ -50,25 +50,25 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 						authorizerAppid,
 						times
 					}, 60 * times)
-					return { ok : false, status: false };
+					return Promise.reject({ ok : false, status: false });
 				}
 			}
-			return { ok : false, status: false };
+			return Promise.reject({ ok : false, status: false });
 		})
 		.then(function ({shop, code}) {
-		log('appid %s code release ok');
-		// 发送 pubu 通知
-		return pubuWeixin.sendCodeReleaseOK
-		(
-			{ codeVersion: code.version, templateType: code.templateType }, shop.appName, shop.authorizerAppid
-		);
-	}).then(function () {
-		log('a worker done.');
-		return { ok : true };
-	}, function (err) {
-		errorlog(err);
-		return { ok : false, status: false };
-	});
+			log('appid %s code release ok');
+			// 发送 pubu 通知
+			return pubuWeixin.sendCodeReleaseOK
+			(
+				{ codeVersion: code.version, templateType: code.templateType }, shop.appName, shop.authorizerAppid
+			);
+		}).then(function () {
+			log('a worker done.');
+			return { ok : true };
+		}, function (err) {
+			errorlog(err);
+			return { ok : false, status: false };
+		});
 });
 
 rabbitmq.start()
