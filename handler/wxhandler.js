@@ -260,7 +260,7 @@ const verifyMsgApi = function (msg, resp) {
 // }));
 
 const wxlitePublish = function (routingKey, data) {
-	return appPublish('yth3rd', routingKey, data)
+	return appPublish('yth.rd3', routingKey, data)
 }
 
 const handleWeappAuditSuccess = function ({AppId, CreateTime, SuccTime}, resp) {

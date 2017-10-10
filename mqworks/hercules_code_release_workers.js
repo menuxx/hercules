@@ -33,22 +33,27 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 			if ( times > 3 ) {
 				return { ok : false, status: false };
 			}
-			if ( release.errcode === 0 ) {
-				// 获取 商户 和商户 代码发布相关的信息
-				return shopApi.getAuthorizerByAppid(authorizerAppid).then(function (shop) {
-					return wxcodeApi.firstCodeType(diner.templateType)
-						.then(function (code) {
-							return {shop, code}
-						});
-				});
-			} else {
-				// 10 秒后重试
-				rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
-					authorizerAppid,
-					times
-				}, 60 * times)
-				return Promise.reject({ ok : false, status: false });
+			// 审核失败的时候, 直接丢弃该请求
+			if ( release.status !== 0 ) {
+				// 服务器返回成功
+				if ( release.errcode === 0 ) {
+					// 获取 商户 和商户 代码发布相关的信息
+					return shopApi.getAuthorizerByAppid(authorizerAppid).then(function (shop) {
+						return wxcodeApi.firstCodeType(diner.templateType)
+							.then(function (code) {
+								return {shop, code}
+							});
+					});
+				} else {
+					// 10 秒后重试
+					rabbitmq.publishDelay(delayPublisherChannel, delayExchangeName, ROUTING_KEYS.Hercules_WxliteCodeRelease, {
+						authorizerAppid,
+						times
+					}, 60 * times)
+					return { ok : false, status: false };
+				}
 			}
+			return { ok : false, status: false };
 		})
 		.then(function ({shop, code}) {
 		log('appid %s code release ok');

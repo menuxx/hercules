@@ -88,7 +88,6 @@
     </div>
 </div>
 <script>
-    var api = {};
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
             return $.ajax(api, {
@@ -115,7 +114,7 @@
                 return alert('数据不能为空')
             }
             if (isSaveDinerCode) {
-                api.put(`/api/shop_wxlite/${appid}`, data).success(function () {
+                api.put('/api/shop_wxlite/' + appid, data).success(function () {
                    $.toast({
                         heading: '店铺信息保存完成',
                         text: '保存完成',
@@ -133,7 +132,7 @@
                 })
             }
             if (isCreateDinerCode) {
-                api.post(`/api/shop_wxlite`, data).success(function () {
+                api.post('/api/shop_wxlite', data).success(function () {
                    $.toast({
                         heading: '店铺信息创建完成',
                         text: '创建完成',
