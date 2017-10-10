@@ -31,8 +31,8 @@
       <file leaf-file-name="hercules_code_release_workers.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_release_workers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="692">
-              <caret line="64" column="29" lean-forward="true" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
+            <state relative-caret-position="255">
+              <caret line="52" column="72" lean-forward="true" selection-start-line="52" selection-start-column="72" selection-end-line="52" selection-end-column="72" />
               <folding />
             </state>
           </provider>
@@ -527,7 +527,7 @@
       <workItem from="1506910481394" duration="308000" />
       <workItem from="1506912743092" duration="146000" />
       <workItem from="1507601313911" duration="2287000" />
-      <workItem from="1507604488893" duration="860000" />
+      <workItem from="1507604488893" duration="952000" />
     </task>
     <task id="LOCAL-00001" summary="appkey =&gt; appKey">
       <created>1506384841996</created>
@@ -760,11 +760,18 @@
       <option name="project" value="LOCAL" />
       <updated>1507604777839</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="修复自动发布流程bug">
+      <created>1507605828875</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1507605828875</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="326669000" />
+    <option name="totallyTimeSpent" value="326761000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="59" y="23" width="1276" height="777" extended-state="0" />
@@ -1201,8 +1208,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mqworks/hercules_code_release_workers.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="692">
-          <caret line="64" column="29" lean-forward="true" selection-start-line="64" selection-start-column="29" selection-end-line="64" selection-end-column="29" />
+        <state relative-caret-position="255">
+          <caret line="52" column="72" lean-forward="true" selection-start-line="52" selection-start-column="72" selection-end-line="52" selection-end-column="72" />
           <folding />
         </state>
       </provider>

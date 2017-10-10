@@ -31,7 +31,7 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 		.then(function (release) {
 			// 超过3次，丢弃该请求
 			if ( times > 3 ) {
-				return Promise.reject({ ok : false, status: false });
+				return Promise.reject({ ok : true, status: false });
 			}
 			// 审核失败的时候, 直接丢弃该请求
 			if ( release.status !== 0 ) {
@@ -50,10 +50,10 @@ rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], q
 						authorizerAppid,
 						times
 					}, 60 * times)
-					return Promise.reject({ ok : false, status: false });
+					return Promise.reject({ ok : true, status: false });
 				}
 			}
-			return Promise.reject({ ok : false, status: false });
+			return Promise.reject({ ok : true, status: false });
 		})
 		.then(function ({shop, code}) {
 			log('appid %s code release ok');
