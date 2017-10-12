@@ -88,6 +88,7 @@
     </div>
 </div>
 <script>
+    var api = {}
     ['put', 'post'].forEach(function (method) {
         api[method] = function (api, data) {
             return $.ajax(api, {
