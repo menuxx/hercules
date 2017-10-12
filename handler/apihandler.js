@@ -220,7 +220,7 @@ route.put('/code_submitaudit/:appid', function (req, resp) {
 				return wxcodeApi.getByVersionNumber(lastCommitVersion)
 			})
 			.then(function (code) {
-				return rabbitmq.publish2(publisherChannel, "yth.rd3", ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
+				return rabbitmq.publish2(publisherChannel, 'yth.rd3', ROUTING_KEYS.Hercules_WxliteSubmitAudit, {
 					authorizerAppid: appid,
 					version: code.version,
 					pipline: false

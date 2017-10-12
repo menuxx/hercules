@@ -16,13 +16,12 @@ const {isEmpty} = require('lodash')
 const rabbitmq = require('../components/rabbitmq')();
 
 const exchangeName = 'yth.rd3'
-const delayExchangeName = 'yth.rd3.delay'
 const queueName = 'wxlite_code_commit_queue';
 const routingKey = ROUTING_KEYS.Hercules_WxliteCodeCommit;
 
 var publisherChannel = null
 
-rabbitmq.createSimpleWorker({exchangeNames: [exchangeName, delayExchangeName], queueName, routingKey}, function (msg, ch) {
+rabbitmq.createSimpleWorker({exchangeNames: [exchangeName], queueName, routingKey}, function (msg, ch) {
 	let {authorizerAppid, version} = msg;
 	// 忽略错误数据
 	if (!isEmpty(authorizerAppid) && !isEmpty(version)) {
