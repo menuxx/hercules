@@ -26,7 +26,7 @@
                             {{/if}}
                             <a href="javascript:void(0);" data-appkey="{{ appKey }}" class="authLink btn btn-link">授权链接</a>
                             {{#if authorizerStatus}}
-                                <a href="https://sso.yingtaohuo.com/shops/{{ shopId }}/tables/list" class="btn btn-link">桌码管理</a>
+                                <a data-appid="{{authorizerAppid}}" href="javascript:void(0);" class="codeRelease btn btn-link">发布代码</a>
                                 <a href="javascript:void(0);" data-appid="{{authorizerAppid}}" class="btnTesters btn btn-link">绑定体验者</a>
                                 <a href="javascript:void(0);" data-appid="{{authorizerAppid}}" class="resetAccessToken btn btn-link">重置访问令牌</a>
                             {{/if}}
@@ -217,6 +217,29 @@
         	return i.errmsg
         }).join(", ")
     }
+
+
+    $('.codeRelease').on('click', function () {
+        var appid = $(this).data('appid')
+        api.put('/api/code_release/' + appid).then(function (data) {
+            if ( data.errcode === 0 ) {
+                $.toast({
+                    heading: '完成',
+                    text: '上线成功',
+                    showHideTransition: 'slide',
+                    icon: 'success'
+                })
+            } else {
+                $.toast({
+                    heading: '',
+                    text: '' + data.errmsg,
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    hideAfter: 10000
+                })
+            }
+        })
+    })
 
     $(".btnTesters").on('click', function () {
         var appid = $(this).data('appid')

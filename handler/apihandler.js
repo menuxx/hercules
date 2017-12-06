@@ -210,6 +210,16 @@ route.put('/code_commit/:appid', function (req, resp) {
 	})
 });
 
+route.put('/code_release/:appid', function (req, resp) {
+	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
+	jsonAutoValid(req, resp).then(function () {
+		let {appid} = req.params;
+		wxlite.codeRelease(appid).then(function (res){
+			resp.json(res)
+		})
+	})
+});
+
 // 代码审核
 route.put('/code_submitaudit/:appid', function (req, resp) {
 	req.checkParams('appid', 'appid 上的 appid 必须存在').notEmpty();
